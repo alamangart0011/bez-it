@@ -1,0 +1,7 @@
+BASELINE=room-based-v17
+STATE=P0_GREEN
+SNAPSHOT=/opt/messenger/_final_backups/v17_p0_green_20260407_063520.tar.gz
+DOMAIN=https://ai.voice.oboron-it.ru
+ROOT=/opt/messenger/contour-chat-jino-final
+DATE=2026-04-07
+STATUS=AUTH_OK;ADMIN_OK;ROOMS_OK;VOICE_READ_OK;MESSAGES_WRITE_OK

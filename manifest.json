@@ -1,0 +1,42 @@
+{
+  "project": "CorpChat",
+  "version": "17.17.0",
+  "status": "operator-wallboard-pack",
+  "countryMode": "RUSSIA_ONLY",
+  "stack": {
+    "backend": "Node.js + Express + PostgreSQL + Socket.IO",
+    "frontend": "React + Vite",
+    "deploy": "Docker + Jino"
+  },
+  "major_features": [
+    "single baseline lock and deploy discipline",
+    "doctor smoke rollback release flow",
+    "fully russian shell texts",
+    "chat room search unread markers pins and room files",
+    "message reply edit delete pin upload",
+    "voice room state roles moderation and participant move",
+    "device selection screen sharing and speaking indicator",
+    "meeting room with agenda materials event journal and summary",
+    "auth sessions invitations reset password",
+    "profiles settings permissions and admin overview",
+    "admin center with user room department invitation and system management",
+    "hosting-ready jino deploy quickstart and post-deploy checks",
+    "release metadata in health endpoint and runbooks for monday demo",
+    "request-id and structured access log on backend",
+    "api live ready health split for hosting diagnostics",
+    "topbar runtime indicators for api socket and network",
+    "database backup restore and log collection scripts",
+    "address summon to voice or meeting rooms",
+    "room occupancy counters in sidebar and room detail",
+    "system announcements in shell",
+    "bulk voice moderation and launch control",
+    "voice room entry mode open or knock",
+    "join request queue with approve or deny",
+    "meeting attendance summary",
+    "mass summon for absent users in voice and meeting rooms",
+    "room incident log and acknowledgment workflow",
+    "launch monitor with hot rooms and open incidents",
+    "operator wallboard with room fastpath and incident resolve",
+    "voice room closed entry mode and operator room controls"
+  ]
+}

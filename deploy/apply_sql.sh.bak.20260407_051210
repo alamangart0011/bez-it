@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+APP_DIR="${APP_DIR:-/opt/messenger/contour-chat-jino-final}"
+cd "$APP_DIR"
+
+for sql in ./infra/sql/*.sql; do
+  echo "[SQL] apply $(basename "$sql")"
+  docker compose exec -T db sh -lc 'psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB"' < "$sql"
+done
+
+echo "[OK] schema sync complete"
