@@ -803,7 +803,8 @@ export function MainApp({user,token,onLogout}){
             </div>
             <div style={{width:'100%',background:C.bg,borderRadius:9,padding:14,display:'flex',flexDirection:'column',gap:8}}>
               <div style={{display:'flex',justifyContent:'space-between',fontSize:13}}><span style={{color:C.txt3}}>Статус</span><span style={{color:C.grn,fontWeight:500}}>● В сети</span></div>
-              {mData.department&&<div style={{display:'flex',justifyContent:'space-between',fontSize:13}}><span style={{color:C.txt3}}>Отдел</span><span style={{color:C.txt}}>{mData.department}</span></div>}
+              {(mData.departmentName||mData.department)&&<div style={{display:'flex',justifyContent:'space-between',fontSize:13}}><span style={{color:C.txt3}}>Отдел</span><span style={{color:C.txt}}>{mData.departmentName||mData.department}</span></div>}
+              {mData.jobTitle&&<div style={{display:'flex',justifyContent:'space-between',fontSize:13}}><span style={{color:C.txt3}}>Должность</span><span style={{color:C.txt}}>{mData.jobTitle}</span></div>}
               {mData.email&&<div style={{display:'flex',justifyContent:'space-between',fontSize:13}}><span style={{color:C.txt3}}>Email</span><span style={{color:C.txt}}>{mData.email}</span></div>}
             </div>
             <div style={{display:'flex',gap:8}}>
