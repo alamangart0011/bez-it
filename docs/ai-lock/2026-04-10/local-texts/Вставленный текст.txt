@@ -1,0 +1,114 @@
+Продолжаем проект Signalum / contour-chat-v17 в режиме: минимум текста, максимум действий.
+
+Текущий подтверждённый контекст:
+- repo: alamangart0011/contour-chat-v17
+- server app dir: /opt/messenger/contour-chat-jino-final
+- domain: ai.voice.oboron-it.ru
+- admin login: admin@corpchat.local
+- admin password: Admin@12345!
+- nginx publish: 80 -> 127.0.0.1:8080
+- api health/release/login OK
+- create room OK
+- room_incidents.status normalized, constraint fixed
+- safe subset PR4 applied earlier
+- later fix branch created on VPS:
+  ops/fix-ui-contract-20260410_002744
+- confirmed smoke on VPS:
+  14 passed / 1 failed
+- fixed:
+  PATCH /:roomId
+  GET /:roomId/members
+  POST /:roomId/members
+  DELETE /:roomId/members/:userId
+  POST /:roomId/join
+  validators text/content compat
+- known good snapshot:
+  /root/known_good_v18_20260410_002744
+
+Режим работы:
+- действуйте автономно
+- не спрашивайте лишнего
+- сначала реальные разрывы контракта и неработающие кнопки
+- потом UX комнат/сотрудников/voice
+- потом AI-контур и память
+- потом smoke/regression/deploy handoff
+- после каждого этапа: только краткий статус, branch, commit, smoke result, next step
+
+Цель:
+Догоняем проект до V26 поэтапно.
+
+Приоритеты:
+V21 — Stabilize Portal Contract
+V22 — Employee/Room UX
+V23 — Voice Overlay and Presence
+V24 — AI Memory Core
+V25 — AI Triad Rooms
+V26 — Automated Ingestion and Regression Gates
+
+Обязательные направления:
+1. Добить все реальные UI/backend разрывы
+2. Починить оставшиеся кнопки/модалки/панели без пустых экранов
+3. Улучшить комнаты и отображение сотрудников
+4. Добавить right-click/context actions на пользователя
+5. Улучшить voice UX, overlay, device picker, speaking indicator
+6. Подготовить 3 AI-комнаты:
+   - Юрист AI
+   - Инженер AI
+   - Общие вопросы AI
+7. Сделать серверную память:
+   - role memory
+   - user-thread memory
+   - document memory / ingestion
+8. Добавить smoke/regression scripts и anti-contract-break checks
+9. Все изменения коммитить и пушить в отдельные ветки
+10. В финале каждого этапа писать только:
+   - что сделано
+   - branch/commit
+   - что проверено
+   - что осталось
+
+Стиль ответа:
+очень кратко, без воды, больше делай чем объясняй.
+
+Этап QA (read-only): найденные реальные разрывы контракта
+1) Frontend вызывает room endpoints, которых нет в router (/api/rooms)
+В frontend/src/App.jsx используются:
+
+PATCH /api/rooms/:id
+
+GET/POST/DELETE /api/rooms/:id/members...
+
+Но в backend/src/routes/rooms.js этих маршрутов нет (есть только list/detail/messages/pins/files/search/uploads и message-level patch/delete/pin).
+
+2) Несовместимость контрактов сообщений: path и payload
+В frontend/src/App.jsx:
+
+send: POST /api/rooms/:id/messages с { content }
+
+delete: DELETE /api/rooms/:roomId/messages/:messageId
+
+pin: POST /api/rooms/:roomId/messages/:messageId/pin
+
+backend:
+
+validator принимает text, не content (backend/src/validators/rooms.validators.js)
+
+delete/pin маршруты не room-scoped: /api/rooms/messages/:messageId... (backend/src/routes/rooms.js)
+
+3) На UI есть SMS-логин, но backend auth endpoints отсутствуют
+frontend/src/App.jsx вызывает:
+
+POST /api/auth/phone/send-otp
+
+POST /api/auth/phone/verify-otp
+
+В backend/src/routes/auth.js маршрутов /phone/* нет.
+
+Краткий статус этапа
+Что сделал: статический QA по реальным UI/backend разрывам контракта (без изменений файлов).
+
+branch/commit: work, коммитов нет (режим read-only QA).
+
+Что проверено: сигнатуры frontend API вызовов vs backend routes/validators/auth routes.
+
+Что осталось: внести фиксы по 3 пунктам выше, затем smoke API/UI и rollback-план по каждому шагу.
