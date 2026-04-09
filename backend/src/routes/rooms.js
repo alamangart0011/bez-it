@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import { roomsService } from '../services/rooms.service.js';
+import { adminService } from '../services/admin.service.js';
 import { sendError } from '../lib/http-error.js';
 import { requirePermission } from '../middleware/permissions.js';
 import { createUploadMiddleware } from '../middleware/upload.js';
-import { validateEditMessagePayload, validateRoomSearchQuery, validateSendMessagePayload } from '../validators/rooms.validators.js';
+import { validateEditMessagePayload, validateRoomSearchQuery, validateSendMessagePayload, validateCreateRoomPayload } from '../validators/rooms.validators.js';
 
 function emitRoom(io, roomId, event, payload) {
   if (!io || !roomId) return;
@@ -17,6 +18,23 @@ export function buildRoomsRouter({ io, uploadRoot, maxUploadBytes }) {
   roomsRouter.get('/', async (req, res) => {
     try {
       res.json(await roomsService.list(req.user.sub));
+    } catch (error) {
+      return sendError(res, error);
+    }
+  });
+
+  roomsRouter.post('/', requirePermission('rooms.create'), async (req, res) => {
+    try {
+      const payload = validateCreateRoomPayload(req.body);
+      const room = await adminService.createRoom(req.user, {
+        name: payload.name,
+        kind: payload.kind,
+        isPrivate: false,
+        ownerUserId: req.user.sub,
+        memberIds: [],
+        moderatorIds: []
+      });
+      res.status(201).json(room);
     } catch (error) {
       return sendError(res, error);
     }
