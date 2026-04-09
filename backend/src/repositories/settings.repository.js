@@ -16,8 +16,8 @@ const defaultSettings = {
 };
 
 export const settingsRepository = {
-  async getByUserId(userId) {
-    const res = await pool.query(
+  async getByUserId(userId, client = pool) {
+    const res = await client.query(
       `select
          user_id as "userId",
          theme,
@@ -80,6 +80,6 @@ export const settingsRepository = {
         next.reduceMotion
       ]
     );
-    return this.getByUserId(userId);
+    return this.getByUserId(userId, client);
   }
 };
