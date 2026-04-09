@@ -1,14 +1,14 @@
 import { badRequest } from '../lib/errors.js';
 
 export function validateSendMessagePayload(body) {
-  const text = String(body?.text || '').trim();
+  const text = String(body?.text ?? body?.content ?? '').trim();
   const replyToMessageId = body?.replyToMessageId ? String(body.replyToMessageId) : null;
   if (!text) throw badRequest('MESSAGE_EMPTY', 'Пустое сообщение', 'Введите текст сообщения.');
   return { text, replyToMessageId };
 }
 
 export function validateEditMessagePayload(body) {
-  const text = String(body?.text || '').trim();
+  const text = String(body?.text ?? body?.content ?? '').trim();
   if (!text) throw badRequest('MESSAGE_EMPTY', 'Пустое сообщение', 'Введите текст сообщения.');
   return { text };
 }
