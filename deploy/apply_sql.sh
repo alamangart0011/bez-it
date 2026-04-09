@@ -15,6 +15,12 @@ for f in $(ls infra/sql/*.sql | sort); do
     continue
   fi
 
+  # Карантин: 013 ссылается на несуществующие колонки (users.organization_id и др.)
+  if [ "$base" = "013_legacy_schema_parity.sql" ]; then
+    echo "[SQL] QUARANTINE skip $base — incompatible with active schema"
+    continue
+  fi
+
   echo "[SQL] apply $base"
   docker compose exec -T db sh -lc 'psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -f -' < "$f"
 done
