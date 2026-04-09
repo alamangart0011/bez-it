@@ -1,0 +1,41 @@
+name: backend-autotests
+
+on:
+  pull_request:
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-autotests.yml'
+  push:
+    branches:
+      - main
+      - claude/project-intake-assessment-cXGaL
+      - chatgpt/backend-autotests-pr4-base
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-autotests.yml'
+
+jobs:
+  backend-unit:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install backend dependencies
+        run: npm ci
+
+      - name: Run syntax check
+        run: npm run check
+
+      - name: Run backend unit tests
+        run: node --test test/**/*.test.js
