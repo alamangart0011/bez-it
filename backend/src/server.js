@@ -15,8 +15,10 @@ import { meRouter } from './routes/me.js';
 import { buildRtcRouter } from './routes/rtc.js';
 import { buildRoomsRouter } from './routes/rooms.js';
 import { buildVoiceRouter } from './routes/voice.js';
+import { buildVoiceSessionsRouter } from './routes/voice-sessions.js';
 import { meetingsRouter } from './routes/meetings.js';
 import { adminRouter } from './routes/admin.js';
+import { aiJobsRouter } from './routes/ai-jobs.js';
 import { registerSocketGateway } from './socket/gateway.js';
 import { sendError } from './lib/http-error.js';
 
@@ -73,8 +75,28 @@ app.use('/api/me', authMiddleware, meRouter);
 app.use('/api/rtc', authMiddleware, buildRtcRouter(config));
 app.use('/api/rooms', authMiddleware, buildRoomsRouter({ io, uploadRoot: config.uploadRoot, maxUploadBytes: config.maxUploadBytes }));
 app.use('/api/voice', authMiddleware, buildVoiceRouter({ io }));
+app.use('/api/voice-sessions', authMiddleware, buildVoiceSessionsRouter({ io }));
 app.use('/api/meetings', authMiddleware, meetingsRouter);
 app.use('/api/admin', authMiddleware, adminRouter);
+app.use('/api/ai-jobs', authMiddleware, aiJobsRouter);
+
+const legacyDisabledMessage = {
+  code: 'LEGACY_ENDPOINT_DISABLED',
+  title: 'Легаси-маршрут отключён',
+  message: 'Маршрут выведен из baseline V17. Используйте актуальные API комнаты/голоса/собраний.'
+};
+
+app.all(['/api/ai', '/api/ai/*'], (req, res) => {
+  res.status(410).json(legacyDisabledMessage);
+});
+
+app.all(['/api/e2e', '/api/e2e/*'], (req, res) => {
+  res.status(410).json(legacyDisabledMessage);
+});
+
+app.all(['/api/qr_phone_auth', '/api/qr_phone_auth/*'], (req, res) => {
+  res.status(410).json(legacyDisabledMessage);
+});
 
 app.use((req, res) => {
   res.status(404).json({ code: 'NOT_FOUND', title: 'Маршрут не найден', message: 'Проверьте адрес запроса.' });

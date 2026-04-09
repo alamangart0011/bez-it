@@ -39,6 +39,43 @@ async function withAttachments(messages) {
 }
 
 export const roomsService = {
+  async createRoom(actorUser, payload) {
+    const name = String(payload?.name || '').trim();
+    const kind = String(payload?.kind || 'group').trim();
+    const allowedKinds = new Set(['group', 'voice', 'meeting']);
+    if (!name) throw badRequest('ROOM_NAME_REQUIRED', 'Не указано название', 'Введите название комнаты.');
+    if (!allowedKinds.has(kind)) throw badRequest('ROOM_KIND_INVALID', 'Неверный тип комнаты', 'Допустимые типы: group, voice, meeting.');
+    const room = await withTransaction(async (client) => {
+      const created = await roomsRepository.create({ name, kind, isPrivate: Boolean(payload?.isPrivate) }, client);
+      await roomsRepository.addMembers(created.id, [actorUser.sub], client);
+      await auditRepository.create({ actorUserId: actorUser.sub, action: 'room.create', target: created.id, result: 'success', meta: { name, kind, isPrivate: Boolean(payload?.isPrivate) } }, client);
+      return created;
+    });
+    return room;
+  },
+
+  async updateRoom(roomId, actorUser, payload) {
+    await ensureRoomAccess(roomId, actorUser.sub);
+    const patch = {};
+    if (payload?.name !== undefined) {
+      const name = String(payload.name || '').trim();
+      if (!name) throw badRequest('ROOM_NAME_REQUIRED', 'Не указано название', 'Название комнаты не может быть пустым.');
+      patch.name = name;
+    }
+    if (payload?.kind !== undefined) {
+      const kind = String(payload.kind || '').trim();
+      if (!['group', 'voice', 'meeting'].includes(kind)) {
+        throw badRequest('ROOM_KIND_INVALID', 'Неверный тип комнаты', 'Допустимые типы: group, voice, meeting.');
+      }
+      patch.kind = kind;
+    }
+    if (payload?.isPrivate !== undefined) patch.isPrivate = Boolean(payload.isPrivate);
+    const updated = await roomsRepository.updateById(roomId, patch);
+    if (!updated) throw notFound('ROOM_NOT_FOUND', 'Комната не найдена', 'Указанная комната не существует.');
+    await auditRepository.create({ actorUserId: actorUser.sub, action: 'room.update', target: roomId, result: 'success', meta: patch });
+    return updated;
+  },
+
   async list(userId) {
     return roomsRepository.getAllForUser(userId);
   },
@@ -55,6 +92,42 @@ export const roomsService = {
       raisedHandsCount: stats.raisedHandsCount,
       pendingJoinRequestsCount: stats.pendingJoinRequestsCount
     };
+  },
+
+  async members(roomId, userId) {
+    await ensureRoomAccess(roomId, userId);
+    return roomsRepository.getMembers(roomId);
+  },
+
+  async addMember(roomId, actorUser, targetUserId) {
+    await ensureRoomAccess(roomId, actorUser.sub);
+    if (!targetUserId) throw badRequest('ROOM_MEMBER_REQUIRED', 'Не выбран сотрудник', 'Укажите userId сотрудника для добавления.');
+    await withTransaction(async (client) => {
+      await roomsRepository.addMembers(roomId, [targetUserId], client);
+      await auditRepository.create({ actorUserId: actorUser.sub, action: 'room.member_add', target: targetUserId, result: 'success', meta: { roomId } }, client);
+    });
+    return { ok: true, roomId, userId: targetUserId };
+  },
+
+  async removeMember(roomId, actorUser, targetUserId) {
+    await ensureRoomAccess(roomId, actorUser.sub);
+    if (!targetUserId) throw badRequest('ROOM_MEMBER_REQUIRED', 'Не выбран сотрудник', 'Укажите userId сотрудника для удаления.');
+    await withTransaction(async (client) => {
+      await roomsRepository.removeMember(roomId, targetUserId, client);
+      await auditRepository.create({ actorUserId: actorUser.sub, action: 'room.member_remove', target: targetUserId, result: 'success', meta: { roomId } }, client);
+    });
+    return { ok: true, roomId, userId: targetUserId };
+  },
+
+  async joinOpenRoom(roomId, actorUser) {
+    const room = await roomsRepository.findById(roomId);
+    if (!room) throw notFound('ROOM_NOT_FOUND', 'Комната не найдена', 'Указанная комната не существует.');
+    if (room.isPrivate) throw forbidden('ROOM_PRIVATE', 'Комната приватная', 'Для входа в приватную комнату нужно приглашение.');
+    await withTransaction(async (client) => {
+      await roomsRepository.addMembers(roomId, [actorUser.sub], client);
+      await auditRepository.create({ actorUserId: actorUser.sub, action: 'room.join_open', target: roomId, result: 'success' }, client);
+    });
+    return { ok: true, roomId, userId: actorUser.sub };
   },
 
   async messages(roomId, userId) {

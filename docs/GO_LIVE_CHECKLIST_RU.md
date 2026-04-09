@@ -5,6 +5,7 @@
 - `docker compose config` валиден;
 - `/api/health` возвращает `ok: true`;
 - `/api/release` возвращает актуальную версию и канал;
+- legacy API отключены явно: `/api/ai`, `/api/e2e`, `/api/qr_phone_auth` возвращают `410 LEGACY_ENDPOINT_DISABLED`;
 - логин/refresh/logout работают;
 - текстовая комната, файлы, поиск и закрепы работают;
 - голосовая комната показывает сотрудников, роли и статусы;
