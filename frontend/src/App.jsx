@@ -452,13 +452,9 @@ export function MainApp({user,token,onLogout}){
     <div style={{display:'flex',height:'100vh',background:C.bg,fontFamily:'system-ui,-apple-system,sans-serif',color:C.txt,overflow:'hidden'}}>
 
       {/* RAIL */}
-      <div style={{width:60,background:C.bg1,display:'flex',flexDirection:'column',alignItems:'center',padding:'12px 0',gap:6,borderRight:`1px solid ${C.brd}`,flexShrink:0}}>
-        <div style={{width:44,height:44,borderRadius:14,background:C.acc,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,fontWeight:800,color:'#fff',cursor:'pointer',transition:'border-radius .2s'}}
-          onMouseEnter={e=>e.currentTarget.style.borderRadius='10px'} onMouseLeave={e=>e.currentTarget.style.borderRadius='14px'}>С</div>
-        <div style={{width:32,height:1,background:C.brd,margin:'2px 0'}}/>
-        <Tooltip text="Чат">
-          <div style={{width:44,height:44,borderRadius:14,background:C.acc,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,cursor:'pointer'}}>💬</div>
-        </Tooltip>
+      <div style={{width:48,background:C.bg1,display:'flex',flexDirection:'column',alignItems:'center',padding:'10px 0',gap:6,borderRight:`1px solid ${C.brd}`,flexShrink:0}}>
+        <div style={{width:36,height:36,borderRadius:12,background:C.acc,display:'flex',alignItems:'center',justifyContent:'center',fontSize:16,fontWeight:800,color:'#fff',cursor:'pointer'}}>С</div>
+        <div style={{width:24,height:1,background:C.brd,margin:'2px 0'}}/>
         <div style={{marginTop:'auto',display:'flex',flexDirection:'column',gap:6,alignItems:'center'}}>
           <Tooltip text={`${user?.displayName} · Выйти`}>
             <div onClick={onLogout} style={{width:36,height:36,borderRadius:'50%',background:avC(user?.id),display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:700,color:'#fff',cursor:'pointer',position:'relative'}}>
@@ -470,7 +466,7 @@ export function MainApp({user,token,onLogout}){
       </div>
 
       {/* SIDEBAR */}
-      <div style={{width:224,background:C.bg1,display:'flex',flexDirection:'column',borderRight:`1px solid ${C.brd}`,flexShrink:0}}>
+      <div style={{width:200,background:C.bg1,display:'flex',flexDirection:'column',borderRight:`1px solid ${C.brd}`,flexShrink:0}}>
         <div style={{height:46,display:'flex',alignItems:'center',padding:'0 12px',borderBottom:`1px solid ${C.brd}`,gap:8,cursor:'pointer'}}
           onMouseEnter={e=>e.currentTarget.style.background=C.hov} onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
           <div style={{width:26,height:26,borderRadius:8,background:C.acc,display:'flex',alignItems:'center',justifyContent:'center',fontSize:12,fontWeight:800,color:'#fff'}}>С</div>
