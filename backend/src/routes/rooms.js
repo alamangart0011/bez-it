@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import { roomsService } from '../services/rooms.service.js';
+import { adminService } from '../services/admin.service.js';
 import { sendError } from '../lib/http-error.js';
 import { requirePermission } from '../middleware/permissions.js';
 import { createUploadMiddleware } from '../middleware/upload.js';
-import { validateEditMessagePayload, validateRoomSearchQuery, validateSendMessagePayload } from '../validators/rooms.validators.js';
+import { validateEditMessagePayload, validateRoomSearchQuery, validateSendMessagePayload, validateCreateRoomPayload } from '../validators/rooms.validators.js';
 
 function emitRoom(io, roomId, event, payload) {
   if (!io || !roomId) return;
@@ -24,17 +25,16 @@ export function buildRoomsRouter({ io, uploadRoot, maxUploadBytes }) {
 
   roomsRouter.post('/', requirePermission('rooms.create'), async (req, res) => {
     try {
-      const created = await roomsService.createRoom(req.user, req.body || {});
-      res.status(201).json(created);
-    } catch (error) {
-      return sendError(res, error);
-    }
-  });
-
-  roomsRouter.patch('/:roomId', requirePermission('rooms.create'), async (req, res) => {
-    try {
-      const updated = await roomsService.updateRoom(req.params.roomId, req.user, req.body || {});
-      res.json(updated);
+      const payload = validateCreateRoomPayload(req.body);
+      const room = await adminService.createRoom(req.user, {
+        name: payload.name,
+        kind: payload.kind,
+        isPrivate: false,
+        ownerUserId: req.user.sub,
+        memberIds: [],
+        moderatorIds: []
+      });
+      res.status(201).json(room);
     } catch (error) {
       return sendError(res, error);
     }
@@ -67,41 +67,6 @@ export function buildRoomsRouter({ io, uploadRoot, maxUploadBytes }) {
   roomsRouter.get('/:roomId/files', async (req, res) => {
     try {
       res.json(await roomsService.files(req.params.roomId, req.user.sub));
-    } catch (error) {
-      return sendError(res, error);
-    }
-  });
-
-  roomsRouter.get('/:roomId/members', async (req, res) => {
-    try {
-      res.json(await roomsService.members(req.params.roomId, req.user.sub));
-    } catch (error) {
-      return sendError(res, error);
-    }
-  });
-
-  roomsRouter.post('/:roomId/members', requirePermission('rooms.create'), async (req, res) => {
-    try {
-      const result = await roomsService.addMember(req.params.roomId, req.user, req.body?.userId);
-      res.status(201).json(result);
-    } catch (error) {
-      return sendError(res, error);
-    }
-  });
-
-  roomsRouter.delete('/:roomId/members/:userId', requirePermission('rooms.create'), async (req, res) => {
-    try {
-      const result = await roomsService.removeMember(req.params.roomId, req.user, req.params.userId);
-      res.json(result);
-    } catch (error) {
-      return sendError(res, error);
-    }
-  });
-
-  roomsRouter.post('/:roomId/join', async (req, res) => {
-    try {
-      const result = await roomsService.joinOpenRoom(req.params.roomId, req.user);
-      res.status(201).json(result);
     } catch (error) {
       return sendError(res, error);
     }
