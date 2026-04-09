@@ -219,9 +219,7 @@ function AuthPage({onAuth}){
           <div style={{fontSize:13,color:C.txt3,marginTop:4}}>Корпоративный контур связи</div>
         </div>
         <div style={{display:'flex',background:C.bg,borderRadius:10,padding:3,width:'100%',gap:2}}>
-          {[['pass','Пароль'],['phone','Телефон'],['qr','QR-код']].map(([k,l])=>(
-            <button key={k} onClick={()=>setTab(k)} style={tabS(k)}>{l}</button>
-          ))}
+          <button onClick={()=>setTab('pass')} style={tabS('pass')}>Пароль</button>
         </div>
 
         {tab==='pass'&&(
@@ -279,7 +277,7 @@ function AuthPage({onAuth}){
           </div>
         )}
         {err&&<div style={{color:C.red,fontSize:12,textAlign:'center',width:'100%',padding:'8px 12px',background:`${C.red}10`,borderRadius:6,border:`1px solid ${C.red}30`}}>⚠️ {err}</div>}
-        <div style={{fontSize:11,color:C.txt3}}>Signum V17 · Корпоративный контур · ЭЦП</div>
+        <div style={{fontSize:11,color:C.txt3}}>Корпоративный контур связи</div>
       </div>
       <style>{`@keyframes qrscan{0%{top:10px}50%{top:148px}100%{top:10px}}*{box-sizing:border-box}`}</style>
     </div>
@@ -458,17 +456,10 @@ export function MainApp({user,token,onLogout}){
         <div style={{width:44,height:44,borderRadius:14,background:C.acc,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,fontWeight:800,color:'#fff',cursor:'pointer',transition:'border-radius .2s'}}
           onMouseEnter={e=>e.currentTarget.style.borderRadius='10px'} onMouseLeave={e=>e.currentTarget.style.borderRadius='14px'}>С</div>
         <div style={{width:32,height:1,background:C.brd,margin:'2px 0'}}/>
-        {[['💬','Чат',true],['📋','Задачи',false],['📁','Файлы',false],['📊','Аналитика',false]].map(([ic,t,active])=>(
-          <Tooltip key={t} text={t}>
-            <div onClick={()=>notify(t)} style={{width:44,height:44,borderRadius:active?14:'50%',background:active?C.acc:C.bg3,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,cursor:'pointer',transition:'all .2s',...(active?{}:{})}}
-              onMouseEnter={e=>{e.currentTarget.style.borderRadius='14px';e.currentTarget.style.background=active?C.acc2:C.bg;}}
-              onMouseLeave={e=>{e.currentTarget.style.borderRadius=active?'14px':'50%';e.currentTarget.style.background=active?C.acc:C.bg3;}}>
-              {ic}
-            </div>
-          </Tooltip>
-        ))}
+        <Tooltip text="Чат">
+          <div style={{width:44,height:44,borderRadius:14,background:C.acc,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,cursor:'pointer'}}>💬</div>
+        </Tooltip>
         <div style={{marginTop:'auto',display:'flex',flexDirection:'column',gap:6,alignItems:'center'}}>
-          <Tooltip text="Настройки"><div onClick={()=>notify('Настройки')} style={{width:44,height:44,borderRadius:'50%',background:C.bg3,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,cursor:'pointer'}} onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background=C.bg3}>⚙</div></Tooltip>
           <Tooltip text={`${user?.displayName} · Выйти`}>
             <div onClick={onLogout} style={{width:36,height:36,borderRadius:'50%',background:avC(user?.id),display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:700,color:'#fff',cursor:'pointer',position:'relative'}}>
               {ini(user?.displayName||'?')}
