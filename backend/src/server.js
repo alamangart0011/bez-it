@@ -76,6 +76,18 @@ app.use('/api/voice', authMiddleware, buildVoiceRouter({ io }));
 app.use('/api/meetings', authMiddleware, meetingsRouter);
 app.use('/api/admin', authMiddleware, adminRouter);
 
+
+// TEMP AI compatibility endpoints (keep until frontend cleanup is deployed)
+app.post('/api/ai/rooms/:roomId/ask', authMiddleware, async (req, res) => {
+  return res.json({ reply: 'AI-модуль временно недоступен.' });
+});
+app.post('/api/ai/rooms/:roomId/summarize', authMiddleware, async (req, res) => {
+  return res.json({ summary: 'AI-модуль временно недоступен.' });
+});
+app.post('/api/ai/rooms/:roomId/draft', authMiddleware, async (req, res) => {
+  return res.json({ draft: 'AI-модуль временно недоступен.' });
+});
+
 app.use((req, res) => {
   res.status(404).json({ code: 'NOT_FOUND', title: 'Маршрут не найден', message: 'Проверьте адрес запроса.' });
 });
