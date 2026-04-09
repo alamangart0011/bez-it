@@ -71,9 +71,6 @@ const A = {
   voiceJoin:   (id)     => req('POST',`/api/voice/rooms/${id}/join`,{}),
   voiceLeave:  (id)     => req('POST',`/api/voice/rooms/${id}/leave`,{}),
   voiceSelf:   (id,d)   => req('PATCH',`/api/voice/rooms/${id}/self`,d),
-  aiAsk:       (id,q)   => req('POST',`/api/ai/rooms/${id}/ask`,{message:q}),
-  aiSum:       (id)     => req('POST',`/api/ai/rooms/${id}/summarize`,{limit:50}),
-  aiDraft:     (id,ctx) => req('POST',`/api/ai/rooms/${id}/draft`,{context:ctx,tone:'professional'}),
 };
 
 // Нормализация — поддерживает все форматы ответа API
@@ -302,9 +299,6 @@ export function MainApp({user,token,onLogout}){
   const[overlay,  setOverlay]  = useState(false);
   const[micOn,    setMic]      = useState(true);
   const[inVoice,  setInV]      = useState(false);
-  const[aiMsgs,   setAiMsgs]   = useState([{role:'assistant',text:'Привет! Я Сигнум AI.\n\n📋 @ai суммаризировать\n✍️ @ai черновик\n❓ @ai <вопрос>'}]);
-  const[aiInp,    setAiInp]    = useState('');
-  const[aiLoad,   setAiLoad]   = useState(false);
   const[toast,    setToast]    = useState(null);
   const[unread,   setUnread]   = useState({});
   const[search,   setSearch]   = useState('');
@@ -390,26 +384,10 @@ export function MainApp({user,token,onLogout}){
   async function sendMsg(){
     const text=input.trim();if(!text||!room)return;
     setInput('');if(inputRef.current)inputRef.current.style.height='auto';
-    if(text.toLowerCase().startsWith('@ai')){const q=text.slice(3).trim();if(panel!=='ai')setPanel('ai');doAI(q);return;}
     const tmp=nm({id:'tmp_'+Date.now(),content:text,userId:user?.id,displayName:user?.displayName,username:user?.username,userRole:user?.role,createdAt:new Date().toISOString()});
     setMsgs(p=>[...p,tmp]);
     try{await A.sendMsg(room.id,text);}
     catch{notify('Ошибка отправки','error');setMsgs(p=>p.filter(m=>m.id!==tmp.id));}
-  }
-
-  async function doAI(q){
-    if(!room){notify('Выберите комнату');return;}
-    const cmd=(q||'').toLowerCase().trim();
-    if(!cmd||cmd==='очистить'||cmd==='clear'){setAiMsgs([{role:'assistant',text:'История очищена.'}]);return;}
-    setAiMsgs(p=>[...p,{role:'user',text:q}]);setAiLoad(true);
-    try{
-      let text;
-      if(cmd==='суммаризировать'||cmd==='summarize'){const d=await A.aiSum(room.id);text='📋 Суммаризация:\n\n'+(d.summary||'Нет данных');}
-      else if(cmd==='черновик'||cmd==='draft'){const ctx=msgs.slice(-3).map(m=>m.content).join('\n');const d=await A.aiDraft(room.id,ctx);text='✍️ Черновик:\n\n'+(d.draft||d.text||'');setInput(d.draft||d.text||'');setTimeout(()=>inputRef.current?.focus(),100);}
-      else{const d=await A.aiAsk(room.id,q);text=d.reply||d.text||d.answer||'Нет ответа';}
-      setAiMsgs(p=>[...p,{role:'assistant',text}]);
-    }catch(e){setAiMsgs(p=>[...p,{role:'assistant',text:'❌ '+e.message}]);}
-    setAiLoad(false);
   }
 
   async function joinVoice(){if(!room)return;try{await A.voiceJoin(room.id);const s=await A.voiceState(room.id);setVoiceP(s?.participants||[]);setInV(true);setOverlay(true);notify('Вы в голосовом контуре','success');}catch(e){notify(e.message,'error');}}
@@ -447,7 +425,6 @@ export function MainApp({user,token,onLogout}){
     ...rooms.map(r=>({icon:r.kind==='voice'?'🎙':r.kind==='meeting'?'📋':'#',label:r.name,action:()=>{setRoom(r);setCmdOpen(false);}})),
     {icon:'＋',label:'Создать комнату',action:()=>{openModal('create_room');setCmdOpen(false);}},
     {icon:'👥',label:'Добавить участника',action:()=>{openModal('add_member');setCmdOpen(false);}},
-    {icon:'🤖',label:'AI-ассистент',action:()=>{setPanel('ai');setCmdOpen(false);}},
   ].filter(i=>!cmdQ||i.label.toLowerCase().includes(cmdQ.toLowerCase()));
 
   return(
@@ -569,7 +546,6 @@ export function MainApp({user,token,onLogout}){
             <IBtn icon="🔍" title="Поиск в комнате" active={!!search} onClick={()=>{if(search)setSearch('');else{const s=prompt('Поиск:');if(s)setSearch(s);}}}/>
             <IBtn icon="📌" title="Закреплённые" onClick={()=>{const p=msgs.filter(m=>m.isPinned);notify(p.length?`${p.length} закреплённых`:'Нет закреплённых');}}/>
             <IBtn icon="👥" title="Участники" active={panel==='members'} onClick={()=>setPanel(p=>p==='members'?'none':'members')}/>
-            <IBtn icon="🤖" title="AI-ассистент" active={panel==='ai'} onClick={()=>setPanel(p=>p==='ai'?'none':'ai')}/>
             <IBtn icon="➕" title="Добавить участника" onClick={()=>openModal('add_member')}/>
             <IBtn icon="⚙" title="Настройки комнаты" onClick={()=>room&&openModal('room_settings',room)}/>
             <IBtn icon="📺" title="Overlay" active={overlay} onClick={()=>setOverlay(v=>!v)}/>
@@ -611,7 +587,7 @@ export function MainApp({user,token,onLogout}){
               <button onClick={()=>notify('Прикрепить файл')} style={{background:'none',border:'none',color:C.txt3,fontSize:20,cursor:'pointer',padding:0,flexShrink:0}} onMouseEnter={e=>e.currentTarget.style.color=C.txt} onMouseLeave={e=>e.currentTarget.style.color=C.txt3}>＋</button>
               <textarea ref={inputRef} value={input} onChange={e=>setInput(e.target.value)}
                 onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}}
-                placeholder={`Написать в #${room?.name}... (@ai вопрос)`}
+                placeholder={`Написать в #${room?.name}...`}
                 rows={1} style={{flex:1,background:'transparent',border:'none',color:C.txt,fontSize:13,resize:'none',outline:'none',minHeight:22,maxHeight:160,lineHeight:1.55,fontFamily:'inherit'}}
                 onInput={e=>{e.target.style.height='auto';e.target.style.height=Math.min(e.target.scrollHeight,160)+'px';}}/>
               <div style={{display:'flex',gap:3,flexShrink:0,alignItems:'center'}}>
@@ -620,7 +596,7 @@ export function MainApp({user,token,onLogout}){
                 <button onClick={sendMsg} style={{width:32,height:32,borderRadius:8,background:input.trim()?C.acc:C.bg3,border:'none',color:input.trim()?'#fff':C.txt3,cursor:input.trim()?'pointer':'default',fontSize:14,display:'flex',alignItems:'center',justifyContent:'center',transition:'all .15s',flexShrink:0}}>➤</button>
               </div>
             </div>
-            <div style={{fontSize:11,color:C.txt3,marginTop:3,paddingLeft:3}}>Enter — отправить · Shift+Enter — новая строка · @ai — AI-ассистент</div>
+            <div style={{fontSize:11,color:C.txt3,marginTop:3,paddingLeft:3}}>Enter — отправить · Shift+Enter — новая строка</div>
           </div>
         )}
       </div>
@@ -656,39 +632,6 @@ export function MainApp({user,token,onLogout}){
             onMouseLeave={e=>{e.currentTarget.style.borderColor=C.brd;e.currentTarget.style.color=C.txt3;e.currentTarget.style.background='transparent';}}>
             <span style={{fontSize:14}}>＋</span> Добавить участника
           </button>
-        </div>
-      )}
-
-      {/* AI PANEL */}
-      {panel==='ai'&&(
-        <div style={{width:280,background:C.bg1,borderLeft:`1px solid ${C.brd}`,display:'flex',flexDirection:'column',flexShrink:0}}>
-          <div style={{padding:'12px 14px 8px',borderBottom:`1px solid ${C.brd}`,display:'flex',alignItems:'center',gap:8}}>
-            <span style={{fontSize:20}}>🤖</span>
-            <div style={{flex:1}}><div style={{fontSize:13,fontWeight:600,color:C.txt}}>Сигнум AI</div><div style={{fontSize:11,color:C.txt3}}>{room?.name||'Выберите комнату'}</div></div>
-            <button onClick={()=>setPanel('none')} style={{background:'none',border:'none',color:C.txt3,cursor:'pointer',fontSize:14}}>✕</button>
-          </div>
-          <div style={{padding:'8px',display:'flex',gap:5,flexWrap:'wrap',borderBottom:`1px solid ${C.brd}`}}>
-            {[['📋 Суммаризировать','суммаризировать'],['✍️ Черновик','черновик'],['🗑 Очистить','очистить']].map(([l,cmd])=>(
-              <button key={cmd} onClick={()=>doAI(cmd)} style={{padding:'4px 8px',borderRadius:6,background:`${C.acc}12`,border:`1px solid ${C.acc}25`,color:C.acc,fontSize:11,fontWeight:500,cursor:'pointer'}}
-                onMouseEnter={e=>e.currentTarget.style.background=`${C.acc}22`} onMouseLeave={e=>e.currentTarget.style.background=`${C.acc}12`}>{l}</button>
-            ))}
-          </div>
-          <div style={{flex:1,overflowY:'auto',padding:12,display:'flex',flexDirection:'column',gap:8}}>
-            {aiMsgs.map((m,i)=>(
-              <div key={i} style={{display:'flex',flexDirection:'column',gap:2,alignItems:m.role==='user'?'flex-end':'flex-start'}}>
-                <span style={{fontSize:10,color:C.txt3}}>{m.role==='user'?'Вы':'AI'}</span>
-                <div style={{maxWidth:'90%',padding:'8px 11px',borderRadius:m.role==='user'?'12px 12px 4px 12px':'12px 12px 12px 4px',background:m.role==='user'?C.acc:C.bg3,color:m.role==='user'?'#fff':C.txt,fontSize:12,lineHeight:1.6,whiteSpace:'pre-wrap',wordBreak:'break-word'}}>{m.text}</div>
-              </div>
-            ))}
-            {aiLoad&&<div style={{display:'flex',gap:4,padding:'8px 11px',background:C.bg3,borderRadius:12,width:'fit-content'}}>{[0,1,2].map(i=><div key={i} style={{width:6,height:6,borderRadius:'50%',background:C.txt3,animation:`bounce .8s ${i*.15}s ease-in-out infinite`}}/>)}</div>}
-          </div>
-          <div style={{padding:8,borderTop:`1px solid ${C.brd}`,display:'flex',gap:6,alignItems:'flex-end'}}>
-            <textarea value={aiInp} onChange={e=>setAiInp(e.target.value)}
-              onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();if(aiInp.trim()){doAI(aiInp);setAiInp('');}}}}
-              placeholder="Задать вопрос..." rows={1}
-              style={{flex:1,border:`1px solid ${C.brd}`,borderRadius:8,padding:'8px 10px',color:C.txt,fontSize:12,outline:'none',resize:'none',minHeight:34,maxHeight:80,background:C.bg,fontFamily:'inherit'}}/>
-            <button onClick={()=>{if(aiInp.trim()){doAI(aiInp);setAiInp('');}}} style={{width:34,height:34,borderRadius:8,background:C.acc,border:'none',color:'#fff',cursor:'pointer',fontSize:13,flexShrink:0}}>➤</button>
-          </div>
         </div>
       )}
 
