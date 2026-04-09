@@ -1,0 +1,16 @@
+# Runtime secrets
+.env
+
+# Dependencies/build outputs
+backend/node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# Runtime data
+uploads/
+
+# Local ops artifacts (must stay off git)
+backups/*
+!backups/.gitkeep
+deploy/fixpacks/*
+!deploy/fixpacks/.gitkeep

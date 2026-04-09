@@ -68,6 +68,32 @@ export const roomsRepository = {
     return res.rows[0];
   },
 
+  async updateById(roomId, patch = {}, client = pool) {
+    const sets = [];
+    const values = [roomId];
+    if (patch.name !== undefined) {
+      values.push(patch.name);
+      sets.push(`name = $${values.length}`);
+    }
+    if (patch.kind !== undefined) {
+      values.push(patch.kind);
+      sets.push(`kind = $${values.length}`);
+    }
+    if (patch.isPrivate !== undefined) {
+      values.push(Boolean(patch.isPrivate));
+      sets.push(`is_private = $${values.length}`);
+    }
+    if (!sets.length) return this.findById(roomId);
+    const res = await client.query(
+      `update rooms
+       set ${sets.join(', ')}
+       where id = $1
+       returning ${roomFields('rooms')}`,
+      values
+    );
+    return res.rows[0] || null;
+  },
+
   async setArchived(roomId, isArchived = true, client = pool) {
     const res = await client.query(
       `update rooms set is_archived = $2 where id = $1 returning ${roomFields('rooms')}`,
@@ -96,6 +122,13 @@ export const roomsRepository = {
         [roomId, userId]
       );
     }
+  },
+
+  async removeMember(roomId, userId, client = pool) {
+    await client.query(
+      `delete from room_members where room_id = $1 and user_id = $2`,
+      [roomId, userId]
+    );
   },
 
   async userHasAccess(roomId, userId) {
