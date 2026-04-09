@@ -48,6 +48,10 @@
 ## Стендовые данные
 - логин: `admin@corpchat.local`
 - пароль: `admin123`
+- логин: `anna@corpchat.local`
+- пароль: `admin123`
+- логин: `pavel@corpchat.local`
+- пароль: `admin123`
 - демонстрационный токен приглашения: `invite_demo_stage2_2026`
 
 ## Документация
@@ -73,7 +77,7 @@
 
 ## Финальный хостинговый пакет
 - `deploy/jino_one_command.sh` — единая команда для Jino baseline;
-- `deploy/post_deploy_check.sh` — быстрый пост-деплой прогон;
+- `deploy/post_deploy_check.sh` — быстрый пост-деплой прогон (health/release + контроль `410` для legacy endpoint-ов);
 - `docs/JINO_FINAL_DEPLOY_RU.md` — краткий runbook выкладки;
 - `docs/GO_LIVE_CHECKLIST_RU.md` — go-live список перед понедельничным запуском.
 
@@ -83,4 +87,8 @@
 - `deploy/backup_db.sh` — резервная копия PostgreSQL.
 - `deploy/restore_db.sh <file.sql.gz>` — восстановление дампа PostgreSQL.
 - `deploy/collect_logs.sh` — сбор логов `api/web/db` перед разбором инцидента.
+- `deploy/dev_room_smoke.sh` — единый smoke для подъёма контура, health/release, login и проверки room-flow без ручного копирования длинных команд.
+- `deploy/remote_dev_room_smoke.sh` — удалённый запуск smoke по SSH на `PROJECT_DIR` (если локального `/workspace/...` пути нет).
 - `/api/live`, `/api/ready`, `/api/health`, `/api/release` — рабочие точки для runtime-диагностики.
+- `/api/ai/*`, `/api/e2e/*`, `/api/qr_phone_auth/*` — возвращают `410 LEGACY_ENDPOINT_DISABLED` как явный сигнал отключённого legacy-контура.
+- `/api/voice-sessions` и `/api/ai-jobs/*` — новый V18 API под auth guard (без токена в smoke ожидается `401`).

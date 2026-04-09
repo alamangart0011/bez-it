@@ -14,6 +14,7 @@ cd /opt/messenger/contour-chat-jino-final && ./deploy/jino_one_command.sh
 6. Проверяет локальный health.
 7. Гоняет smoke API.
 8. Проверяет `/api/release` и внешний `api/health`.
+9. Проверяет, что legacy API (`/api/ai`, `/api/e2e`, `/api/qr_phone_auth`) отвечают `410`.
 
 ## Что проверить руками после деплоя
 - логин под `admin@corpchat.local`;
@@ -24,3 +25,6 @@ cd /opt/messenger/contour-chat-jino-final && ./deploy/jino_one_command.sh
 - перенос участника;
 - комнату для собраний;
 - админ-центр.
+- `curl -sS -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8080/api/ai` возвращает `410`;
+- `curl -sS -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8080/api/e2e` возвращает `410`;
+- `curl -sS -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8080/api/qr_phone_auth` возвращает `410`.
