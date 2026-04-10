@@ -1,0 +1,46 @@
+{
+  "project_name": "Contour Chat V17",
+  "repository": "alamangart0011/contour-chat-v17",
+  "active_baseline": "room-based-v17",
+  "active_deploy_path": "/opt/messenger/contour-chat-jino-final",
+  "active_domain": "https://ai.voice.oboron-it.ru",
+  "source_of_truth": "github",
+  "do_not_use_as_active": [
+    "messenger-first",
+    "legacy handoff archives",
+    "parallel release branches"
+  ],
+  "read_order": [
+    "START_HERE_GITHUB_RU.md",
+    "docs/CHATGPT_SOURCE_OF_TRUTH_RU.md",
+    "docs/NEW_CHAT_GITHUB_BOOTSTRAP_RU.txt",
+    "docs/PROJECT_MANIFEST_RU.json",
+    "docs/ACTIVE_STATUS_RU.md",
+    "docs/BACKLOG_P0_P1_P2_RU.md",
+    "README.md",
+    "docker-compose.yml",
+    "deploy/",
+    "infra/sql/",
+    "backend/src/",
+    "frontend/src/"
+  ],
+  "product_model": {
+    "type": "room-based workspace",
+    "core_objects": [
+      "text rooms",
+      "voice rooms",
+      "meeting rooms",
+      "admin center",
+      "profiles",
+      "roles and permissions",
+      "audit"
+    ]
+  },
+  "new_chat_rules": [
+    "start from GitHub, not from old chat fragments",
+    "treat GitHub as the main disk",
+    "work only on top of room-based V17",
+    "do not re-open messenger-first as active UI",
+    "do not create parallel active canons"
+  ]
+}
