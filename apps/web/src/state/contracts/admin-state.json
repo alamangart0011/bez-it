@@ -1,0 +1,5 @@
+{
+  "data": ["overview", "users", "rooms", "auditRows"],
+  "ui": ["isLoading", "activeTab", "filters"],
+  "actions": ["loadOverview", "loadUsers", "openRoomCreate", "openAudit"]
+}
