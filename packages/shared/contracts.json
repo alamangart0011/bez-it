@@ -1,0 +1,16 @@
+{
+  "product": "SIGNALUM Voice AI Portal",
+  "domains": [
+    "auth",
+    "rooms",
+    "memberships",
+    "messages",
+    "calls",
+    "transcripts",
+    "assistants",
+    "knowledge",
+    "actions"
+  ],
+  "primary_mode": "voice-first",
+  "primary_surface": "rooms"
+}
