@@ -1,0 +1,15 @@
+{
+  "baseline": "room-based-v17",
+  "rewrite_mapping": [
+    {"target": "README.md", "source": "docs/README_CANONICAL_CHAT3_RU.md"},
+    {"target": "CHANGELOG_RU.md", "source": "docs/CHANGELOG_CANONICAL_RU.md"},
+    {"target": "docs/LATEST_STATE_RU.md", "source": "docs/LATEST_STATE_CANONICAL_CHAT3_RU.md"},
+    {"target": "docs/REPO_MAP_RU.md", "source": "docs/REPO_MAP_CANONICAL_CHAT3_RU.md"},
+    {"target": "docs/PATHS_AND_ENTRYPOINTS_RU.md", "source": "docs/PATHS_CANONICAL_CHAT3_RU.md"},
+    {"target": "docs/BOOT_CHECKLIST_RU.md", "source": "docs/BOOT_CHECKLIST_CANONICAL_CHAT3_RU.md"},
+    {"target": "docs/DECISION_RULES_RU.md", "source": "docs/DECISIONS_CANONICAL_CHAT3_RU.md"},
+    {"target": "docs/ONE_PROMPT_ANY_CHAT_RU.txt", "source": "docs/ONE_PROMPT_CANONICAL_CHAT3_RU.txt"},
+    {"target": "docs/NEW_CHAT_SCENARIOS_RU.md", "source": "docs/NEW_CHAT_SCENARIOS_CANONICAL_CHAT3_RU.md"},
+    {"target": "docs/TASK_MODES_RU.json", "source": "docs/TASK_MODES_CANONICAL_CHAT3_RU.json"}
+  ]
+}
