@@ -1,0 +1,33 @@
+Работаем только от GitHub repo alamangart0011/contour-chat-v17.
+
+Сначала прочитай в таком порядке:
+1. CHATGPT_START_HERE_RU.md
+2. docs/PROJECT_BOOT_MANIFEST_RU.json
+3. docs/LATEST_STATE_RU.md
+4. docs/REPO_MAP_RU.md
+5. docs/FOLDER_NAMING_CONVENTIONS_RU.md
+6. docs/DECISION_RULES_RU.md
+7. README.md
+8. docker-compose.yml
+9. deploy/
+10. infra/sql/
+11. backend/src/
+12. frontend/src/
+
+Жёсткие правила:
+- активный продуктовый канон только room-based V17 baseline
+- messenger-first не считать активным каноном
+- GitHub считать главным источником истины и рабочим диском
+- старые архивы использовать только как reference, если в GitHub чего-то нет
+- не начинать новый анализ с нуля, если информация уже есть в GitHub
+- все новые решения собирать только в этот репозиторий
+- не плодить параллельные активные ветки
+
+Сначала дай краткий статус:
+- что уже есть в коде
+- что сломано
+- что осталось
+- где active baseline
+- какие P0 стопперы есть прямо сейчас
+
+Только после этого переходи к изменениям.
