@@ -1,0 +1,24 @@
+{
+  "name": "Сигнум",
+  "short_name": "Сигнум",
+  "description": "Корпоративная связь и комнаты",
+  "lang": "ru",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B1511",
+  "theme_color": "#19C37D",
+  "icons": [
+    {
+      "src": "/app-icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "64x64",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
