@@ -1,0 +1,29 @@
+{
+  "project": "Contour Chat V17",
+  "repository": "alamangart0011/contour-chat-v17",
+  "source_of_truth": "github",
+  "active_baseline": "room-based-v17",
+  "deploy_path": "/opt/messenger/contour-chat-jino-final",
+  "domain": "https://ai.voice.oboron-it.ru",
+  "start_file": "CHATGPT_START_HERE_RU.md",
+  "read_order": [
+    "CHATGPT_START_HERE_RU.md",
+    "docs/PROJECT_BOOT_MANIFEST_RU.json",
+    "docs/ONE_PROMPT_ANY_CHAT_RU.txt",
+    "docs/LATEST_STATE_RU.md",
+    "docs/REPO_MAP_RU.md",
+    "docs/PATHS_AND_ENTRYPOINTS_RU.md",
+    "docs/DECISION_RULES_RU.md",
+    "README.md",
+    "docker-compose.yml",
+    "deploy/",
+    "infra/sql/",
+    "backend/src/",
+    "frontend/src/"
+  ],
+  "do_not_use_as_active": [
+    "messenger-first",
+    "legacy archives",
+    "parallel release branches"
+  ]
+}
