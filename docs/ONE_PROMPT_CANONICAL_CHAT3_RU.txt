@@ -1,0 +1,7 @@
+Работаем только от GitHub repo alamangart0011/contour-chat-v17.
+Активный baseline: room-based-v17.
+GitHub считать главным источником истины.
+Сначала читать README, LATEST_STATE, REPO_MAP, PATHS, BOOT_CHECKLIST, DECISION_RULES.
+Сначала давать status по репозиторию.
+Messenger-first не считать активным каноном.
+Старые архивы использовать только как reference.
