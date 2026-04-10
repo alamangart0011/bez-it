@@ -1,0 +1,35 @@
+AI TRIAD V24-V26 — стартовый пакет реализации
+
+Состав:
+- 01_AI_TRIAD_ARCHITECTURE_RU.md
+- 02_AI_CENTER_UI_RU.md
+- 03_AI_MEMORY_SCHEMA_RU.md
+- 04_INGESTION_REVIEW_GATES_RU.md
+- 05_ROLE_PROMPTS_CONTRACT_RU.md
+- 06_V24_V26_IMPLEMENTATION_PLAN_RU.md
+- 07_SQL_SCHEMA_DRAFT.sql
+- 08_API_CONTRACT_DRAFT_RU.md
+- 09_ACCEPTANCE_CHECKLIST_RU.md
+
+Что это такое:
+Это не общий обзор, а рабочий пакет под V24-V26 для room-based baseline.
+
+Принятое решение:
+- V21/V22/V23 считаются отдельным контуром и здесь не трогаются.
+- Активный фокус: V24 AI Memory Core, V25 AI Triad Rooms, V26 Automated Ingestion and Regression Gates.
+- Внутри портала делаются 3 ИИ:
+  1. Юрист AI
+  2. Инженер ИБ AI
+  3. Общие вопросы AI
+
+Ключевой принцип:
+Никакого online self-learning весов модели в production.
+Самообучение реализуется как controlled memory + ingestion + approval + regression gates.
+
+Следующий инженерный ход:
+- schema migrations
+- AI Center UI
+- AI rooms in shell
+- ingestion queue
+- review/publish flow
+- evaluation + regression checks
