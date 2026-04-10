@@ -1,0 +1,5 @@
+{
+  "data": ["rooms", "activeRoom", "members", "messages"],
+  "ui": ["isLoading", "isConnecting", "composerState"],
+  "actions": ["selectRoom", "refreshRoom", "openCall", "sendMessage"]
+}
