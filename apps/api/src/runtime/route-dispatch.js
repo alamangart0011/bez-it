@@ -4,5 +4,7 @@ module.exports = {
   '/api/transcripts': 'transcripts',
   '/api/assistant': 'assistant',
   '/api/profile': 'memberships',
-  '/api/admin': 'admin'
+  '/api/memberships': 'memberships',
+  '/api/admin': 'actions',
+  '/api/actions': 'actions'
 };

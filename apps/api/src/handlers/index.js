@@ -1,5 +1,8 @@
 module.exports = {
   rooms: require('./rooms-handler'),
   calls: require('./calls-handler'),
-  admin: require('./admin-handler')
+  memberships: require('./memberships-handler'),
+  transcripts: require('./transcripts-handler'),
+  assistant: require('./assistant-handler'),
+  actions: require('./admin-handler')
 };

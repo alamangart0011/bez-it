@@ -3,18 +3,27 @@ const runtimeResponse = require('./runtime-response');
 
 module.exports = {
   dispatch(req, res) {
-    const url = req.url || '/';
-    const domain = serverRuntime.resolveDomain(url);
-    const handler = serverRuntime.resolveHandler(url);
+    const domain = serverRuntime.resolveDomain(req.url || '/');
+    const handler = serverRuntime.resolveHandler(req.url || '/');
 
-    if (!domain || !handler) {
+    if (!domain) {
       return false;
     }
 
-    return runtimeResponse.ok(res, {
-      routed: true,
+    if (!handler || typeof handler.handle !== 'function') {
+      return runtimeResponse.ok(res, {
+        routed: true,
+        domain,
+        runtime: 'pending'
+      });
+    }
+
+    handler.handle(req, res, {
       domain,
-      handler
+      runtime: serverRuntime,
+      runtimeResponse
     });
+
+    return true;
   }
 };
