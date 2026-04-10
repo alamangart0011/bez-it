@@ -1,0 +1,30 @@
+{
+  "baseline": "room-based-v17",
+  "source_of_truth": "GitHub",
+  "status": "merge_ready",
+  "master_doc": "docs/CHATS_MERGE_MASTER_RU.md",
+  "whitepatch": {
+    "transfer_doc": "docs/WHITEPATCH_GITHUB_TRANSFER_RU.md",
+    "manifest": "docs/WHITEPATCH_MANIFEST_RU.json",
+    "summary": "docs/WHITEPATCH_STATUS_SUMMARY_RU.json",
+    "verification": "docs/WHITEPATCH_VERIFICATION_RU.md"
+  },
+  "handoff": {
+    "status": "docs/HANDOFF_STATUS_RU.md",
+    "sync": "docs/HANDOFF_SYNC_STATUS_RU.md",
+    "close_plan": "docs/HANDOFF_CLOSE_PLAN_RU.md"
+  },
+  "rewrite": {
+    "plan": "docs/TRACKED_REWRITE_PLAN_RU.md",
+    "mapping": "docs/TRACKED_REWRITE_MAPPING_RU.json"
+  },
+  "live_acceptance": {
+    "status": "docs/LIVE_ACCEPTANCE_STATUS_RU.md",
+    "checkpoints": "docs/LIVE_ACCEPTANCE_CHECKPOINTS_RU.md"
+  },
+  "pending": [
+    "tracked_files_rewrite",
+    "live_acceptance_confirm",
+    "final_handoff_sync"
+  ]
+}
