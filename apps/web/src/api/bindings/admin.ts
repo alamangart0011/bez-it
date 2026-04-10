@@ -1,6 +1,10 @@
 export const adminBinding = {
   page: 'admin',
   domain: 'actions',
+  endpoint: '/api/actions',
   queries: ['getOverview', 'listUsers', 'listRooms', 'listAudit'],
-  commands: ['createRoom', 'inviteUser', 'updateRole']
+  commands: ['openAdmin'],
+  buildRequest() {
+    return this.endpoint;
+  }
 };
