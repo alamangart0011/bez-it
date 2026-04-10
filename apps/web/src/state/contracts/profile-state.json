@@ -1,0 +1,5 @@
+{
+  "data": ["profile", "sessions", "settings"],
+  "ui": ["isLoading", "isEditing"],
+  "actions": ["loadProfile", "saveProfile", "openSettings", "openSessions"]
+}
