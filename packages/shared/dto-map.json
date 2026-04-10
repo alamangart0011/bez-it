@@ -1,0 +1,7 @@
+{
+  "rooms": ["RoomDto", "RoomMemberDto", "RoomEventDto"],
+  "calls": ["CallSessionDto", "ParticipantStateDto", "MediaStateDto"],
+  "profile": ["ProfileDto", "SessionDto"],
+  "admin": ["OverviewDto", "UserDto", "AuditRowDto"],
+  "transcripts": ["TranscriptDto", "TranscriptChunkDto", "SummaryDto"]
+}
