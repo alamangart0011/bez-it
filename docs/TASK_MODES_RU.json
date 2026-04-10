@@ -1,0 +1,48 @@
+{
+  "modes": {
+    "status": {
+      "goal": "быстро понять состояние репозитория без изменения кода",
+      "steps": [
+        "прочитать bootstrap файлы",
+        "подтвердить active baseline",
+        "проверить deploy sql backend frontend",
+        "дать краткий status"
+      ]
+    },
+    "recovery": {
+      "goal": "найти runtime schema deploy стоппер",
+      "steps": [
+        "проверить auth runtime",
+        "проверить rooms runtime",
+        "проверить voice runtime",
+        "проверить admin runtime",
+        "проверить sql parity"
+      ]
+    },
+    "design": {
+      "goal": "работать над UX UI branding без смены продуктового канона",
+      "steps": [
+        "не уходить в messenger-first",
+        "сначала дать варианты",
+        "потом выбрать главный стиль"
+      ]
+    },
+    "release": {
+      "goal": "готовить baseline к выкладке",
+      "steps": [
+        "проверить deploy scripts",
+        "проверить sql apply path",
+        "проверить smoke post-check"
+      ]
+    },
+    "code": {
+      "goal": "писать или менять код по active baseline",
+      "steps": [
+        "сначала status по runtime",
+        "потом точка входа",
+        "потом минимально нужный слой",
+        "после обновить state changelog"
+      ]
+    }
+  }
+}
