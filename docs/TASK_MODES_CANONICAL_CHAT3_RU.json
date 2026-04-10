@@ -1,0 +1,11 @@
+{
+  "task_modes": [
+    "status",
+    "recovery",
+    "release",
+    "handoff",
+    "code"
+  ],
+  "baseline": "room-based-v17",
+  "source_of_truth": "GitHub"
+}
