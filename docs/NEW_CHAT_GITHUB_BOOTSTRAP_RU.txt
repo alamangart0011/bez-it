@@ -1,0 +1,58 @@
+РАБОТАЕМ ТОЛЬКО ОТ GITHUB КАК ОТ ИСТОЧНИКА ИСТИНЫ.
+
+Активный репозиторий:
+- alamangart0011/contour-chat-v17
+
+Активный продуктовый канон:
+- room-based V17 baseline
+- один baseline
+- один deploy path
+- один shell
+- один admin center
+- messenger-first НЕ считать активным каноном
+
+Откуда поднимать информацию в первую очередь:
+1. docs/CHATGPT_SOURCE_OF_TRUTH_RU.md
+2. docs/NEW_CHAT_GITHUB_BOOTSTRAP_RU.txt
+3. README.md
+4. docker-compose.yml
+5. deploy/
+6. infra/sql/
+7. backend/src/
+8. frontend/src/
+9. docs/
+
+Что считать главным:
+- текущий active baseline = contour-chat-v17
+- всё, что уже лежит в этом репозитории, считать главным рабочим источником
+- внешние архивы и старые handoff-пакеты использовать только как reference, если в GitHub чего-то нет
+
+Что делать в новом чате:
+1. сначала прочитать GitHub-структуру и зафиксировать active baseline
+2. составить краткий status: что уже есть в коде, что сломано, что осталось
+3. работать только поверх room-based V17
+4. не плодить новые параллельные продуктовые ветки
+5. не уходить в messenger-first
+6. все новые решения собирать в этот же репозиторий
+
+Что запрещено:
+- начинать новый анализ с нуля, игнорируя GitHub
+- тащить новый активный канон вне contour-chat-v17
+- разносить продукт по нескольким равноправным веткам
+- делать пустые UI-экраны и пустые кнопки
+
+Минимальный стартовый порядок чтения:
+- docs/CHATGPT_SOURCE_OF_TRUTH_RU.md
+- docs/NEW_CHAT_GITHUB_BOOTSTRAP_RU.txt
+- docs/
+- infra/sql/
+- deploy/
+- backend/src/routes
+- backend/src/services
+- backend/src/repositories
+- frontend/src/App.jsx или текущий shell-entry
+
+Цель:
+- поднимать весь проект из GitHub как из диска
+- все решения и тексты брать прежде всего из GitHub
+- новый чат должен опираться на GitHub, а не на обрывки старых сообщений
