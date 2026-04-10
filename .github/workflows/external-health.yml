@@ -1,0 +1,13 @@
+name: external-health
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/30 * * * *'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check external health
+        run: curl -fsS "${{ secrets.JINO_EXTERNAL_HEALTH_URL }}"
