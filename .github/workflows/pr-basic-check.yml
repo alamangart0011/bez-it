@@ -1,0 +1,13 @@
+name: pr-basic-check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  basic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Basic check
+        run: echo OK
