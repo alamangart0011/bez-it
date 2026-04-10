@@ -1,0 +1,49 @@
+name: Deploy Jino baseline on main
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-jino-main
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Start ssh-agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.JINO_DEPLOY_SSH_KEY }}
+
+      - name: Add VPS host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "${{ secrets.JINO_DEPLOY_PORT }}" "${{ secrets.JINO_DEPLOY_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Verify remote access
+        run: |
+          ssh -p "${{ secrets.JINO_DEPLOY_PORT }}" \
+            "${{ secrets.JINO_DEPLOY_USER }}@${{ secrets.JINO_DEPLOY_HOST }}" \
+            "echo CONNECT_OK && whoami && hostname"
+
+      - name: Deploy baseline
+        env:
+          APP_DIR: ${{ secrets.JINO_APP_DIR }}
+          DEPLOY_REF: ${{ github.sha }}
+        run: |
+          ssh -p "${{ secrets.JINO_DEPLOY_PORT }}" \
+            "${{ secrets.JINO_DEPLOY_USER }}@${{ secrets.JINO_DEPLOY_HOST }}" \
+            "export APP_DIR='${APP_DIR:-/opt/messenger/contour-chat-jino-final}' DEPLOY_REF='${DEPLOY_REF}' && bash /opt/messenger/contour-chat-jino-final/deploy/gh_actions_remote_pull_and_deploy.sh"
+
+      - name: Post summary
+        run: |
+          echo "Deployed commit: ${{ github.sha }}"
+          echo "Target host: ${{ secrets.JINO_DEPLOY_HOST }}:${{ secrets.JINO_DEPLOY_PORT }}"
