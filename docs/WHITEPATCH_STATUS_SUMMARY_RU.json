@@ -1,0 +1,18 @@
+{
+  "baseline": "room-based-v17",
+  "source_of_truth": "GitHub",
+  "whitepatch_status": "document_layer_ready",
+  "document_completion_percent": 99,
+  "remaining_percent": 1,
+  "pending": [
+    "tracked_files_rewrite",
+    "live_acceptance_confirm",
+    "final_handoff_sync"
+  ],
+  "next_steps": [
+    "rewrite tracked files",
+    "confirm live acceptance for voice and meeting",
+    "close final handoff sync",
+    "move to sandbox and SSH stage"
+  ]
+}
