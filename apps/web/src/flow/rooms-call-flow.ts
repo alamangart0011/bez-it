@@ -7,5 +7,9 @@ export const roomsCallFlow = {
     'openTranscript',
     'openAssistant'
   ],
-  exit: 'profile'
+  exit: 'profile',
+  runtime: {
+    execute: 'executeRoomsCallFlow',
+    chain: ['rooms', 'calls', 'transcript', 'assistant']
+  }
 };
