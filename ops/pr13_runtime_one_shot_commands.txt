@@ -1,0 +1,13 @@
+cd /opt/messenger/contour-chat-jino-final && \
+
+git apply patches/runtime-web-switch.patch && \
+
+git apply patches/runtime-preview-nginx.patch && \
+
+docker compose -f docker-compose.runtime-web.yml build --no-cache && \
+
+docker compose -f docker-compose.runtime-web.yml up -d && \
+
+docker compose -f docker-compose.runtime-web.yml ps && \
+
+curl -I http://127.0.0.1:3300/
