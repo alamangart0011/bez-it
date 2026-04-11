@@ -1,0 +1,91 @@
+diff --git a/apps/web/src/pages/rooms-page.ts b/apps/web/src/pages/rooms-page.ts
+index 8552cab..0000000 100644
+--- a/apps/web/src/pages/rooms-page.ts
++++ b/apps/web/src/pages/rooms-page.ts
+@@
+-export const roomsPage = {
+-  title: 'Комнаты',
+-  sections: ['Список комнат', 'Активная комната', 'Правая панель'],
+-  actions: ['Создать комнату', 'Войти в голос', 'Открыть чат'],
+-  states: ['empty', 'loaded', 'active'],
+-  runtime: {
+-    page: 'rooms',
+-    execute: 'executeRoomsPage',
+-    hydrate: '/api/rooms'
+-  }
+-};
++export { roomsPageNext as roomsPage } from './rooms-page-next';
+
+diff --git a/apps/web/src/pages/calls-page.ts b/apps/web/src/pages/calls-page.ts
+index 8a0bb39..0000000 100644
+--- a/apps/web/src/pages/calls-page.ts
++++ b/apps/web/src/pages/calls-page.ts
+@@
+-export const callsPage = {
+-  title: 'Звонки',
+-  sections: ['Текущий звонок', 'История', 'Устройства'],
+-  actions: ['Начать звонок', 'Присоединиться', 'Завершить'],
+-  states: ['idle', 'connecting', 'active'],
+-  runtime: {
+-    page: 'calls',
+-    execute: 'executeCallsPage',
+-    hydrate: '/api/calls'
+-  }
+-};
++export { callsPageNext as callsPage } from './calls-page-next';
+
+diff --git a/apps/web/src/views/rooms-view.ts b/apps/web/src/views/rooms-view.ts
+index b5a5a80..0000000 100644
+--- a/apps/web/src/views/rooms-view.ts
++++ b/apps/web/src/views/rooms-view.ts
+@@
+-export const roomsView = {
+-  shell: 'roomShell',
+-  adapter: 'roomsPageAdapter',
+-  loader: 'roomsLoader',
+-  sections: ['roomHeader', 'messageList', 'composer', 'membersPanel'],
+-  actions: ['selectRoom', 'sendMessage', 'openCall']
+-};
++export { roomsViewNext as roomsView } from './rooms-view-next';
+
+diff --git a/apps/web/src/views/calls-view.ts b/apps/web/src/views/calls-view.ts
+index 859c341..0000000 100644
+--- a/apps/web/src/views/calls-view.ts
++++ b/apps/web/src/views/calls-view.ts
+@@
+-export const callsView = {
+-  shell: 'callShell',
+-  adapter: 'callsPageAdapter',
+-  loader: 'callsLoader',
+-  sections: ['callHeader', 'participantGrid', 'controls', 'transcriptPanel'],
+-  actions: ['joinCall', 'leaveCall', 'toggleMute', 'openAssistant']
+-};
++export { callsViewNext as callsView } from './calls-view-next';
+
+diff --git a/apps/web/src/adapters/rooms-page-adapter.ts b/apps/web/src/adapters/rooms-page-adapter.ts
+index c451654..0000000 100644
+--- a/apps/web/src/adapters/rooms-page-adapter.ts
++++ b/apps/web/src/adapters/rooms-page-adapter.ts
+@@
+-export const roomsPageAdapter = {
+-  page: 'rooms',
+-  binding: 'rooms',
+-  state: 'rooms-state.json',
+-  dto: ['RoomDto', 'RoomMemberDto'],
+-  loaders: ['loadRooms', 'loadActiveRoom']
+-};
++export { roomsPageAdapterNext as roomsPageAdapter } from './rooms-page-adapter-next';
+
+diff --git a/apps/web/src/adapters/calls-page-adapter.ts b/apps/web/src/adapters/calls-page-adapter.ts
+index 461097e..0000000 100644
+--- a/apps/web/src/adapters/calls-page-adapter.ts
++++ b/apps/web/src/adapters/calls-page-adapter.ts
+@@
+-export const callsPageAdapter = {
+-  page: 'calls',
+-  binding: 'calls',
+-  state: 'calls-state.json',
+-  dto: ['CallSessionDto', 'ParticipantStateDto'],
+-  loaders: ['loadCalls', 'loadCurrentCall']
+-};
++export { callsPageAdapterNext as callsPageAdapter } from './calls-page-adapter-next';
