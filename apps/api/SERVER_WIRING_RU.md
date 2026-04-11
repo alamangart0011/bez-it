@@ -7,12 +7,18 @@
 ## Доменные группы
 - /api/rooms
 - /api/calls
+- /api/profile
 - /api/memberships
-- /api/presence
 - /api/transcripts
 - /api/assistant
-- /api/knowledge
+- /api/admin
 - /api/actions
 
+## Текущее состояние
+- /health остается отдельной точкой
+- /api/meta остается отдельной точкой
+- остальные живые runtime домены проходят через server-dispatch
+- rooms, calls, memberships, transcripts, assistant и actions уже подключены к handler-map
+
 ## Следующий шаг
-Перевести route map в runtime handlers и затем подключить web shell к этим доменам.
+Довести merge-ready cleanup и финальный review по web execution path.
