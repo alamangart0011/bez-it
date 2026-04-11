@@ -1,11 +1,15 @@
 {
   "contracts": [
+    "rooms-state.json",
     "calls-state.json",
-    "profile-state.json"
+    "profile-state.json",
+    "admin-state.json",
+    "transcript-state.json",
+    "assistant-state.json"
   ],
   "next": [
-    "rooms-state",
-    "admin-state",
-    "shared dto integration"
+    "shared dto integration",
+    "runtime execution review",
+    "merge review"
   ]
 }

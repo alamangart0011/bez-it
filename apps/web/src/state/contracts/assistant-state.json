@@ -1,0 +1,5 @@
+{
+  "data": ["answer", "actionItems", "nextSteps"],
+  "ui": ["isLoading", "canCopy", "isExpanded"],
+  "actions": ["openAssistant", "extractActions", "copySummary"]
+}

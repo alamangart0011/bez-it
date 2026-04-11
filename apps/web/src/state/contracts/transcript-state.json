@@ -1,0 +1,5 @@
+{
+  "data": ["transcript", "chunks", "summary"],
+  "ui": ["isLoading", "isStreaming", "activeSpeaker"],
+  "actions": ["openTranscript", "labelSpeaker", "buildSummary"]
+}
