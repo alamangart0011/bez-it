@@ -1,6 +1,11 @@
 export const assistantView = {
   shell: 'rightPanelShell',
-  loader: 'callsLoader',
+  loader: 'assistantLoader',
   sections: ['assistantHeader', 'assistantAnswer', 'actionItems', 'nextSteps'],
-  actions: ['openAssistant', 'extractActions', 'copySummary']
+  actions: ['openAssistant', 'extractActions', 'copySummary'],
+  runtime: {
+    page: 'assistant',
+    execute: 'executeAssistantPanel',
+    hydrate: '/api/assistant'
+  }
 };

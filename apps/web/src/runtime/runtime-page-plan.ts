@@ -7,30 +7,52 @@ import { roomsBinding } from '../api/bindings/rooms';
 import { callsBinding } from '../api/bindings/calls';
 import { profileBinding } from '../api/bindings/profile';
 import { adminBinding } from '../api/bindings/admin';
+import { transcriptBinding } from '../api/bindings/transcript';
+import { assistantBinding } from '../api/bindings/assistant';
 import { roomsLoader } from '../loaders/rooms-loader';
 import { callsLoader } from '../loaders/calls-loader';
 import { profileLoader } from '../loaders/profile-loader';
 import { adminLoader } from '../loaders/admin-loader';
+import { transcriptLoader } from '../loaders/transcript-loader';
+import { assistantLoader } from '../loaders/assistant-loader';
 
 const pageAdapters = {
   rooms: roomsPageAdapter,
   calls: callsPageAdapter,
   profile: profilePageAdapter,
-  admin: adminPageAdapter
+  admin: adminPageAdapter,
+  transcript: {
+    page: 'transcript',
+    binding: 'transcript',
+    state: 'transcript-state.json',
+    dto: ['TranscriptDto', 'TranscriptChunkDto', 'SummaryDto'],
+    loaders: ['loadTranscript', 'loadSummary']
+  },
+  assistant: {
+    page: 'assistant',
+    binding: 'assistant',
+    state: 'assistant-state.json',
+    dto: ['AssistantAnswerDto', 'ActionItemDto'],
+    loaders: ['loadAssistant', 'loadActions']
+  }
 };
 
 const pageBindings = {
   rooms: roomsBinding,
   calls: callsBinding,
   profile: profileBinding,
-  admin: adminBinding
+  admin: adminBinding,
+  transcript: transcriptBinding,
+  assistant: assistantBinding
 };
 
 const pageLoaders = {
   rooms: roomsLoader,
   calls: callsLoader,
   profile: profileLoader,
-  admin: adminLoader
+  admin: adminLoader,
+  transcript: transcriptLoader,
+  assistant: assistantLoader
 };
 
 export function buildPageRuntimePlan(page, params = {}) {

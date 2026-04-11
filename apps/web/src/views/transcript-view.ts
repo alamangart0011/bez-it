@@ -1,6 +1,11 @@
 export const transcriptView = {
   shell: 'rightPanelShell',
-  loader: 'callsLoader',
+  loader: 'transcriptLoader',
   sections: ['transcriptHeader', 'transcriptList', 'speakerLabels', 'summaryBlock'],
-  actions: ['openTranscript', 'labelSpeaker', 'buildSummary']
+  actions: ['openTranscript', 'labelSpeaker', 'buildSummary'],
+  runtime: {
+    page: 'transcript',
+    execute: 'executeTranscriptPanel',
+    hydrate: '/api/transcripts'
+  }
 };
