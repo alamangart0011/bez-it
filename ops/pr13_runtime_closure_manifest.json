@@ -1,0 +1,30 @@
+{
+  "repo": "alamangart0011/contour-chat-v17",
+  "branch": "project/signalum-voice-foundation-20260410",
+  "pr": 13,
+  "phase": "runtime-preview-closure",
+  "switch_patch": "patches/runtime-web-switch.patch",
+  "preview_nginx_patch": "patches/runtime-preview-nginx.patch",
+  "preview_compose": "docker-compose.runtime-web.yml",
+  "preview_port": 3300,
+  "preview_path": "/runtime-preview/",
+  "steps": [
+    "apply_runtime_switch_patch",
+    "apply_preview_nginx_patch",
+    "run_cleanup_pass",
+    "build_preview_contour",
+    "start_preview_contour",
+    "mount_runtime_preview_path",
+    "run_visual_smoke"
+  ],
+  "docs": {
+    "apply": "docs/APPLY_RUNTIME_SWITCH_AND_PREVIEW_RU.md",
+    "switch_runbook": "docs/WEB_RUNTIME_SWITCH_RUNBOOK_RU.md",
+    "cleanup": "docs/WEB_RUNTIME_CLEANUP_PASS_RU.md",
+    "preview_deploy": "docs/WEB_RUNTIME_PREVIEW_DEPLOY_RU.md",
+    "preview_mount": "docs/RUNTIME_PREVIEW_MOUNT_PLAN_RU.md",
+    "visual_smoke": "docs/WEB_RUNTIME_VISUAL_SMOKE_RU.md",
+    "final_action_block": "docs/PR13_FINAL_ACTION_BLOCK_RU.md",
+    "final_checklist": "docs/PR13_FINAL_CHECKLIST_RU.md"
+  }
+}
