@@ -1,4 +1,4 @@
-import { pageRuntimeAdapter } from './page-runtime-adapter';
+import { fetchRuntimePage } from './runtime-http-client';
 
 function normalizeRoomsState(payload) {
   const data = payload && payload.data ? payload.data : {};
@@ -23,7 +23,7 @@ function normalizeRoomsState(payload) {
 }
 
 export async function executeRoomsPage(params = {}, fetcher = fetch) {
-  const hydrated = await pageRuntimeAdapter.hydrate('rooms', params, fetcher);
+  const hydrated = await fetchRuntimePage('rooms', params, fetcher);
   const normalized = normalizeRoomsState(hydrated.payload);
 
   return {

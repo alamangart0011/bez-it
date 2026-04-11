@@ -1,4 +1,4 @@
-import { pageRuntimeAdapter } from './page-runtime-adapter';
+import { fetchRuntimePage } from './runtime-http-client';
 
 function normalizeCallsState(payload) {
   const data = payload && payload.data ? payload.data : {};
@@ -20,7 +20,7 @@ function normalizeCallsState(payload) {
 }
 
 export async function executeCallsPage(params = {}, fetcher = fetch) {
-  const hydrated = await pageRuntimeAdapter.hydrate('calls', params, fetcher);
+  const hydrated = await fetchRuntimePage('calls', params, fetcher);
   const normalized = normalizeCallsState(hydrated.payload);
 
   return {

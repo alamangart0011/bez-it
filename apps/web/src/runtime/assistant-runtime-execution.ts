@@ -1,4 +1,4 @@
-import { pageRuntimeAdapter } from './page-runtime-adapter';
+import { fetchRuntimePage } from './runtime-http-client';
 
 function normalizeAssistantState(payload) {
   const data = payload && payload.data ? payload.data : {};
@@ -19,7 +19,7 @@ function normalizeAssistantState(payload) {
 }
 
 export async function executeAssistantPanel(params = {}, fetcher = fetch) {
-  const hydrated = await pageRuntimeAdapter.hydrate('assistant', params, fetcher);
+  const hydrated = await fetchRuntimePage('assistant', params, fetcher);
   const normalized = normalizeAssistantState(hydrated.payload);
 
   return {

@@ -1,4 +1,4 @@
-import { pageRuntimeAdapter } from './page-runtime-adapter';
+import { fetchRuntimePage } from './runtime-http-client';
 
 function normalizeTranscriptState(payload) {
   const data = payload && payload.data ? payload.data : {};
@@ -19,7 +19,7 @@ function normalizeTranscriptState(payload) {
 }
 
 export async function executeTranscriptPanel(params = {}, fetcher = fetch) {
-  const hydrated = await pageRuntimeAdapter.hydrate('transcript', params, fetcher);
+  const hydrated = await fetchRuntimePage('transcript', params, fetcher);
   const normalized = normalizeTranscriptState(hydrated.payload);
 
   return {
