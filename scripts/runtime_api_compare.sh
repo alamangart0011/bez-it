@@ -7,9 +7,8 @@ TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
 check_one() {
-  local label="$1"
-  local url="$2"
-  local out="$3"
+  local url="$1"
+  local out="$2"
   local code
   code=$(curl -sS -o "$out" -w '%{http_code}' "$url" || true)
   echo "$code"
@@ -18,8 +17,8 @@ check_one() {
 report() {
   local path="$1"
   local lcode rcode
-  lcode=$(check_one legacy "$LEGACY_BASE$path" "$TMP/legacy.json")
-  rcode=$(check_one runtime "$RUNTIME_BASE$path" "$TMP/runtime.json")
+  lcode=$(check_one "$LEGACY_BASE$path" "$TMP/legacy.json")
+  rcode=$(check_one "$RUNTIME_BASE$path" "$TMP/runtime.json")
   echo "=== $path ==="
   echo "legacy=$lcode runtime=$rcode"
   echo "-- legacy sample --"
@@ -31,6 +30,9 @@ report() {
 }
 
 report /api/health
+report /api/live
+report /api/ready
+report /api/release
 report /api/meta
 report /api/rooms
 report /api/calls

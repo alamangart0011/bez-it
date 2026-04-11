@@ -17,7 +17,7 @@ must_200() {
   echo "[OK] $label"
 }
 
-for path in /health /api/meta /api/rooms /api/calls /api/transcripts /api/assistant /api/profile /api/admin; do
+for path in /health /api/health /api/live /api/ready /api/release /api/meta /api/rooms /api/calls /api/transcripts /api/assistant /api/profile /api/admin; do
   code=$(curl -sS -o "$TMP/out.json" -w '%{http_code}' "$BASE_URL$path")
   must_200 "$path" "$code" "$TMP/out.json"
 done
