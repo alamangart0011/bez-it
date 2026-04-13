@@ -48,6 +48,41 @@ export function buildRoomsRouter({ io, uploadRoot, maxUploadBytes }) {
     }
   });
 
+  roomsRouter.patch('/:roomId', async (req, res) => {
+    try {
+      res.json(await roomsService.updateRoom(req.params.roomId, req.user, req.body || {}));
+    } catch (error) {
+      return sendError(res, error);
+    }
+  });
+
+  roomsRouter.get('/:roomId/members', async (req, res) => {
+    try {
+      res.json(await roomsService.members(req.params.roomId, req.user.sub));
+    } catch (error) {
+      return sendError(res, error);
+    }
+  });
+
+  roomsRouter.post('/:roomId/members', async (req, res) => {
+    try {
+      const targetUserId = req.body?.userId || req.body?.memberId || null;
+      const result = await roomsService.addMember(req.params.roomId, req.user, targetUserId);
+      res.status(201).json(result);
+    } catch (error) {
+      return sendError(res, error);
+    }
+  });
+
+  roomsRouter.delete('/:roomId/members/:userId', async (req, res) => {
+    try {
+      const result = await roomsService.removeMember(req.params.roomId, req.user, req.params.userId);
+      res.json(result);
+    } catch (error) {
+      return sendError(res, error);
+    }
+  });
+
   roomsRouter.get('/:roomId/messages', async (req, res) => {
     try {
       res.json(await roomsService.messages(req.params.roomId, req.user.sub));
@@ -87,6 +122,36 @@ export function buildRoomsRouter({ io, uploadRoot, maxUploadBytes }) {
       const created = await roomsService.sendMessage({ roomId: req.params.roomId, actorUser: req.user, ...payload });
       emitRoom(io, req.params.roomId, 'message:created', { roomId: req.params.roomId, messageId: created.id });
       res.status(201).json(created);
+    } catch (error) {
+      return sendError(res, error);
+    }
+  });
+
+  roomsRouter.delete('/:roomId/messages/:messageId', async (req, res) => {
+    try {
+      const result = await roomsService.deleteMessage({ messageId: req.params.messageId, actorUser: req.user });
+      emitRoom(io, result.roomId, 'message:deleted', { roomId: result.roomId, messageId: req.params.messageId });
+      res.json(result);
+    } catch (error) {
+      return sendError(res, error);
+    }
+  });
+
+  roomsRouter.post('/:roomId/messages/:messageId/pin', requirePermission('messages.moderate'), async (req, res) => {
+    try {
+      const result = await roomsService.pinMessage({ messageId: req.params.messageId, actorUser: req.user, value: true });
+      emitRoom(io, result.roomId, 'message:pinned', { roomId: result.roomId, messageId: req.params.messageId, value: true });
+      res.json(result);
+    } catch (error) {
+      return sendError(res, error);
+    }
+  });
+
+  roomsRouter.delete('/:roomId/messages/:messageId/pin', requirePermission('messages.moderate'), async (req, res) => {
+    try {
+      const result = await roomsService.pinMessage({ messageId: req.params.messageId, actorUser: req.user, value: false });
+      emitRoom(io, result.roomId, 'message:pinned', { roomId: result.roomId, messageId: req.params.messageId, value: false });
+      res.json(result);
     } catch (error) {
       return sendError(res, error);
     }

@@ -1,12 +1,12 @@
 export const BRANDING_DEFAULTS = {
-  appName: 'Контур Связи',
-  organizationName: 'IT Group Company',
+  appName: 'Сигнум',
+  organizationName: 'Корпоративный контур связи',
   organizationInn: '',
-  licensePlan: 'Корпоративный пакет · 100 пользователей',
-  supportLabel: 'Техническая поддержка',
-  supportEmail: 'support@kontur.local',
-  releaseLabel: 'V17',
-  footerMark: 'Единый корпоративный контур связи, собраний и администрирования',
+  licensePlan: 'Корпоративный пакет',
+  supportLabel: 'Поддержка',
+  supportEmail: 'support@signalum.local',
+  releaseLabel: '17.17.0',
+  footerMark: 'Единый корпоративный контур связи',
 };
 
 export function normalizeBranding(input = {}) {
