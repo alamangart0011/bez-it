@@ -1,0 +1,42 @@
+{
+  "activeBaseline": "room-based-v17",
+  "root": "/opt/messenger/contour-chat-jino-final",
+  "domain": "https://ai.voice.oboron-it.ru",
+  "singleDeployPath": true,
+  "messengerFirstActive": false,
+  "sourceOfTruth": {
+    "progressStatus": "docs/ROOM_BASED_PROGRESS_STATUS_RU.md",
+    "executionLedger": "docs/EXECUTION_LEDGER_RU.md",
+    "continuationLock": "docs/NEXT_CHAT_CONTINUATION_LOCK_RU.txt",
+    "executiveActionSheet": "docs/EXECUTIVE_ACTION_SHEET_RU.md"
+  },
+  "stageOrder": [
+    "P0 schema/runtime parity",
+    "browser voice and meeting acceptance",
+    "shell cleanup",
+    "rooms and chat polish",
+    "voice UX cleanup",
+    "meeting UX cleanup",
+    "admin and operator cleanup",
+    "mobile minimum and PWA",
+    "stabilization"
+  ],
+  "currentProgress": {
+    "baselineDiscipline": 96,
+    "runtimeDeploy": 90,
+    "authSessions": 88,
+    "roomsChatRuntime": 85,
+    "voiceMeetingsRuntime": 78,
+    "adminOperatorLayer": 74,
+    "schemaParityMigrationHygiene": 68,
+    "uiUxPolish": 46,
+    "overall": 78
+  },
+  "hardRules": [
+    "do not restart analysis from zero in a new chat",
+    "do not create new parallel release branches",
+    "do not reactivate messenger-first as active UI",
+    "do not keep debug or service strip visible in normal user mode",
+    "do not keep test rooms or technical trash in active UI"
+  ]
+}
