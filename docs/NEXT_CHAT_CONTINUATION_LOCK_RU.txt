@@ -1,0 +1,31 @@
+АКТИВНЫЙ КАНОН:
+- только room-based V17 baseline
+- root: /opt/messenger/contour-chat-jino-final
+- домен: https://ai.voice.oboron-it.ru
+- один deploy path
+- messenger-first не использовать как active UI
+- новые параллельные release-ветки не создавать
+
+КАК ПРОДОЛЖАТЬ В НОВОМ ЧАТЕ:
+1. не делать новый анализ с нуля
+2. не искать новый продуктовый вектор
+3. считать текущий baseline уже живым recovery-контуром
+4. сначала читать docs/ROOM_BASED_PROGRESS_STATUS_RU.md
+5. затем читать docs/EXECUTION_LEDGER_RU.md
+6. дальше продолжать только по этапам P0 -> P1 -> P2
+
+ЖЁСТКИЙ ПОРЯДОК:
+- P0: schema/runtime/browser voice acceptance
+- P1: shell/admin/rooms/voice/meeting cleanup
+- P2: mobile minimum / PWA / stabilization
+
+ЧТО СЧИТАТЬ ИСТОЧНИКОМ ИСТИНЫ:
+- docs/ROOM_BASED_PROGRESS_STATUS_RU.md
+- docs/EXECUTION_LEDGER_RU.md
+- scripts/room_based_acceptance_smoke.sh
+
+ЧЕГО НЕ ДЕЛАТЬ:
+- не возвращать messenger-first
+- не плодить новые handoff без обновления execution-ledger
+- не держать debug/service strip в обычном пользовательском режиме
+- не оставлять тестовые комнаты и технический мусор в active UI
