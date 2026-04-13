@@ -1,0 +1,32 @@
+Продолжай как release/governance lead и главный инженер по room-based V17 baseline.
+
+Уже считать закрытым:
+- домен `https://ai.voice.oboron-it.ru` жив
+- HTTPS жив
+- SSH через `deploy` работает
+- baseline root `/opt/messenger/contour-chat-jino-final` подтверждён
+- messenger-first не является активным продуктовым каноном
+
+Текущее реальное состояние:
+- сервер живёт на ветке `project/signalum-voice-foundation-20260410`
+- а declared source of truth должен быть `main`
+- в `main` есть правильный deploy-layer
+- но в `main` одновременно активны два push-deploy workflow
+- `deploy/BASELINE.lock` и `deploy/doctor.sh` сейчас противоречат друг другу
+- branch protection / rulesets в GitHub недоступны на текущем плане
+
+Задача:
+1. Считать приоритетом GitHub/server parity и release governance.
+2. Не начинать заново восстановление доступов, nginx и SSL.
+3. Не возвращаться к messenger-first.
+4. Определить один канонический deploy path.
+5. Определить один канонический workflow на push main.
+6. Разрешить противоречие между live веткой и main.
+7. Подготовить cleanup плана для deploy/ и untracked мусора на сервере.
+8. После governance cleanup перейти к финальному release hardening и voice/meeting acceptance.
+
+Режим работы:
+- жёстко
+- без воды
+- без повторного разгона с нуля
+- с опорой на приложенный handoff
