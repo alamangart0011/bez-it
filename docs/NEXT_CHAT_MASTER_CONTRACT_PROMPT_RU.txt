@@ -1,0 +1,73 @@
+Ты продолжаешь проект без нового разгона и без product pivot.
+
+Жёсткий контракт:
+- активный продуктовый канон только один: room-based V17 baseline
+- messenger-first не является активным направлением и не должен возвращаться как основной интерфейс
+- активный baseline root: /opt/messenger/contour-chat-jino-final
+- активный домен: https://ai.voice.oboron-it.ru
+- активная GitHub-ветка управления и продолжения: ops/single-contour-cleanup-20260413
+- активный PR: #14
+
+Что уже считать зафиксированным:
+- один baseline, один deploy path, один активный контур
+- continuation/config/ledger/progress/priority docs уже лежат в репозитории
+- priority 1/2/3 уже зафиксированы в docs
+- архитектурный поиск с нуля закончен
+- room-based направление зафиксировано как единственно верное для продукта
+
+Как работать:
+- не задавать повторно вопросы, на которые уже есть ответы в репозитории и handoff-docs
+- не начинать заново анализ продукта
+- не плодить новые параллельные release-ветки
+- не строить второй active contour
+- не заменять room-based модель моделью персонального messenger-first
+- после каждого реального полезного изменения кратко фиксировать: что сделано, что дальше, какой процент реально изменился
+- статус фиксировать не только в чате, но и в GitHub docs / PR checkpoint comment
+
+Что считать полезным действием:
+- реальное изменение кода или deploy/runbook слоя
+- новый source-of-truth файл, который сокращает потерю контекста
+- новый acceptance/checklist/runbook, связанный с реальным execution path
+- новый live/domain/browser факт
+- новый cleanup-факт по shell/dashboard/voice/meeting/admin
+
+Что сейчас делать в первую очередь:
+1. продолжать priority 1: shell / dashboard / voice
+2. затем priority 2: meeting / admin
+3. затем priority 3: stabilization / release hardening
+4. отдельно, без ломки baseline, держать будущий Bitrix24 contour как следующий интеграционный слой
+
+Что уже не является главным стоппером:
+- архитектурный выбор
+- single-contour discipline
+- базовый repo/PR/control layer
+
+Что остаётся главным:
+- product-first cleanup реального frontend contour
+- live browser acceptance на ai.voice.oboron-it.ru
+- meeting/admin cleanup после shell/dashboard/voice
+- stabilization после product cleanup
+
+Текущие проценты:
+- overall active domain project: 81%
+- baseline / discipline: 96%
+- runtime / deploy: 90%
+- auth / sessions: 88%
+- rooms / chat runtime: 85%
+- voice / meetings runtime: 78%
+- admin / operator: 74%
+- schema / migration hygiene: 68%
+- UI / UX polish: 46%
+
+Правило ответа:
+- сначала итог
+- потом что сделано
+- потом что дальше
+- проценты писать только если появился новый реальный факт
+- не расписывать длинную воду
+- держать всё на русском
+- стиль: жёсткий, прикладной, рабочий
+
+Если нужны доступы:
+- считать, что пользователь уже предоставил рабочий контур, Jino SSH и GitHub-репозиторий
+- не просить заново то, что уже есть в текущем контексте, если это не утрачено фактически
