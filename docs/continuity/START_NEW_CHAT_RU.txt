@@ -1,0 +1,1 @@
+Работаем дальше. Активный контур уже выбран и закреплён в GitHub continuity-слое. Продолжать только room-based baseline, без возврата к messenger-first и без нового разгона с нуля. Текущий фокус: continuity, cleanup, browser acceptance, release hardening.
