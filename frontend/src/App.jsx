@@ -71,6 +71,7 @@ const A = {
   voiceJoin:   (id)     => req('POST',`/api/voice/rooms/${id}/join`,{}),
   voiceLeave:  (id)     => req('POST',`/api/voice/rooms/${id}/leave`,{}),
   voiceSelf:   (id,d)   => req('PATCH',`/api/voice/rooms/${id}/self`,d),
+  archiveRoom: (id)     => req('POST',`/api/admin/rooms/${id}/archive`,{}),
 };
 
 // Нормализация — поддерживает все форматы ответа API
@@ -160,25 +161,10 @@ function Inp({value,onChange,placeholder,type='text',sx={},onKeyDown,autoFocus})
 // AUTH
 // ═══════════════════════════════════════════════════════
 function AuthPage({onAuth}){
-  const[tab,setTab]=useState('pass');
-  const[login,setLogin]=useState('admin@corpchat.local');
+  const[login,setLogin]=useState('');
   const[pass,setPass]=useState('');
-  const[phone,setPhone]=useState('');
-  const[otp,setOtp]=useState(['','','','','','']);
-  const[otpSent,setSent]=useState(false);
   const[err,setErr]=useState('');
   const[loading,setLoad]=useState(false);
-  const[qrT,setQrT]=useState(120);
-  const[qrS,setQrS]=useState('wait');
-  const timerI=useRef(null);
-  const otpR=useRef([]);
-
-  useEffect(()=>{
-    if(tab!=='qr')return;
-    setQrT(120);setQrS('wait');
-    timerI.current=setInterval(()=>setQrT(v=>{if(v<=1){clearInterval(timerI.current);return 0;}return v-1;}),1000);
-    return()=>clearInterval(timerI.current);
-  },[tab]);
 
   async function doLogin(){
     if(!login||!pass){setErr('Заполните все поля');return;}
@@ -190,22 +176,6 @@ function AuthPage({onAuth}){
     }catch(e){setErr(e.status===401?'Неверный логин или пароль':'Ошибка сервера: '+e.message);}
     setLoad(false);
   }
-  function fmtPhone(v){let n=v.replace(/\D/g,'');if(n[0]==='8')n='7'+n.slice(1);if(!n.startsWith('7'))n='7'+n;n=n.slice(0,11);let f='+7';if(n.length>1)f+=` (${n.slice(1,4)}`;if(n.length>4)f+=`) ${n.slice(4,7)}`;if(n.length>7)f+=`-${n.slice(7,9)}`;if(n.length>9)f+=`-${n.slice(9,11)}`;return f;}
-  async function doSMS(){
-    setErr('');setLoad(true);
-    try{await fetch('/api/auth/phone/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,purpose:'login'})});setSent(true);setTimeout(()=>otpR.current[0]?.focus(),100);}
-    catch{setErr('Ошибка отправки SMS');}
-    setLoad(false);
-  }
-  function handleOtp(i,v){const n=[...otp];n[i]=v.slice(-1);setOtp(n);if(v&&i<5)otpR.current[i+1]?.focus();if(n.join('').length===6)verOtp(n.join(''));}
-  async function verOtp(code){
-    setLoad(true);
-    try{const d=await(await fetch('/api/auth/phone/verify-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,code})})).json();if(d.accessToken){localStorage.setItem('sg_token',d.accessToken);onAuth(d.accessToken,d.user);}else setErr('Неверный код');}
-    catch{setErr('Ошибка');}
-    setLoad(false);
-  }
-  const pct=qrT/120;const circ=2*Math.PI*18;
-  const tabS=(k)=>({flex:1,padding:'8px 4px',borderRadius:8,border:'none',background:tab===k?C.bg1:'transparent',color:tab===k?C.txt:C.txt3,fontSize:13,fontWeight:500,cursor:'pointer',boxShadow:tab===k?C.shd:'none',transition:'all .15s'});
 
   return(
     <div style={{minHeight:'100vh',background:C.bg,display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'system-ui,-apple-system,sans-serif'}}>
@@ -215,70 +185,15 @@ function AuthPage({onAuth}){
           <div style={{fontSize:22,fontWeight:700,color:C.txt}}>Сигнум</div>
           <div style={{fontSize:13,color:C.txt3,marginTop:4}}>Корпоративный контур связи</div>
         </div>
-        <div style={{display:'flex',background:C.bg,borderRadius:10,padding:3,width:'100%',gap:2}}>
-          {[['pass','Пароль'],['phone','Телефон'],['qr','QR-код']].map(([k,l])=>(
-            <button key={k} onClick={()=>setTab(k)} style={tabS(k)}>{l}</button>
-          ))}
+        <div style={{display:'flex',flexDirection:'column',gap:10,width:'100%'}}>
+          <Inp value={login} onChange={e=>setLogin(e.target.value)} placeholder="Email или логин" onKeyDown={e=>e.key==='Enter'&&doLogin()} autoFocus/>
+          <Inp value={pass}  onChange={e=>setPass(e.target.value)}  placeholder="Пароль" type="password" onKeyDown={e=>e.key==='Enter'&&doLogin()}/>
+          <Btn variant="primary" onClick={doLogin} disabled={loading} sx={{width:'100%',padding:'11px 0',fontSize:14,fontWeight:600}}>{loading?'Вход...':'Войти'}</Btn>
         </div>
-
-        {tab==='pass'&&(
-          <div style={{display:'flex',flexDirection:'column',gap:10,width:'100%'}}>
-            <Inp value={login} onChange={e=>setLogin(e.target.value)} placeholder="Email или логин" onKeyDown={e=>e.key==='Enter'&&doLogin()} autoFocus/>
-            <Inp value={pass}  onChange={e=>setPass(e.target.value)}  placeholder="Пароль" type="password" onKeyDown={e=>e.key==='Enter'&&doLogin()}/>
-            <Btn variant="primary" onClick={doLogin} disabled={loading} sx={{width:'100%',padding:'11px 0',fontSize:14,fontWeight:600}}>{loading?'Вход...':'Войти'}</Btn>
-            <div style={{textAlign:'center',fontSize:12,color:C.txt3}}>или <span onClick={()=>setTab('qr')} style={{color:C.acc,cursor:'pointer'}}>войти через QR-код</span></div>
-          </div>
-        )}
-        {tab==='phone'&&(
-          <div style={{display:'flex',flexDirection:'column',gap:12,width:'100%'}}>
-            <Inp value={phone} onChange={e=>setPhone(fmtPhone(e.target.value))} placeholder="+7 (___) ___-__-__"/>
-            {!otpSent
-              ?<Btn variant="primary" onClick={doSMS} disabled={loading||phone.replace(/\D/g,'').length<11} sx={{width:'100%'}}>{loading?'Отправка...':'Получить код'}</Btn>
-              :<>
-                <div style={{fontSize:12,color:C.txt3,textAlign:'center'}}>Код отправлен — введите 6 цифр</div>
-                <div style={{display:'flex',gap:8,justifyContent:'center'}}>
-                  {otp.map((v,i)=>(
-                    <input key={i} ref={el=>otpR.current[i]=el} value={v} maxLength={1} onChange={e=>handleOtp(i,e.target.value)}
-                      style={{width:42,height:48,borderRadius:8,border:`2px solid ${v?C.acc:C.brd}`,textAlign:'center',fontSize:20,fontWeight:700,color:C.txt,background:C.bg,outline:'none',fontFamily:'inherit'}}/>
-                  ))}
-                </div>
-              </>
-            }
-          </div>
-        )}
-        {tab==='qr'&&(
-          <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:14,width:'100%'}}>
-            <div style={{fontSize:12,color:C.txt3,textAlign:'center',lineHeight:1.7}}>Откройте Сигнум на телефоне<br/>и отсканируйте код</div>
-            <div onClick={()=>{setQrS('scan');setTimeout(()=>{setQrS('ok');clearInterval(timerI.current);setTimeout(()=>setTab('pass'),900);},1800);}}
-              style={{width:160,height:160,background:C.bg3,borderRadius:12,padding:10,position:'relative',overflow:'hidden',cursor:'pointer',border:`2px solid ${C.brd}`}}>
-              <svg width="140" height="140" viewBox="0 0 144 144">
-                <rect x="8" y="8" width="42" height="42" rx="5" fill="none" stroke={C.txt} strokeWidth="3.5"/><rect x="17" y="17" width="24" height="24" rx="2" fill={C.txt}/>
-                <rect x="94" y="8" width="42" height="42" rx="5" fill="none" stroke={C.txt} strokeWidth="3.5"/><rect x="103" y="17" width="24" height="24" rx="2" fill={C.txt}/>
-                <rect x="8" y="94" width="42" height="42" rx="5" fill="none" stroke={C.txt} strokeWidth="3.5"/><rect x="17" y="103" width="24" height="24" rx="2" fill={C.txt}/>
-                {[[62,8],[72,8],[62,18],[72,18],[82,18],[62,62],[72,62],[82,62],[62,72],[82,72],[62,82],[72,82],[8,62],[18,62],[28,62],[8,72],[28,72],[8,82],[18,82],[94,62],[104,62],[114,72],[94,82],[104,82],[94,104],[104,114],[114,104],[124,94],[124,114]].map(([x,y],i)=>(
-                  <rect key={i} x={x} y={y} width="6" height="6" rx="1" fill={C.txt}/>
-                ))}
-              </svg>
-              {qrT>0&&<div style={{position:'absolute',left:10,right:10,height:2,background:`${C.acc}99`,animation:'qrscan 3s ease-in-out infinite',top:10}}/>}
-              {qrS==='scan'&&<div style={{position:'absolute',inset:0,background:`${C.acc}dd`,borderRadius:10,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}><span style={{fontSize:28}}>📲</span><span style={{color:'#fff',fontSize:12,fontWeight:600,marginTop:6}}>Подтверждение...</span></div>}
-              {qrS==='ok'&&<div style={{position:'absolute',inset:0,background:`${C.grn}dd`,borderRadius:10,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}><span style={{fontSize:28}}>✅</span><span style={{color:'#fff',fontSize:12,fontWeight:600,marginTop:6}}>Выполнено</span></div>}
-            </div>
-            <div style={{display:'flex',alignItems:'center',gap:10}}>
-              <div style={{position:'relative',width:44,height:44}}>
-                <svg width="44" height="44" viewBox="0 0 44 44">
-                  <circle cx="22" cy="22" r="18" fill="none" stroke={C.bg3} strokeWidth="3"/>
-                  <circle cx="22" cy="22" r="18" fill="none" stroke={qrT>40?C.acc:qrT>15?C.amb:C.red} strokeWidth="3" strokeDasharray={circ} strokeDashoffset={circ*(1-pct)} transform="rotate(-90 22 22)" strokeLinecap="round"/>
-                </svg>
-                <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:12,fontWeight:700,color:C.txt}}>{qrT}</div>
-              </div>
-              <div style={{fontSize:12,color:C.txt3}}>{qrS==='ok'?'✅ Выполнено':qrS==='scan'?'⏳ Ожидание...':'Ожидание сканирования'}</div>
-            </div>
-          </div>
-        )}
         {err&&<div style={{color:C.red,fontSize:12,textAlign:'center',width:'100%',padding:'8px 12px',background:`${C.red}10`,borderRadius:6,border:`1px solid ${C.red}30`}}>⚠️ {err}</div>}
         <div style={{fontSize:11,color:C.txt3}}>Signum V17 · Корпоративный контур · ЭЦП</div>
       </div>
-      <style>{`@keyframes qrscan{0%{top:10px}50%{top:148px}100%{top:10px}}*{box-sizing:border-box}`}</style>
+      <style>{`*{box-sizing:border-box}`}</style>
     </div>
   );
 }
@@ -313,6 +228,7 @@ export function MainApp({user,token,onLogout}){
   const msgEnd   = useRef(null);
   const inputRef = useRef(null);
   const wsRef    = useRef(null);
+  const fileRef  = useRef(null);
 
   const notify=useCallback((msg,type='info',dur=3500)=>{setToast({msg,type});setTimeout(()=>setToast(null),dur);},[]);
   const openModal=(n,d=null)=>{setModal(n);setMData(d);};
@@ -381,6 +297,16 @@ export function MainApp({user,token,onLogout}){
     document.addEventListener('keydown',h);return()=>document.removeEventListener('keydown',h);
   },[]);
 
+  async function uploadFile(file){
+    if(!room||!file)return;
+    const fd=new FormData();fd.append('file',file);
+    try{
+      const r=await fetch(`/api/rooms/${room.id}/uploads`,{method:'POST',headers:{Authorization:`Bearer ${tok()}`},body:fd});
+      if(!r.ok)throw new Error(await r.text());
+      const created=await r.json();setMsgs(p=>[...p,nm(created)]);notify('Файл прикреплён','success');
+    }catch(e){notify('Ошибка загрузки: '+e.message,'error');}
+  }
+
   async function sendMsg(){
     const text=input.trim();if(!text||!room)return;
     setInput('');if(inputRef.current)inputRef.current.style.height='auto';
@@ -435,15 +361,11 @@ export function MainApp({user,token,onLogout}){
         <div style={{width:44,height:44,borderRadius:14,background:C.acc,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,fontWeight:800,color:'#fff',cursor:'pointer',transition:'border-radius .2s'}}
           onMouseEnter={e=>e.currentTarget.style.borderRadius='10px'} onMouseLeave={e=>e.currentTarget.style.borderRadius='14px'}>С</div>
         <div style={{width:32,height:1,background:C.brd,margin:'2px 0'}}/>
-        {[['💬','Чат',true],['📋','Задачи',false],['📁','Файлы',false],['📊','Аналитика',false]].map(([ic,t,active])=>(
-          <Tooltip key={t} text={t}>
-            <div onClick={()=>notify(t)} style={{width:44,height:44,borderRadius:active?14:'50%',background:active?C.acc:C.bg3,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,cursor:'pointer',transition:'all .2s',...(active?{}:{})}}
-              onMouseEnter={e=>{e.currentTarget.style.borderRadius='14px';e.currentTarget.style.background=active?C.acc2:C.bg;}}
-              onMouseLeave={e=>{e.currentTarget.style.borderRadius=active?'14px':'50%';e.currentTarget.style.background=active?C.acc:C.bg3;}}>
-              {ic}
-            </div>
-          </Tooltip>
-        ))}
+        <Tooltip text="Чат">
+          <div style={{width:44,height:44,borderRadius:14,background:C.acc,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,cursor:'default',transition:'all .2s'}}>
+            💬
+          </div>
+        </Tooltip>
         <div style={{marginTop:'auto',display:'flex',flexDirection:'column',gap:6,alignItems:'center'}}>
           <Tooltip text="Настройки"><div onClick={()=>notify('Настройки')} style={{width:44,height:44,borderRadius:'50%',background:C.bg3,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,cursor:'pointer'}} onMouseEnter={e=>e.currentTarget.style.background=C.bg} onMouseLeave={e=>e.currentTarget.style.background=C.bg3}>⚙</div></Tooltip>
           <Tooltip text={`${user?.displayName} · Выйти`}>
@@ -584,15 +506,15 @@ export function MainApp({user,token,onLogout}){
         {room&&(
           <div style={{padding:'0 14px 12px',background:C.bg2,flexShrink:0}}>
             <div style={{background:C.bg1,border:`1px solid ${C.brd}`,borderRadius:10,display:'flex',alignItems:'flex-end',gap:7,padding:'8px 10px',boxShadow:C.shd}}>
-              <button onClick={()=>notify('Прикрепить файл')} style={{background:'none',border:'none',color:C.txt3,fontSize:20,cursor:'pointer',padding:0,flexShrink:0}} onMouseEnter={e=>e.currentTarget.style.color=C.txt} onMouseLeave={e=>e.currentTarget.style.color=C.txt3}>＋</button>
+              <input ref={fileRef} type="file" style={{display:'none'}} onChange={e=>{if(e.target.files[0])uploadFile(e.target.files[0]);e.target.value='';}}/>
+            <button onClick={()=>room&&fileRef.current?.click()} title="Прикрепить файл" style={{background:'none',border:'none',color:C.txt3,fontSize:20,cursor:'pointer',padding:0,flexShrink:0}} onMouseEnter={e=>e.currentTarget.style.color=C.txt} onMouseLeave={e=>e.currentTarget.style.color=C.txt3}>＋</button>
               <textarea ref={inputRef} value={input} onChange={e=>setInput(e.target.value)}
                 onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}}
                 placeholder={`Написать в #${room?.name}...`}
                 rows={1} style={{flex:1,background:'transparent',border:'none',color:C.txt,fontSize:13,resize:'none',outline:'none',minHeight:22,maxHeight:160,lineHeight:1.55,fontFamily:'inherit'}}
                 onInput={e=>{e.target.style.height='auto';e.target.style.height=Math.min(e.target.scrollHeight,160)+'px';}}/>
               <div style={{display:'flex',gap:3,flexShrink:0,alignItems:'center'}}>
-                <button onClick={()=>notify('Emoji')} style={{background:'none',border:'none',fontSize:15,cursor:'pointer',color:C.txt3}}>😊</button>
-                <button onClick={()=>notify('Прикрепить')} style={{background:'none',border:'none',fontSize:14,cursor:'pointer',color:C.txt3}}>📎</button>
+                <button title="Эмодзи" style={{background:'none',border:'none',fontSize:15,cursor:'default',color:C.txt3,opacity:.5}}>😊</button>
                 <button onClick={sendMsg} style={{width:32,height:32,borderRadius:8,background:input.trim()?C.acc:C.bg3,border:'none',color:input.trim()?'#fff':C.txt3,cursor:input.trim()?'pointer':'default',fontSize:14,display:'flex',alignItems:'center',justifyContent:'center',transition:'all .15s',flexShrink:0}}>➤</button>
               </div>
             </div>
@@ -729,7 +651,7 @@ export function MainApp({user,token,onLogout}){
             <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
               <Btn variant="ghost" onClick={()=>{openModal('add_member');}} small>👤 Добавить участника</Btn>
               <Btn variant="ghost" onClick={()=>notify('Уведомления настроены')} small>🔔 Уведомления</Btn>
-              <Btn variant="danger" onClick={()=>{notify('Комната заархивирована');closeModal();}} small>🗑 Архивировать</Btn>
+              <Btn variant="danger" small onClick={async()=>{try{await A.archiveRoom(mData.id);setRooms(p=>p.filter(r=>r.id!==mData.id));if(room?.id===mData.id)setRoom(null);notify('Комната заархивирована');closeModal();}catch(e){notify('Ошибка: '+e.message,'error');}}}>🗑 Архивировать</Btn>
             </div>
             <div style={{textAlign:'right'}}><Btn variant="ghost" onClick={closeModal}>Закрыть</Btn></div>
           </div>
