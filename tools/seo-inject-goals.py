@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PUBLIC = ROOT / "apps" / "bez-it" / "public"
 
 # 1) yandex-verification meta
-YV_META = '<meta name="yandex-verification" content="__YANDEX_VERIFY__">'
+YV_META = '<meta name="yandex-verification" content="9e7d671381785e61">'
 
 def ensure_yandex_verify(html: str) -> tuple[str, bool]:
     if "yandex-verification" in html:

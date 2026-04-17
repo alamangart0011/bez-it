@@ -99,7 +99,7 @@ TEMPLATE = """<!DOCTYPE html>
 <meta name="description" content="{descr}">
 <meta name="keywords" content="{keywords}">
 <meta name="robots" content="index,follow">
-<meta name="yandex-verification" content="__YANDEX_VERIFY__">
+<meta name="yandex-verification" content="9e7d671381785e61">
 <link rel="canonical" href="https://bez-it.ru/regions/{slug}.html">
 <meta property="og:title" content="{og_title}">
 <meta property="og:type" content="article">
