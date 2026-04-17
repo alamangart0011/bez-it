@@ -1,0 +1,11 @@
+{
+  "contracts": [
+    "calls-state.json",
+    "profile-state.json"
+  ],
+  "next": [
+    "rooms-state",
+    "admin-state",
+    "shared dto integration"
+  ]
+}

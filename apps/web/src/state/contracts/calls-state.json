@@ -1,0 +1,5 @@
+{
+  "data": ["currentCall", "participants", "devices"],
+  "ui": ["isConnecting", "isMuted", "isRecording"],
+  "actions": ["startCall", "joinCall", "leaveCall", "toggleMute"]
+}

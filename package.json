@@ -1,0 +1,13 @@
+{
+  "name": "signalum-voice-foundation",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.0.0",
+  "scripts": {
+    "dev:web": "pnpm --dir apps/web dev",
+    "dev:api": "pnpm --dir apps/api dev",
+    "build": "echo build pipeline pending",
+    "lint": "echo lint pipeline pending",
+    "test": "echo test pipeline pending"
+  }
+}
