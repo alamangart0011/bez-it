@@ -20,6 +20,10 @@ import { auditRepository } from './repositories/audit.repository.js';
 import { jwtUtil } from './lib/jwt.js';
 import { buildPushRouter } from './routes/push.js';
 import { buildPushService } from './services/push.service.js';
+import { buildInvitesRouter } from './routes/invites.js';
+import { buildRoomInvitesService } from './services/room-invites.service.js';
+import { roomInvitesRepository } from './repositories/room-invites.repository.js';
+import { roomsRepository } from './repositories/rooms.repository.js';
 import { meRouter } from './routes/me.js';
 import { buildRtcRouter } from './routes/rtc.js';
 import { buildRoomsRouter } from './routes/rooms.js';
@@ -113,6 +117,13 @@ app.use('/api/meetings', authMiddleware, meetingsRouter);
 app.use('/api/admin', authMiddleware, adminRouter);
 app.use('/api/ai-jobs', authMiddleware, aiJobsRouter);
 app.use('/api/push', buildPushRouter({ pushService }));
+
+const roomInvitesService = buildRoomInvitesService({
+  roomInvitesRepository,
+  roomsRepository,
+  auditRepository
+});
+app.use('/api', buildInvitesRouter({ roomInvitesService }));
 
 const legacyDisabledMessage = {
   code: 'LEGACY_ENDPOINT_DISABLED',
