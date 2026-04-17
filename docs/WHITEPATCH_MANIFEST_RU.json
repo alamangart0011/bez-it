@@ -1,0 +1,11 @@
+{
+  "whitepatch_version": "1.0",
+  "baseline": "room-based-v17",
+  "source_of_truth": "GitHub",
+  "status": "document_layer_ready",
+  "pending": [
+    "tracked_files_rewrite",
+    "live_acceptance_confirm",
+    "final_handoff_sync"
+  ]
+}

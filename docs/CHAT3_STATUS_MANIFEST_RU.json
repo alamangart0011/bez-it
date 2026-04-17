@@ -1,0 +1,14 @@
+{
+  "baseline": "room-based-v17",
+  "source_of_truth": "GitHub",
+  "acceptance": "in_progress",
+  "handoff": "prepared",
+  "files": [
+    "docs/CHAT3_STATUS_RU.md",
+    "docs/ACCEPTANCE_STATUS_RU.md",
+    "docs/HANDOFF_STATUS_RU.md",
+    "docs/HANDOFF_INDEX_RU.md",
+    "docs/FINAL_ACCEPTANCE_CHECKLIST_RU.md",
+    "docs/CHAT3_EXECUTION_BOARD_RU.md"
+  ]
+}

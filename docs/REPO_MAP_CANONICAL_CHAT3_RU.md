@@ -1,0 +1,6 @@
+# Canonical repo map
+
+- baseline: room-based-v17
+- root: README.md, CHANGELOG_RU.md, docker-compose.yml
+- docs: LATEST_STATE_RU.md, REPO_MAP_RU.md, PATHS_AND_ENTRYPOINTS_RU.md, BOOT_CHECKLIST_RU.md, DECISION_RULES_RU.md
+- overlay: ACCEPTANCE_STATUS_RU.md, HANDOFF_STATUS_RU.md, HANDOFF_INDEX_RU.md, CHAT3_EXECUTION_BOARD_RU.md, CHAT3_STATUS_MANIFEST_RU.json

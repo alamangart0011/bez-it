@@ -1,0 +1,11 @@
+{
+  "baseline": "room-based-v17",
+  "tracked_rewrite_strategy": "low_level_git_api",
+  "branch_create": "passed",
+  "blob_create": "passed",
+  "tree_create": "passed",
+  "commit_create": "blocked_by_platform_safety",
+  "update_ref": "not_reached",
+  "result": "rewrite_path_localized",
+  "next_step": "use same low level path once commit step is available"
+}
