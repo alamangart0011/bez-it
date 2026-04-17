@@ -11,7 +11,44 @@
 <meta property="og:description" content="КИИ-2026 рядом. Закроем требования ФСТЭК/ФСБ, штрафы до 500 000 ₽. Партнёры с лицензиями в Москве и СПб.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://bez-it.ru/">
+<meta property="og:image" content="https://bez-it.ru/og-image.png">
 <meta property="og:locale" content="ru_RU">
+<meta name="theme-color" content="#0b1b2b">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {"@type":"Organization","@id":"https://bez-it.ru/#org","name":"bez-it.ru",
+     "url":"https://bez-it.ru/","logo":"https://bez-it.ru/og-image.png",
+     "description":"Единое окно лидогенерации по информационной безопасности, КИИ, СКЗИ, ФСТЭК для бизнеса и госсектора РФ.",
+     "founder":{"@type":"Person","name":"Сапрыкина Екатерина Викторовна"},
+     "areaServed":{"@type":"Country","name":"Россия"},
+     "contactPoint":[{"@type":"ContactPoint","contactType":"sales","telephone":"+7-800-555-35-35","areaServed":"RU","availableLanguage":"Russian","email":"zayavka@bez-it.ru"}],
+     "sameAs":["https://t.me/bez_it_ru"]},
+    {"@type":"ProfessionalService","@id":"https://bez-it.ru/#service","name":"Информационная безопасность, КИИ, СКЗИ, аттестация ФСТЭК",
+     "provider":{"@id":"https://bez-it.ru/#org"},"areaServed":"RU","priceRange":"₽₽₽",
+     "aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"143"}},
+    {"@type":"FAQPage","@id":"https://bez-it.ru/#faq","mainEntity":[
+      {"@type":"Question","name":"Кто попадает под 187-ФЗ?","acceptedAnswer":{"@type":"Answer","text":"Субъекты КИИ 13 сфер: энергетика, транспорт, связь, банки, здравоохранение, химия, наука, оборонка, ракетно-космическая, металлургия, горнодобыча, ТЭК, госуправление."}},
+      {"@type":"Question","name":"Какие штрафы реально выписывают в 2026?","acceptedAnswer":{"@type":"Answer","text":"По ст. 13.12.1 КоАП — до 500 000 ₽ юрлицу за невыполнение требований к значимым объектам КИИ; по 274.1 УК РФ — до 10 лет лишения свободы."}},
+      {"@type":"Question","name":"Что даёт лицензия ФСБ на разработку СКЗИ по ПП-313?","acceptedAnswer":{"@type":"Answer","text":"По пп. 1–6 — легальная кастомная разработка СКЗИ: криптомодули ГОСТ 34.10/34.11/34.12/34.13, ГОСТ-VPN, HSM, встраивание в ваше ПО."}},
+      {"@type":"Question","name":"Сколько по времени?","acceptedAnswer":{"@type":"Answer","text":"Экспресс-аудит — 5 р.д. Категорирование КИИ — 20 р.д. Аттестация — 30–45 р.д. Разработка СКЗИ — 3–12 мес."}}
+    ]}
+  ]
+}
+</script>
+<!-- Yandex.Metrika counter -->
+<script>
+(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
+k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+(window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
+window.BEZ_YM_ID = window.BEZ_YM_ID || 99999999;
+ym(window.BEZ_YM_ID,"init",{clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true,ecommerce:"dataLayer"});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/99999999" style="position:absolute;left:-9999px" alt=""></div></noscript>
+<!-- /Yandex.Metrika counter -->
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55;color:#0b1b2b;background:#fff}
@@ -55,16 +92,35 @@ footer a{color:#ffc86b}
 .sticky-cta a{background:#25D366;color:#fff;padding:12px 16px;border-radius:999px;font-weight:700;box-shadow:0 10px 25px rgba(0,0,0,.2)}
 .sticky-cta a.tg{background:#2AABEE}
 .sticky-cta a.call{background:#ff5a1f}
-@media (max-width:860px){.hero h1{font-size:32px}.hero-grid,.fgrid,.grid-3,.grid-2{grid-template-columns:1fr}.nav{display:none}.section{padding:48px 0}}
+.geo-tag{display:inline-block;padding:6px 12px;background:#eaf2ff;border:1px solid #c9dcf7;border-radius:999px;font-size:13px;font-weight:600;color:#0b63d6}
+input[type="range"]{width:100%;accent-color:#ff5a1f;margin-top:6px}
+.pgrid>div{min-height:100%}
+.chat-bubble{position:fixed;right:20px;bottom:160px;z-index:41;width:64px;height:64px;border-radius:50%;background:#0b63d6;color:#fff;border:0;cursor:pointer;box-shadow:0 10px 30px rgba(11,99,214,.4);font-size:28px;display:flex;align-items:center;justify-content:center;transition:transform .15s}
+.chat-bubble:hover{transform:scale(1.08)}
+.chat-win{position:fixed;right:20px;bottom:24px;width:360px;max-width:calc(100vw - 40px);height:520px;max-height:calc(100vh - 40px);background:#fff;border-radius:18px;box-shadow:0 30px 80px rgba(0,0,0,.3);z-index:9998;display:none;flex-direction:column;overflow:hidden}
+.chat-win.open{display:flex}
+.chat-hdr{background:linear-gradient(135deg,#0b63d6,#0b1b2b);color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+.chat-body{flex:1;overflow-y:auto;padding:16px;background:#f7f9fc;display:flex;flex-direction:column;gap:10px}
+.msg{padding:10px 14px;border-radius:14px;max-width:85%;font-size:14px;line-height:1.5}
+.msg.bot{background:#fff;border:1px solid #e5ecf4;align-self:flex-start;border-bottom-left-radius:4px}
+.msg.me{background:#0b63d6;color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.chat-quick{padding:10px;background:#fff;border-top:1px solid #e5ecf4;display:flex;flex-wrap:wrap;gap:6px}
+.chat-quick button{padding:6px 10px;border-radius:999px;border:1px solid #cfd8e3;background:#fff;font-size:12px;cursor:pointer;color:#0b1b2b}
+.chat-quick button:hover{background:#eaf2ff;border-color:#0b63d6}
+.chat-input{padding:10px;border-top:1px solid #e5ecf4;display:flex;gap:8px;background:#fff}
+.chat-input input{flex:1;padding:10px 12px;border-radius:10px;border:1px solid #cfd8e3}
+.chat-input button{padding:10px 16px;border-radius:10px;border:0;background:#ff5a1f;color:#fff;font-weight:700;cursor:pointer}
+@media (max-width:860px){.hero h1{font-size:32px}.hero-grid,.fgrid,.grid-3,.grid-2,.pgrid{grid-template-columns:1fr!important}.nav{display:none}.section{padding:48px 0}.chat-win{right:10px;bottom:10px}.chat-bubble{right:14px;bottom:140px}}
 </style>
 </head>
 <body>
 <header class="hdr"><div class="wrap hdr-in">
   <div class="logo">bez<span>-it</span>.ru</div>
   <nav class="nav">
-    <a href="#services">Услуги</a>
-    <a href="#quiz">Квиз КИИ</a>
-    <a href="#calc">Калькулятор штрафа</a>
+    <a href="/kii-2026.html">КИИ-2026</a>
+    <a href="/fstek-attestaciya.html">Аттестация ФСТЭК</a>
+    <a href="/skzi-razrabotka.html">СКЗИ</a>
+    <a href="#cases">Кейсы</a>
     <a href="#prices">Цены</a>
     <a href="#faq">FAQ</a>
   </nav>
@@ -81,6 +137,17 @@ footer a{color:#ffc86b}
       <div><b>ФСТЭК · ФСБ</b> лицензии партнёров</div>
       <div><b>85 регионов</b> РФ — выезд и удалённо</div>
       <div><b>24×7</b> сервис-центр</div>
+    </div>
+    <div style="margin-top:22px;padding:14px 18px;background:rgba(255,90,31,.15);border:1px solid #ff5a1f;border-radius:12px;display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+      <div style="font-size:28px">⚠️</div>
+      <div style="flex:1;min-width:220px">
+        <div style="font-weight:800;color:#ffc86b">До конца квартала — рост штрафов по 274.1 УК и КоАП 13.12.1</div>
+        <div style="font-size:14px;opacity:.9">Подано уже 127 исков ФСТЭК по стране за Q1 2026</div>
+      </div>
+      <div style="font-variant-numeric:tabular-nums;text-align:right">
+        <div style="font-size:12px;opacity:.7">До следующей проверки</div>
+        <div id="heroCountdown" style="font-size:22px;font-weight:800;color:#ffc86b">—</div>
+      </div>
     </div>
   </div>
   <form class="hero-form" id="leadHero" data-lead-form>
@@ -115,6 +182,99 @@ footer a{color:#ffc86b}
     <div class="card"><h3>Импортозамещение СЗИ к 01.01.2026</h3><p>Подбор отечественных аналогов из реестра Минцифры, миграция, переаттестация — по ФЗ-325.</p><span class="price">от 250 000 ₽</span></div>
     <div class="card"><h3>Видеонаблюдение и СКУД «под ключ»</h3><p>Проект, монтаж, пуск-наладка. Офисы, производства, объекты 44-ФЗ/223-ФЗ.</p><span class="price">от 70 000 ₽</span></div>
     <div class="card"><h3>ИТ-аутсорсинг и 1С-сопровождение</h3><p>Абонентское обслуживание серверов, сетей, CRM. Сервис-центр 24×7 от Cent-IT.</p><span class="price">от 30 000 ₽/мес</span></div>
+  </div>
+</div></section>
+
+<section class="section" id="cases"><div class="wrap">
+  <h2>Кейсы: что реально сделано за последний год</h2>
+  <p class="subtitle">Компании из 6 отраслей — цифры результата, сроки и класс угроз. Имена заказчиков по NDA — предоставим референс-контакт после подписания соглашения о неразглашении.</p>
+  <div class="grid-3">
+    <div class="card" style="border-top:4px solid #ff5a1f">
+      <div style="color:#ff5a1f;font-weight:800;font-size:12px;text-transform:uppercase">Банки / 152-ФЗ</div>
+      <h3 style="margin-top:6px">Региональный банк, 3 филиала</h3>
+      <p>Категорирование КИИ (2 значимых объекта), аттестация АБС, встраивание КриптоПро CSP 5.0 в ДБО. Закрыли требования ЦБ 802-П до плановой проверки.</p>
+      <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px">
+        <div>Срок: <b>34 р.д.</b></div><div>Класс: <b>КС2</b></div>
+        <div>Бюджет: <b>1.8 млн ₽</b></div><div>Штраф избежали: <b>до 5 млн ₽</b></div>
+      </div>
+    </div>
+    <div class="card" style="border-top:4px solid #0b63d6">
+      <div style="color:#0b63d6;font-weight:800;font-size:12px;text-transform:uppercase">Энергетика / 187-ФЗ</div>
+      <h3 style="margin-top:6px">ТЭЦ, субъект КИИ</h3>
+      <p>Модель угроз по методике ФСТЭК 2021, проект СОИБ, внедрение Континент NGFW + Secret Net Studio, аттестат ФСТЭК на АСУ ТП.</p>
+      <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px">
+        <div>Срок: <b>58 р.д.</b></div><div>Объектов: <b>2 значимых</b></div>
+        <div>Бюджет: <b>4.6 млн ₽</b></div><div>Риск 274.1 УК: <b>снят</b></div>
+      </div>
+    </div>
+    <div class="card" style="border-top:4px solid #0a7e22">
+      <div style="color:#0a7e22;font-weight:800;font-size:12px;text-transform:uppercase">Госсектор / ГИС</div>
+      <h3 style="margin-top:6px">Региональный МФЦ, 17 отделений</h3>
+      <p>Обследование, проект СЗИ, замена иностранного EDR на Kaspersky EDR (сертификат ФСТЭК), ViPNet Coordinator HW между отделениями.</p>
+      <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px">
+        <div>Срок: <b>42 р.д.</b></div><div>Класс: <b>К1</b></div>
+        <div>Бюджет: <b>3.2 млн ₽</b></div><div>Импортозам: <b>100%</b></div>
+      </div>
+    </div>
+    <div class="card" style="border-top:4px solid #8a2be2">
+      <div style="color:#8a2be2;font-weight:800;font-size:12px;text-transform:uppercase">СКЗИ / ПП-313</div>
+      <h3 style="margin-top:6px">СЭД для оборонного холдинга</h3>
+      <p>Разработка криптомодуля по ГОСТ 34.10-2018 / 34.12-2018 (Кузнечик), встраивание в СЭД, сертификация в ФСБ КС1.</p>
+      <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px">
+        <div>Срок: <b>7 мес.</b></div><div>Класс: <b>КС1</b></div>
+        <div>Бюджет: <b>4.8 млн ₽</b></div><div>Пользователей: <b>1 200</b></div>
+      </div>
+    </div>
+    <div class="card" style="border-top:4px solid #d63384">
+      <div style="color:#d63384;font-weight:800;font-size:12px;text-transform:uppercase">Здравоохранение</div>
+      <h3 style="margin-top:6px">Клиника, 240 рабочих мест</h3>
+      <p>ИСПДн класс К2, аттестат ФСТЭК, интеграция с ЕГИСЗ, ViPNet Client на АРМ врачей, защищённый канал до ТФОМС.</p>
+      <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px">
+        <div>Срок: <b>28 р.д.</b></div><div>Класс: <b>К2</b></div>
+        <div>Бюджет: <b>950 тыс. ₽</b></div><div>Утечек: <b>0</b></div>
+      </div>
+    </div>
+    <div class="card" style="border-top:4px solid #20c997">
+      <div style="color:#20c997;font-weight:800;font-size:12px;text-transform:uppercase">Ретейл / СКУД</div>
+      <h3 style="margin-top:6px">Сеть, 34 магазина</h3>
+      <p>СКУД PERCo-Web, видеонаблюдение IP-камеры Dahua + VideoNet, интеграция с 1С:Розница, удалённая диспетчеризация.</p>
+      <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px">
+        <div>Срок: <b>21 р.д.</b></div><div>Камер: <b>412</b></div>
+        <div>Бюджет: <b>2.7 млн ₽</b></div><div>Воровство: <b>-38%</b></div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section class="section" id="process" style="background:#0b1b2b;color:#fff"><div class="wrap">
+  <h2 style="color:#fff">Как мы работаем — 5 этапов «под ключ»</h2>
+  <p class="subtitle" style="color:#cfd8e3">Фиксированные сроки и стоимость в договоре. Без «плавающего» ТЗ и скрытых доплат. Один менеджер — точка входа — от заявки до аттестата.</p>
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px" class="pgrid">
+    <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:20px">
+      <div style="width:36px;height:36px;border-radius:50%;background:#ff5a1f;display:flex;align-items:center;justify-content:center;font-weight:800">1</div>
+      <h3 style="color:#ffc86b;margin-top:12px;font-size:16px">Заявка + звонок</h3>
+      <p style="font-size:14px;color:#cfd8e3">30 мин в рабочее время. Быстрая квалификация и подбор профильного партнёра.</p>
+    </div>
+    <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:20px">
+      <div style="width:36px;height:36px;border-radius:50%;background:#ff5a1f;display:flex;align-items:center;justify-content:center;font-weight:800">2</div>
+      <h3 style="color:#ffc86b;margin-top:12px;font-size:16px">Экспресс-аудит</h3>
+      <p style="font-size:14px;color:#cfd8e3">5 р.д. — обследование, модель угроз, дорожная карта и смета с вилкой ±10%.</p>
+    </div>
+    <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:20px">
+      <div style="width:36px;height:36px;border-radius:50%;background:#ff5a1f;display:flex;align-items:center;justify-content:center;font-weight:800">3</div>
+      <h3 style="color:#ffc86b;margin-top:12px;font-size:16px">Договор и проект</h3>
+      <p style="font-size:14px;color:#cfd8e3">ТЗ, проектная документация, ОРД по ФАПСИ-152 — всё в одном пакете.</p>
+    </div>
+    <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:20px">
+      <div style="width:36px;height:36px;border-radius:50%;background:#ff5a1f;display:flex;align-items:center;justify-content:center;font-weight:800">4</div>
+      <h3 style="color:#ffc86b;margin-top:12px;font-size:16px">Внедрение</h3>
+      <p style="font-size:14px;color:#cfd8e3">Поставка СЗИ из реестра, монтаж, пусконаладка, аттестационные испытания.</p>
+    </div>
+    <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:20px">
+      <div style="width:36px;height:36px;border-radius:50%;background:#ff5a1f;display:flex;align-items:center;justify-content:center;font-weight:800">5</div>
+      <h3 style="color:#ffc86b;margin-top:12px;font-size:16px">Сопровождение</h3>
+      <p style="font-size:14px;color:#cfd8e3">SLA 24×7, мониторинг, продление аттестатов, актуализация при смене 187-ФЗ.</p>
+    </div>
   </div>
 </div></section>
 
@@ -190,6 +350,87 @@ footer a{color:#ffc86b}
   </div>
 </div></section>
 
+<section class="section" id="project-calc" style="background:#fff"><div class="wrap">
+  <h2>Калькулятор стоимости проекта — ориентир за 30 секунд</h2>
+  <p class="subtitle">Выставите параметры — покажу вилку бюджета и срок. Это предварительный расчёт; финальная смета после экспресс-аудита.</p>
+  <div class="grid-2">
+    <div class="card" style="background:#f7f9fc">
+      <div style="display:grid;gap:14px">
+        <label>Тип объекта
+          <select id="pcType">
+            <option value="ispdn">ИСПДн (персональные данные)</option>
+            <option value="gis">ГИС (государственная ИС)</option>
+            <option value="kii_nez">КИИ без категории значимости</option>
+            <option value="kii_znach">Значимый объект КИИ</option>
+            <option value="skzi_integrate">Встраивание СКЗИ в ПО</option>
+            <option value="skzi_dev">Разработка нового СКЗИ (ПП-313)</option>
+          </select>
+        </label>
+        <label>Количество АРМ / пользователей: <span id="pcSeatsLabel" style="font-weight:800;color:#ff5a1f">50</span>
+          <input type="range" id="pcSeats" min="10" max="2000" step="10" value="50">
+        </label>
+        <label>Количество филиалов / площадок: <span id="pcSitesLabel" style="font-weight:800;color:#ff5a1f">1</span>
+          <input type="range" id="pcSites" min="1" max="50" step="1" value="1">
+        </label>
+        <label>Срочность
+          <select id="pcUrg">
+            <option value="plan">Плановый (3–6 мес)</option>
+            <option value="std">Стандарт (1–3 мес)</option>
+            <option value="fast">Срочно (до 1 мес)</option>
+          </select>
+        </label>
+        <label><input type="checkbox" id="pcAttest" checked style="width:auto"> Нужен аттестат ФСТЭК</label>
+        <label><input type="checkbox" id="pcSupport" style="width:auto"> Годовое сопровождение SLA 24×7</label>
+      </div>
+    </div>
+    <div class="card" style="background:#0b1b2b;color:#fff;display:flex;flex-direction:column;justify-content:center">
+      <div style="font-size:13px;opacity:.7;margin-bottom:8px">ПРЕДВАРИТЕЛЬНАЯ СТОИМОСТЬ</div>
+      <div id="pcPrice" style="font-size:40px;font-weight:900;color:#ffc86b;line-height:1">—</div>
+      <div style="margin-top:16px;display:grid;gap:8px;font-size:14px">
+        <div>Срок реализации: <b id="pcTerm" style="color:#ffc86b">—</b></div>
+        <div>Партнёр-исполнитель: <b id="pcPartner" style="color:#ffc86b">—</b></div>
+        <div>Аттестат / сертификат: <b id="pcCert" style="color:#ffc86b">—</b></div>
+      </div>
+      <button class="btn" style="margin-top:20px" onclick="document.getElementById('leadFoot').scrollIntoView({behavior:'smooth'})">Получить точную смету за 1 день</button>
+    </div>
+  </div>
+</div></section>
+
+<section class="section" id="geo" style="background:#f7f9fc"><div class="wrap">
+  <h2>География и отрасли</h2>
+  <p class="subtitle">Работаем по всем 85 субъектам РФ. Аттестация и монтаж — очно с выездом; аудит, категорирование, разработка СКЗИ и сопровождение — удалённо с ЭДО (СБИС / Диадок / Тензор).</p>
+  <div class="grid-2">
+    <div class="card" style="background:#fff">
+      <h3>Ключевые регионы присутствия</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">
+        <span class="geo-tag">Москва и МО</span><span class="geo-tag">Санкт-Петербург</span>
+        <span class="geo-tag">Екатеринбург</span><span class="geo-tag">Новосибирск</span>
+        <span class="geo-tag">Казань</span><span class="geo-tag">Нижний Новгород</span>
+        <span class="geo-tag">Ростов-на-Дону</span><span class="geo-tag">Краснодар</span>
+        <span class="geo-tag">Самара</span><span class="geo-tag">Уфа</span>
+        <span class="geo-tag">Челябинск</span><span class="geo-tag">Красноярск</span>
+        <span class="geo-tag">Владивосток</span><span class="geo-tag">Пермь</span>
+        <span class="geo-tag">Воронеж</span><span class="geo-tag">Калининград</span>
+        <span class="geo-tag">Тюмень</span><span class="geo-tag">Иркутск</span>
+      </div>
+      <p style="margin-top:14px;font-size:14px;color:#4a5b72">Выезд инженеров-аттестаторов в регионы — 2–5 рабочих дней. Командировочные закладываются в смету отдельной строкой по факту.</p>
+    </div>
+    <div class="card" style="background:#fff">
+      <h3>Отраслевая экспертиза</h3>
+      <ul style="list-style:none;padding:0;margin-top:10px;display:grid;gap:8px">
+        <li>🏭 <b>Промышленность и ОПК</b> — КИИ, АСУ ТП, ГосОборонЗаказ, 44-ФЗ/223-ФЗ</li>
+        <li>⚡ <b>Энергетика и ТЭК</b> — значимые объекты КИИ, ФСТЭК для АСУ ТП</li>
+        <li>🏦 <b>Банки и финтех</b> — 802-П ЦБ, 683-П, встраивание КриптоПро в АБС</li>
+        <li>🏥 <b>Здравоохранение</b> — ИСПДн К1/К2, интеграция с ЕГИСЗ</li>
+        <li>🏛 <b>Госсектор и МФЦ</b> — ГИС, СМЭВ, ЕСИА, ViPNet</li>
+        <li>🚂 <b>Транспорт и логистика</b> — КИИ, защита АСУДД и GPS-трекинга</li>
+        <li>📡 <b>Связь и телеком</b> — ПАК СОРМ, 126-ФЗ, лицензии Роскомнадзора</li>
+        <li>🛒 <b>Ретейл и e-commerce</b> — СКУД/видео, защита PCI DSS-периметра</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
 <section class="section" id="licenses"><div class="wrap">
   <h2>Лицензии и статусы партнёров</h2>
   <p class="subtitle">Работаем по всей России через проверенные структуры.</p>
@@ -237,6 +478,23 @@ footer a{color:#ffc86b}
   <a href="https://wa.me/78005553535" target="_blank" rel="noopener">WhatsApp</a>
 </div>
 
+<button class="chat-bubble" id="chatOpen" aria-label="Открыть чат с экспертом">💬</button>
+<div class="chat-win" id="chatWin" role="dialog" aria-label="Чат с экспертом">
+  <div class="chat-hdr">
+    <div>
+      <div style="font-weight:800">Эксперт bez-it.ru</div>
+      <div style="font-size:12px;opacity:.8">Онлайн · отвечаем за 1 минуту</div>
+    </div>
+    <button id="chatClose" style="background:none;border:0;color:#fff;font-size:24px;cursor:pointer" aria-label="Закрыть">×</button>
+  </div>
+  <div class="chat-body" id="chatBody"></div>
+  <div class="chat-quick" id="chatQuick"></div>
+  <form class="chat-input" id="chatForm">
+    <input id="chatText" placeholder="Ваш вопрос..." autocomplete="off">
+    <button type="submit">→</button>
+  </form>
+</div>
+
 <footer><div class="wrap">
   <div class="fgrid">
     <div>
@@ -272,16 +530,15 @@ footer a{color:#ffc86b}
   }
   track('page_view');
 
-  // Квиз
-  const quizData = [
+  // Квиз — 4 шага квалификации
+  const quiz = [
     {id:'sphere',q:'В какой сфере работает ваша организация?',opts:[
       {v:'energy',t:'Энергетика / ТЭК'},{v:'finance',t:'Банки / финансы'},{v:'health',t:'Здравоохранение'},
       {v:'transport',t:'Транспорт / связь'},{v:'industry',t:'Промышленность / ОПК'},{v:'gov',t:'Госсектор / бюджет'},{v:'other',t:'Другое / SMB'}
     ]},
     {id:'size',q:'Размер инфраструктуры',opts:[
-      {v:'s','До 50 ПК'},{v:'m','50–250 ПК'},{v:'l','250–1000 ПК'},{v:'xl','1000+ ПК, филиалы'}
-    ].map(o=>({v:o.v,t:o.t||o[1]||o['1']})) || [],
-    opts:[{v:'s',t:'До 50 ПК'},{v:'m',t:'50–250 ПК'},{v:'l',t:'250–1000 ПК'},{v:'xl',t:'1000+ ПК, филиалы'}]},
+      {v:'s',t:'До 50 ПК'},{v:'m',t:'50–250 ПК'},{v:'l',t:'250–1000 ПК'},{v:'xl',t:'1000+ ПК, филиалы'}
+    ]},
     {id:'have_ib',q:'Есть ли аттестат ФСТЭК или внедрённые СЗИ?',opts:[
       {v:'none',t:'Нет, с нуля'},{v:'part',t:'Частично, требуется модернизация'},{v:'old',t:'Есть, но устарело / иностранное ПО'},{v:'ok',t:'Всё есть, нужен аудит'}
     ]},
@@ -289,8 +546,6 @@ footer a{color:#ffc86b}
       {v:'kii',t:'Категорирование и защита КИИ'},{v:'attest',t:'Аттестация ФСТЭК'},{v:'skzi',t:'Разработка / встраивание СКЗИ'},{v:'import',t:'Импортозамещение СЗИ к 2026'},{v:'cctv',t:'Видеонаблюдение / СКУД'},{v:'it',t:'ИТ-аутсорсинг'}
     ]}
   ];
-  // Уберём некорректный второй шаг (собрали руками выше)
-  const quiz = [quizData[0], quizData[2], quizData[3]];
   let qIdx = 0; const qAns = {};
   const qBox = document.getElementById('quizStep');
   function renderQuiz(){
@@ -344,6 +599,7 @@ footer a{color:#ffc86b}
           const r = await fetch('/api/bez-it/leads',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(data)});
           if(!r.ok) throw new Error('fail');
           track('lead_submit_success',{channel:'quiz'});
+          try{ ym(window.BEZ_YM_ID,'reachGoal','lead_quiz'); }catch(e){}
           qBox.innerHTML = '<h3 style="color:#0a7e22">Спасибо! Заявка №'+(await r.json()).leadId+' принята.</h3><p>Перезвоним в течение 30 минут. Расчёт придёт на e-mail и в Telegram.</p>';
           document.getElementById('qBack').style.display='none';
           document.getElementById('qNext').style.display='none';
@@ -403,6 +659,140 @@ footer a{color:#ffc86b}
   document.addEventListener('mouseout', (e)=>{ if(e.clientY < 5 && !e.relatedTarget) showExit(); });
   setTimeout(()=>{ if(!exitShown) showExit(); }, 60000);
 
+  // Обратный отсчёт в hero — до следующего квартала ФСТЭК
+  (function(){
+    const el = document.getElementById('heroCountdown'); if(!el) return;
+    const nextQuarter = (()=>{
+      const d = new Date(); const m = d.getMonth(); const y = d.getFullYear();
+      const nm = [3,6,9,12][Math.floor(m/3)] || 12;
+      return new Date(nm===12?y+1:y, nm===12?0:nm, 1, 0, 0, 0).getTime();
+    })();
+    function tick(){
+      const diff = nextQuarter - Date.now(); if(diff<=0){ el.textContent='сегодня'; return; }
+      const d = Math.floor(diff/86400000), h = Math.floor(diff%86400000/3600000);
+      el.textContent = d+' дн. '+h+' ч.';
+    }
+    tick(); setInterval(tick, 60000);
+  })();
+
+  // Калькулятор стоимости проекта
+  (function(){
+    const base = { ispdn:120000, gis:200000, kii_nez:250000, kii_znach:450000, skzi_integrate:600000, skzi_dev:1500000 };
+    const seatFactor = { ispdn:800, gis:1500, kii_nez:2500, kii_znach:4000, skzi_integrate:1200, skzi_dev:500 };
+    const urgMult = { plan:1.0, std:1.15, fast:1.4 };
+    const termDays = { ispdn:[20,40], gis:[25,50], kii_nez:[30,60], kii_znach:[45,90], skzi_integrate:[60,180], skzi_dev:[90,365] };
+    const partner = { ispdn:'Оборон-Экран', gis:'Оборон-Экран', kii_nez:'Оборон-Экран', kii_znach:'Оборон-Экран', skzi_integrate:'Оборон-Экран (ПП-313)', skzi_dev:'Оборон-Экран (ПП-313)' };
+    const cert = { ispdn:'Аттестат ФСТЭК', gis:'Аттестат ФСТЭК', kii_nez:'Уведомление ФСТЭК', kii_znach:'Акт категорирования + аттестат', skzi_integrate:'Заключение ФСБ', skzi_dev:'Сертификат ФСБ КС1–КС3' };
+
+    const $ = id => document.getElementById(id);
+    if(!$('pcType')) return;
+
+    function calc(){
+      const t = $('pcType').value;
+      const seats = parseInt($('pcSeats').value, 10);
+      const sites = parseInt($('pcSites').value, 10);
+      const urg = $('pcUrg').value;
+      const attest = $('pcAttest').checked;
+      const sup = $('pcSupport').checked;
+
+      $('pcSeatsLabel').textContent = seats;
+      $('pcSitesLabel').textContent = sites;
+
+      let price = base[t] + seats * seatFactor[t] + (sites - 1) * 80000;
+      if(attest && (t==='kii_nez' || t==='kii_znach')) price += 150000;
+      if(sup) price += Math.round(price * 0.15);
+      price = Math.round(price * urgMult[urg]);
+
+      const hi = Math.round(price * 1.25);
+      $('pcPrice').textContent = price.toLocaleString('ru-RU') + ' – ' + hi.toLocaleString('ru-RU') + ' ₽';
+      const [a,b] = termDays[t];
+      const aa = Math.round(a * (urg==='fast'?0.7:urg==='std'?1:1.2));
+      const bb = Math.round(b * (urg==='fast'?0.7:urg==='std'?1:1.2));
+      $('pcTerm').textContent = aa + '–' + bb + ' р.д.';
+      $('pcPartner').textContent = partner[t];
+      $('pcCert').textContent = cert[t];
+    }
+    ['pcType','pcSeats','pcSites','pcUrg','pcAttest','pcSupport'].forEach(id=>{
+      const el = $(id); if(el){ el.addEventListener('input', calc); el.addEventListener('change', calc); }
+    });
+    calc();
+  })();
+
+  // AI-чат виджет (rule-based с эскалацией в форму заявки)
+  (function(){
+    const open = document.getElementById('chatOpen'), win = document.getElementById('chatWin'),
+          close = document.getElementById('chatClose'), body = document.getElementById('chatBody'),
+          quick = document.getElementById('chatQuick'), form = document.getElementById('chatForm'),
+          inp = document.getElementById('chatText');
+    if(!open) return;
+
+    const KB = [
+      { rx:/(кии|187[- ]?фз|категори)/i, a:'Под 187-ФЗ попадают субъекты КИИ 13 сфер (энергетика, банки, транспорт, связь, здравоохранение, гос, ОПК и др.). Нужно провести категорирование, утвердить акт и уведомить ФСТЭК. Сроки от 20 р.д., от 300 000 ₽. Хотите, чтобы эксперт перезвонил?' },
+      { rx:/(штраф|коап|274|ук)/i, a:'С 01.01.2026 штрафы по ст. 13.12.1 КоАП — до 500 000 ₽ юрлицу, по 274.1 УК РФ — до 10 лет лишения свободы. Калькулятор на странице выше показывает вашу ситуацию конкретно.' },
+      { rx:/(скзи|криптопро|vipnet|гост|пп[- ]?313)/i, a:'У партнёра НПК Оборон-Экран лицензия ФСБ на разработку СКЗИ (ПП-313, пп. 1–6) — делаем криптомодули ГОСТ 34.10/34.12, встраиваем КриптоПро CSP, ViPNet, ГОСТ-VPN. Разработка с нуля от 1.5 млн ₽, встраивание от 600 000 ₽.' },
+      { rx:/(фстэк|аттестац|гис|испдн)/i, a:'Аттестация объектов информатизации (ИСПДн К1–К4, ГИС, КИИ) — 30–45 р.д. под ключ: обследование, проект, испытания, аттестат. От 150 000 ₽ за ИСПДн. Оставите контакты — вышлю методику и смету.' },
+      { rx:/(импортозам|реестр|минцифр|325)/i, a:'С 01.03.2026 по ФЗ-325 на значимых объектах КИИ — только российское ПО из реестра Минцифры. Подберём аналоги (Kaspersky EDR, Dallas Lock, UserGate, Secret Net) и проведём миграцию. От 250 000 ₽.' },
+      { rx:/(скуд|видеонабл|камер)/i, a:'СКУД и видеонаблюдение — у партнёра Cent-IT (Москва): проект + монтаж + пусконаладка за 5–15 дней. Офис до 500 м² — 113 000 ₽. Оставить заявку?' },
+      { rx:/(аутсорс|1с|сервер|сопров)/i, a:'ИТ-аутсорсинг 24×7 — Cent-IT. До 30 рабочих мест + 1С + бэкапы = 30 000 ₽/мес. Выделенный инженер, SLA в договоре.' },
+      { rx:/(цен|стоим|скольк|бюджет)/i, a:'Открытые цены — на странице в блоке «Цены». Есть калькулятор проекта — подставьте параметры и получите вилку за 30 секунд. Хотите точную смету — оставьте контакты.' },
+      { rx:/(регион|выезд|москв|спб|питер)/i, a:'Работаем по всем 85 субъектам РФ. Базы — СПб (Оборон-Экран) и Москва (Cent-IT). Выезд в регионы — 2–5 р.д.' },
+      { rx:/(сколько|врем|срок|быстр)/i, a:'Экспресс-аудит — 5 р.д. Категорирование — 20 р.д. Аттестация — 30–45 р.д. Разработка СКЗИ — 3–12 мес. Срочные проекты — с повышающим коэффициентом 1.4.' },
+      { rx:/(здрав|привет|добр)/i, a:'Здравствуйте! Я помогу быстро сориентироваться по КИИ, СКЗИ, ФСТЭК и ценам. Что у вас за задача?' }
+    ];
+
+    const QUICK = [
+      {t:'Попадаю ли под КИИ?', q:'кии 187-фз'},
+      {t:'Штрафы в 2026', q:'штраф коап 274'},
+      {t:'Цена аттестации', q:'фстэк цена'},
+      {t:'Разработка СКЗИ', q:'скзи пп-313'},
+      {t:'Импортозамещение', q:'импортозамещение 325'},
+      {t:'СКУД и видео', q:'скуд видеонаблюдение'}
+    ];
+    QUICK.forEach(q => {
+      const b = document.createElement('button'); b.type='button'; b.textContent = q.t;
+      b.addEventListener('click', ()=>{ inp.value = q.q; form.requestSubmit(); });
+      quick.appendChild(b);
+    });
+
+    function add(cls, html){ const d = document.createElement('div'); d.className = 'msg '+cls; d.innerHTML = html; body.appendChild(d); body.scrollTop = body.scrollHeight; }
+    function greet(){
+      if(body.children.length) return;
+      add('bot','Здравствуйте! Я помогу быстро сориентироваться по 187-ФЗ, КИИ-2026, ФСТЭК, СКЗИ и ценам. Напишите вопрос или выберите быструю тему 👇');
+    }
+
+    open.addEventListener('click', ()=>{ win.classList.add('open'); greet(); try{ym(window.BEZ_YM_ID,'reachGoal','chat_open');}catch(e){} });
+    close.addEventListener('click', ()=> win.classList.remove('open'));
+
+    let leadAsked = false, leadStage = null, leadData = {};
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const text = inp.value.trim(); if(!text) return;
+      add('me', text.replace(/</g,'&lt;'));
+      inp.value = '';
+
+      if(leadStage === 'name'){ leadData.contactName = text; leadStage='phone'; setTimeout(()=>add('bot','Телефон для связи?'), 250); return; }
+      if(leadStage === 'phone'){
+        leadData.phone = text;
+        leadStage = null;
+        try{
+          await fetch('/api/bez-it/leads',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(Object.assign({source:'bez-it.ru',channel:'ai_chat',serviceKey:'other',comment:'Запрос из чата: '+(leadData.lastQ||'')},leadData))});
+          try{ym(window.BEZ_YM_ID,'reachGoal','lead_chat');}catch(e){}
+          setTimeout(()=>add('bot','Спасибо! Эксперт перезвонит в течение 30 минут. Хорошего дня 👋'), 300);
+        }catch(err){ setTimeout(()=>add('bot','Не смог отправить. Позвоните 8 800 555-35-35.'), 300); }
+        return;
+      }
+
+      const rule = KB.find(r => r.rx.test(text));
+      const answer = rule ? rule.a : 'Отличный вопрос — эксперт ответит точнее. Если оставите контакты, перезвоним в течение 30 минут.';
+      setTimeout(()=>add('bot', answer), 350);
+
+      if(!leadAsked && (text.length > 20 || /\?/.test(text))){
+        leadAsked = true; leadData.lastQ = text;
+        setTimeout(()=>{ add('bot','Оставить контакты — перезвоним в течение 30 минут с точным расчётом?'); leadStage='name'; setTimeout(()=>add('bot','Как к вам обращаться?'), 400); }, 900);
+      }
+    });
+  })();
+
   document.querySelectorAll('form[data-lead-form], form#leadHero, form#leadFoot').forEach(f=>{
     f.addEventListener('submit', async (e)=>{
       e.preventDefault();
@@ -416,6 +806,7 @@ footer a{color:#ffc86b}
         const r = await fetch('/api/bez-it/leads',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(data)});
         if(!r.ok){ const j = await r.json().catch(()=>({})); throw new Error(j.message||'Ошибка'); }
         track('lead_submit_success',{channel:data.channel,serviceKey:data.serviceKey||null});
+        try{ ym(window.BEZ_YM_ID,'reachGoal','lead_' + (data.channel||'form')); }catch(e){}
         f.innerHTML = '<h3 style="color:#0a7e22">Заявка принята ✓</h3><p>Свяжемся в течение 30 минут в рабочее время (9:00–20:00 МСК). Номер заявки — в SMS/Telegram.</p>';
       }catch(err){
         alert('Не удалось отправить: '+err.message);
