@@ -38,6 +38,7 @@ apt-get install -y certbot
 
 log "2/6 · проверяю DNS"
 echo "  ожидаемые IP:  landing=${LANDING_IP}  cabinet=${CABINET_IP}"
+AUTO="${BEZIT_TLS_AUTO:-0}"
 SKIP_WWW=0; SKIP_CABINET=0
 check_dns() {
   local d="$1" want="$2" got
@@ -47,11 +48,18 @@ check_dns() {
     return 0
   fi
   warn "  ✗ ${d} → ${got:-не резолвится} (ожидался ${want})"
+  if [[ "${AUTO}" == "1" ]]; then
+    echo "  [auto] исключаю ${d} из сертификата"
+    return 1
+  fi
   read -rp "  Продолжить, исключив ${d} из сертификата? [y/N] " ANS
   [[ "${ANS}" =~ ^[YyДд]$ ]] || return 2
   return 1
 }
-check_dns "${DOMAIN_MAIN}" "${LANDING_IP}" || { r=$?; [[ $r -eq 2 ]] && exit 1; }
+if ! check_dns "${DOMAIN_MAIN}" "${LANDING_IP}"; then
+  r=$?; [[ $r -eq 2 ]] && exit 1
+  err "главный домен ${DOMAIN_MAIN} обязателен"; exit 1
+fi
 check_dns "${DOMAIN_WWW}"  "${LANDING_IP}" || { r=$?; [[ $r -eq 2 ]] && exit 1; SKIP_WWW=1; }
 check_dns "${DOMAIN_CABINET}" "${CABINET_IP}" || { r=$?; [[ $r -eq 2 ]] && exit 1; SKIP_CABINET=1; }
 
