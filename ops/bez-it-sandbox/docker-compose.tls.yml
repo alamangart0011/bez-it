@@ -1,0 +1,13 @@
+# Override для TLS-режима. Используется как:
+#   docker compose -f docker-compose.bez-it.yml -f docker-compose.tls.yml --env-file .env up -d
+services:
+  bez-it-web:
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../../apps/bez-it/public:/usr/share/nginx/html/landing:ro
+      - ../../apps/ip-cabinet/public:/usr/share/nginx/html/cabinet:ro
+      - ./nginx.tls.conf:/etc/nginx/conf.d/default.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/certbot:/var/www/certbot:ro
