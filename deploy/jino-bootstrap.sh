@@ -4,10 +4,19 @@
 # или:    bash deploy/jino-bootstrap.sh
 set -euo pipefail
 
-REPO_URL="${REPO_URL:-https://github.com/alamangart0011/contour-chat-v17.git}"
+REPO_OWNER="${REPO_OWNER:-alamangart0011}"
+REPO_NAME="${REPO_NAME:-contour-chat-v17}"
 BRANCH="${BRANCH:-claude/landing-pages-leads-X4MIG}"
 APP_DIR="${APP_DIR:-/opt/bez-it}"
 HTTP_PORT="${HTTP_PORT:-80}"
+
+# Если репо приватный — задайте GH_TOKEN перед запуском:
+#   GH_TOKEN=ghp_xxx bash deploy/jino-bootstrap.sh
+if [[ -n "${GH_TOKEN:-}" ]]; then
+  REPO_URL="https://${GH_TOKEN}@github.com/${REPO_OWNER}/${REPO_NAME}.git"
+else
+  REPO_URL="${REPO_URL:-https://github.com/${REPO_OWNER}/${REPO_NAME}.git}"
+fi
 
 log() { echo -e "\n[$(date +%H:%M:%S)] \033[1;32m$*\033[0m"; }
 err() { echo -e "\n[$(date +%H:%M:%S)] \033[1;31m$*\033[0m" >&2; }
