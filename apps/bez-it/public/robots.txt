@@ -2,6 +2,22 @@ User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /kabinet/
+Clean-param: utm_source&utm_medium&utm_campaign&utm_term&utm_content&yclid&gclid&fbclid&from
+
+User-agent: Yandex
+Allow: /
+Disallow: /api/
+Disallow: /kabinet/
+Clean-param: utm_source&utm_medium&utm_campaign&utm_term&utm_content&yclid&gclid&fbclid&from
+
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /kabinet/
+
+User-agent: YandexTurbo
+Allow: /
 
 Sitemap: https://bez-it.ru/sitemap.xml
-Host: https://bez-it.ru
+Sitemap: https://bez-it.ru/turbo.xml
+Host: bez-it.ru
