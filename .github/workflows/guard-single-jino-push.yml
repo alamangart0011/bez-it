@@ -1,0 +1,39 @@
+name: guard-single-jino-push
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ensure single Jino workflow on push main
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          import sys
+
+          workflow_dir = Path('.github/workflows')
+          offenders = []
+
+          for path in sorted(workflow_dir.glob('*.y*ml')):
+              text = path.read_text(encoding='utf-8')
+              has_push_main = bool(re.search(r'on:\s*\n(?:.*\n)*?\s+push:\s*\n(?:.*\n)*?\s+branches:\s*\n(?:.*\n)*?\s+-\s+main', text))
+              mentions_jino = 'jino' in text.lower() or 'JINO_' in text
+              if has_push_main and mentions_jino:
+                  offenders.append(path.as_posix())
+
+          print('Jino push workflows:', offenders)
+          if len(offenders) > 1:
+              print('ERROR: more than one Jino workflow reacts to push on main')
+              sys.exit(1)
+          PY

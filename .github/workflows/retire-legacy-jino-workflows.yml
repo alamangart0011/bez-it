@@ -1,0 +1,64 @@
+name: retire-legacy-jino-workflows
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/retire-legacy-jino-workflows.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  retire:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rewrite legacy workflows to manual-only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          targets = [
+              Path('.github/workflows/deploy-jino-main.yml'),
+              Path('.github/workflows/deploy-jino-fastlane.yml'),
+          ]
+
+          old = """on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+"""
+          new = """on:
+  workflow_dispatch:
+"""
+
+          for path in targets:
+              text = path.read_text(encoding='utf-8')
+              if old in text:
+                  text = text.replace(old, new, 1)
+                  path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Commit changes if needed
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if git diff --quiet; then
+            echo 'No changes to commit'
+            exit 0
+          fi
+          git add .github/workflows/deploy-jino-main.yml .github/workflows/deploy-jino-fastlane.yml
+          git commit -m "ops: retire legacy Jino workflows from push on main"
+          git push
