@@ -81,6 +81,10 @@ export function validateEnv(env = process.env) {
     otpTtlSec: Number(env.OTP_TTL_SEC || 300),
     otpResendMinSec: Number(env.OTP_RESEND_MIN_SEC || 60),
     otpMaxAttempts: Number(env.OTP_MAX_ATTEMPTS || 5),
-    otpExposeDevCode: String(env.OTP_EXPOSE_DEV_CODE || 'true') !== 'false'
+    otpExposeDevCode: String(env.OTP_EXPOSE_DEV_CODE || 'true') !== 'false',
+    vapidPublicKey:  env.VAPID_PUBLIC_KEY  || '',
+    vapidPrivateKey: env.VAPID_PRIVATE_KEY || '',
+    vapidSubject:    env.VAPID_SUBJECT     || '',
+    pushDefaultTtlSec: Number(env.PUSH_DEFAULT_TTL_SEC || 86400)
   };
 }

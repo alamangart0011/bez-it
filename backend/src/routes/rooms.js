@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { roomsService } from '../services/rooms.service.js';
 import { adminService } from '../services/admin.service.js';
+import { roomsRepository } from '../repositories/rooms.repository.js';
 import { sendError } from '../lib/http-error.js';
 import { requirePermission } from '../middleware/permissions.js';
 import { createUploadMiddleware } from '../middleware/upload.js';
@@ -11,7 +12,42 @@ function emitRoom(io, roomId, event, payload) {
   io.to(roomId).emit(event, payload);
 }
 
-export function buildRoomsRouter({ io, uploadRoot, maxUploadBytes }) {
+function truncatePushBody(text, max = 140) {
+  const s = String(text || '').replace(/\s+/g, ' ').trim();
+  if (s.length <= max) return s;
+  return s.slice(0, max - 1) + '…';
+}
+
+async function firePushForMessage({ pushService, roomId, message, authorId }) {
+  if (!pushService || !pushService.isConfigured()) return;
+  try {
+    const [room, members] = await Promise.all([
+      roomsRepository.findById(roomId),
+      roomsRepository.getMembers(roomId)
+    ]);
+    const recipientIds = (members || [])
+      .map((m) => m.id)
+      .filter((id) => id && id !== authorId);
+    if (recipientIds.length === 0) return;
+    const author = (members || []).find((m) => m.id === authorId);
+    const authorName = author?.displayName || author?.username || 'Сотрудник';
+    const title = room?.name ? `${room.name}` : 'Контур Связи';
+    const body = `${authorName}: ${truncatePushBody(message?.text)}`;
+    await pushService.sendToUsers({
+      userIds: recipientIds,
+      payload: {
+        title,
+        body,
+        tag: `room-${roomId}`,
+        data: { url: `/rooms/${roomId}`, roomId, messageId: message?.id || null }
+      }
+    });
+  } catch (error) {
+    console.warn('[push] send for message failed:', error?.message || error);
+  }
+}
+
+export function buildRoomsRouter({ io, uploadRoot, maxUploadBytes, pushService = null }) {
   const roomsRouter = Router();
   const upload = createUploadMiddleware(maxUploadBytes);
 
@@ -86,6 +122,7 @@ export function buildRoomsRouter({ io, uploadRoot, maxUploadBytes }) {
       const payload = validateSendMessagePayload(req.body);
       const created = await roomsService.sendMessage({ roomId: req.params.roomId, actorUser: req.user, ...payload });
       emitRoom(io, req.params.roomId, 'message:created', { roomId: req.params.roomId, messageId: created.id });
+      firePushForMessage({ pushService, roomId: req.params.roomId, message: created, authorId: req.user.sub });
       res.status(201).json(created);
     } catch (error) {
       return sendError(res, error);
@@ -137,6 +174,7 @@ export function buildRoomsRouter({ io, uploadRoot, maxUploadBytes }) {
     try {
       const created = await roomsService.upload({ roomId: req.params.roomId, actorUser: req.user, file: req.file, uploadRoot, maxUploadBytes });
       emitRoom(io, req.params.roomId, 'message:created', { roomId: req.params.roomId, messageId: created.id });
+      firePushForMessage({ pushService, roomId: req.params.roomId, message: created, authorId: req.user.sub });
       res.status(201).json(created);
     } catch (error) {
       return sendError(res, error);

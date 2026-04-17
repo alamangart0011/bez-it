@@ -18,6 +18,8 @@ import { phoneAuthRepository } from './repositories/phone-auth.repository.js';
 import { authRepository } from './repositories/auth.repository.js';
 import { auditRepository } from './repositories/audit.repository.js';
 import { jwtUtil } from './lib/jwt.js';
+import { buildPushRouter } from './routes/push.js';
+import { buildPushService } from './services/push.service.js';
 import { meRouter } from './routes/me.js';
 import { buildRtcRouter } from './routes/rtc.js';
 import { buildRoomsRouter } from './routes/rooms.js';
@@ -91,17 +93,26 @@ const authPhoneService = buildAuthPhoneService({
     exposeDevCode:  config.otpExposeDevCode
   }
 });
+const pushService = buildPushService({
+  vapidPublicKey:  config.vapidPublicKey,
+  vapidPrivateKey: config.vapidPrivateKey,
+  vapidSubject:    config.vapidSubject,
+  defaultTtlSec:   config.pushDefaultTtlSec
+});
+app.set('pushService', pushService);
+
 const authPhoneRouter = buildAuthPhoneRouter({ authPhoneService });
 app.use('/api/auth', createRateLimiter({ windowMs: 60_000, max: config.authRateLimit, prefix: 'auth' }), authRouter);
 app.use('/api/auth', createRateLimiter({ windowMs: 60_000, max: config.authRateLimit, prefix: 'auth-phone' }), authPhoneRouter);
 app.use('/api/me', authMiddleware, meRouter);
 app.use('/api/rtc', authMiddleware, buildRtcRouter(config));
-app.use('/api/rooms', authMiddleware, buildRoomsRouter({ io, uploadRoot: config.uploadRoot, maxUploadBytes: config.maxUploadBytes }));
+app.use('/api/rooms', authMiddleware, buildRoomsRouter({ io, uploadRoot: config.uploadRoot, maxUploadBytes: config.maxUploadBytes, pushService }));
 app.use('/api/voice', authMiddleware, buildVoiceRouter({ io }));
 app.use('/api/voice-sessions', authMiddleware, buildVoiceSessionsRouter({ io }));
 app.use('/api/meetings', authMiddleware, meetingsRouter);
 app.use('/api/admin', authMiddleware, adminRouter);
 app.use('/api/ai-jobs', authMiddleware, aiJobsRouter);
+app.use('/api/push', buildPushRouter({ pushService }));
 
 const legacyDisabledMessage = {
   code: 'LEGACY_ENDPOINT_DISABLED',
