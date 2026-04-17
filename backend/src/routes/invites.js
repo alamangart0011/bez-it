@@ -35,7 +35,18 @@ function buildInviteUrl(req, token) {
   return `${origin}/invite/${token}`;
 }
 
-export function buildInvitesRouter({ roomInvitesService }) {
+function fireWebhook(webhooksService, eventType, roomId, payload) {
+  if (!webhooksService) return;
+  try {
+    webhooksService.emit({ eventType, roomId: roomId || null, payload }).catch((error) => {
+      console.warn('[webhook] invite emit failed:', error?.message || error);
+    });
+  } catch (error) {
+    console.warn('[webhook] invite emit sync threw:', error?.message || error);
+  }
+}
+
+export function buildInvitesRouter({ roomInvitesService, webhooksService = null }) {
   const router = Router();
 
   // Создание приглашения для комнаты.
@@ -94,6 +105,11 @@ export function buildInvitesRouter({ roomInvitesService }) {
   router.post('/invites/:token/accept', authMiddleware, async (req, res) => {
     try {
       const result = await roomInvitesService.accept({ token: req.params.token, actorUser: req.user });
+      if (result?.ok && !result.alreadyMember) {
+        fireWebhook(webhooksService, 'user.joined_room', result.roomId, {
+          roomId: result.roomId, userId: req.user.sub, via: 'invite'
+        });
+      }
       res.json(result);
     } catch (error) {
       return sendError(res, error);

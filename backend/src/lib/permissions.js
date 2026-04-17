@@ -31,7 +31,8 @@ export const permissionsCatalog = [
   { key: 'roles.manage', title: 'Управление ролями и правами', module: 'admin' },
   { key: 'audit.read', title: 'Просмотр аудита', module: 'admin' },
   { key: 'sessions.manage', title: 'Управление сессиями сотрудников', module: 'admin' },
-  { key: 'system.manage', title: 'Управление системными настройками', module: 'admin' }
+  { key: 'system.manage', title: 'Управление системными настройками', module: 'admin' },
+  { key: 'webhooks.manage', title: 'Управление исходящими вебхуками', module: 'admin' }
 ];
 
 export const roleMatrix = {
@@ -43,7 +44,8 @@ export const roleMatrix = {
     'files.upload', 'files.manage',
     'voice.join', 'voice.share_screen', 'voice.moderate',
     'meetings.manage',
-    'admin.access', 'users.manage', 'roles.manage', 'audit.read', 'sessions.manage', 'system.manage'
+    'admin.access', 'users.manage', 'roles.manage', 'audit.read', 'sessions.manage', 'system.manage',
+    'webhooks.manage'
   ],
   leader: [
     'profile.read', 'settings.manage', 'rooms.read', 'rooms.create',

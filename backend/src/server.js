@@ -24,6 +24,9 @@ import { buildInvitesRouter } from './routes/invites.js';
 import { buildRoomInvitesService } from './services/room-invites.service.js';
 import { roomInvitesRepository } from './repositories/room-invites.repository.js';
 import { roomsRepository } from './repositories/rooms.repository.js';
+import { buildWebhooksRouter } from './routes/webhooks.js';
+import { buildWebhooksService } from './services/webhooks.service.js';
+import { webhooksRepository, webhookDeliveriesRepository } from './repositories/webhooks.repository.js';
 import { meRouter } from './routes/me.js';
 import { buildRtcRouter } from './routes/rtc.js';
 import { buildRoomsRouter } from './routes/rooms.js';
@@ -105,14 +108,21 @@ const pushService = buildPushService({
 });
 app.set('pushService', pushService);
 
+const webhooksService = buildWebhooksService({
+  webhooksRepository,
+  webhookDeliveriesRepository,
+  auditRepository
+});
+app.set('webhooksService', webhooksService);
+
 const authPhoneRouter = buildAuthPhoneRouter({ authPhoneService });
 app.use('/api/auth', createRateLimiter({ windowMs: 60_000, max: config.authRateLimit, prefix: 'auth' }), authRouter);
 app.use('/api/auth', createRateLimiter({ windowMs: 60_000, max: config.authRateLimit, prefix: 'auth-phone' }), authPhoneRouter);
 app.use('/api/me', authMiddleware, meRouter);
 app.use('/api/rtc', authMiddleware, buildRtcRouter(config));
-app.use('/api/rooms', authMiddleware, buildRoomsRouter({ io, uploadRoot: config.uploadRoot, maxUploadBytes: config.maxUploadBytes, pushService }));
+app.use('/api/rooms', authMiddleware, buildRoomsRouter({ io, uploadRoot: config.uploadRoot, maxUploadBytes: config.maxUploadBytes, pushService, webhooksService }));
 app.use('/api/voice', authMiddleware, buildVoiceRouter({ io }));
-app.use('/api/voice-sessions', authMiddleware, buildVoiceSessionsRouter({ io }));
+app.use('/api/voice-sessions', authMiddleware, buildVoiceSessionsRouter({ io, webhooksService }));
 app.use('/api/meetings', authMiddleware, meetingsRouter);
 app.use('/api/admin', authMiddleware, adminRouter);
 app.use('/api/ai-jobs', authMiddleware, aiJobsRouter);
@@ -123,7 +133,8 @@ const roomInvitesService = buildRoomInvitesService({
   roomsRepository,
   auditRepository
 });
-app.use('/api', buildInvitesRouter({ roomInvitesService }));
+app.use('/api', buildInvitesRouter({ roomInvitesService, webhooksService }));
+app.use('/api/admin/webhooks', authMiddleware, buildWebhooksRouter({ webhooksService }));
 
 const legacyDisabledMessage = {
   code: 'LEGACY_ENDPOINT_DISABLED',

@@ -2,7 +2,18 @@ import { Router } from 'express';
 import { voiceSessionsService } from '../services/voice-sessions.service.js';
 import { sendError } from '../lib/http-error.js';
 
-export function buildVoiceSessionsRouter({ io }) {
+function fireWebhook(webhooksService, eventType, roomId, payload) {
+  if (!webhooksService) return;
+  try {
+    webhooksService.emit({ eventType, roomId: roomId || null, payload }).catch((error) => {
+      console.warn('[webhook] voice emit failed:', error?.message || error);
+    });
+  } catch (error) {
+    console.warn('[webhook] voice emit sync threw:', error?.message || error);
+  }
+}
+
+export function buildVoiceSessionsRouter({ io, webhooksService = null }) {
   const router = Router();
 
   router.get('/', async (req, res) => {
@@ -28,6 +39,7 @@ export function buildVoiceSessionsRouter({ io }) {
     try {
       const session = await voiceSessionsService.startSession(req.body?.room_id);
       if (io && session?.roomId) io.to(session.roomId).emit('voice-session:started', session);
+      fireWebhook(webhooksService, 'voice.session_started', session?.roomId || null, { session });
       return res.status(201).json(session);
     } catch (error) {
       return sendError(res, error);
@@ -38,6 +50,7 @@ export function buildVoiceSessionsRouter({ io }) {
     try {
       const session = await voiceSessionsService.endSession(req.params.id);
       if (io && session?.roomId) io.to(session.roomId).emit('voice-session:ended', session);
+      fireWebhook(webhooksService, 'voice.session_stopped', session?.roomId || null, { session });
       return res.json(session);
     } catch (error) {
       return sendError(res, error);

@@ -47,7 +47,18 @@ async function firePushForMessage({ pushService, roomId, message, authorId }) {
   }
 }
 
-export function buildRoomsRouter({ io, uploadRoot, maxUploadBytes, pushService = null }) {
+function fireWebhook({ webhooksService, eventType, roomId, payload }) {
+  if (!webhooksService) return;
+  try {
+    webhooksService.emit({ eventType, roomId: roomId || null, payload }).catch((error) => {
+      console.warn('[webhook] emit failed:', error?.message || error);
+    });
+  } catch (error) {
+    console.warn('[webhook] emit sync threw:', error?.message || error);
+  }
+}
+
+export function buildRoomsRouter({ io, uploadRoot, maxUploadBytes, pushService = null, webhooksService = null }) {
   const roomsRouter = Router();
   const upload = createUploadMiddleware(maxUploadBytes);
 
@@ -69,6 +80,12 @@ export function buildRoomsRouter({ io, uploadRoot, maxUploadBytes, pushService =
         ownerUserId: req.user.sub,
         memberIds: [],
         moderatorIds: []
+      });
+      fireWebhook({
+        webhooksService,
+        eventType: 'room.created',
+        roomId: room?.id || null,
+        payload: { room, actorUserId: req.user.sub }
       });
       res.status(201).json(room);
     } catch (error) {
@@ -123,6 +140,12 @@ export function buildRoomsRouter({ io, uploadRoot, maxUploadBytes, pushService =
       const created = await roomsService.sendMessage({ roomId: req.params.roomId, actorUser: req.user, ...payload });
       emitRoom(io, req.params.roomId, 'message:created', { roomId: req.params.roomId, messageId: created.id });
       firePushForMessage({ pushService, roomId: req.params.roomId, message: created, authorId: req.user.sub });
+      fireWebhook({
+        webhooksService,
+        eventType: 'message.created',
+        roomId: req.params.roomId,
+        payload: { message: created, roomId: req.params.roomId, authorUserId: req.user.sub }
+      });
       res.status(201).json(created);
     } catch (error) {
       return sendError(res, error);
@@ -144,6 +167,12 @@ export function buildRoomsRouter({ io, uploadRoot, maxUploadBytes, pushService =
     try {
       const result = await roomsService.deleteMessage({ messageId: req.params.messageId, actorUser: req.user });
       emitRoom(io, result.roomId, 'message:deleted', { roomId: result.roomId, messageId: req.params.messageId });
+      fireWebhook({
+        webhooksService,
+        eventType: 'message.deleted',
+        roomId: result.roomId,
+        payload: { roomId: result.roomId, messageId: req.params.messageId, actorUserId: req.user.sub }
+      });
       res.json(result);
     } catch (error) {
       return sendError(res, error);
