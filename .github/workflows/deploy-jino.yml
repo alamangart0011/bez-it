@@ -1,0 +1,65 @@
+name: deploy-jino
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - 'deploy/**'
+      - 'infra/**'
+      - 'docker-compose.yml'
+      - 'scripts/**'
+      - '.github/workflows/deploy-jino.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-jino-main
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Start ssh-agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.JINO_SSH_PRIVATE_KEY }}
+
+      - name: Add Jino known_hosts
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "${{ secrets.JINO_PORT }}" -H "${{ secrets.JINO_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Sync repository to baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          rsync -az --delete \
+            --exclude '.git' \
+            --exclude '.github' \
+            --exclude '.env' \
+            --exclude 'frontend/node_modules' \
+            --exclude 'backend/node_modules' \
+            --exclude 'frontend/dist' \
+            --exclude 'uploads' \
+            --exclude 'backups' \
+            ./ "${{ secrets.JINO_USER }}@${{ secrets.JINO_HOST }}:${{ secrets.JINO_APP_DIR }}/"
+
+      - name: Remote deploy
+        shell: bash
+        run: |
+          set -euo pipefail
+          ssh -p "${{ secrets.JINO_PORT }}" "${{ secrets.JINO_USER }}@${{ secrets.JINO_HOST }}" "cd '${{ secrets.JINO_APP_DIR }}' && chmod +x deploy/*.sh scripts/*.sh 2>/dev/null || true && APP_DIR='${{ secrets.JINO_APP_DIR }}' BACKUP_ROOT='${{ secrets.JINO_BACKUP_ROOT }}' HEALTH_URL='${{ secrets.JINO_HEALTH_URL }}' ./deploy/deploy.sh"
+
+      - name: External health
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS "${{ secrets.JINO_EXTERNAL_HEALTH_URL }}"
