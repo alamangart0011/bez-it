@@ -29,8 +29,24 @@ services:
         condition: service_healthy
     environment:
       NODE_ENV: production
-      PORT: 3001
+      API_PORT: 3001
+      # backend/src/config/env.js — обязательные ENV
+      POSTGRES_DB: ${BEZIT_DB_NAME:-bezit}
+      POSTGRES_USER: ${BEZIT_DB_USER:-bezit}
+      POSTGRES_PASSWORD: ${BEZIT_DB_PASSWORD:-bezit_change_me}
+      POSTGRES_HOST: bez-it-db
+      POSTGRES_PORT: 5432
+      JWT_SECRET: ${BEZIT_JWT_SECRET:-bezit_dev_jwt_secret_change_me_64hex}
+      JWT_REFRESH_SECRET: ${BEZIT_JWT_REFRESH_SECRET:-bezit_dev_jwt_refresh_secret_change_me_64hex}
+      ACCESS_TOKEN_TTL_SEC: 3600
+      REFRESH_TOKEN_TTL_SEC: 2592000
+      UPLOAD_ROOT: /app/uploads
+      MAX_UPLOAD_BYTES: 26214400
+      APP_COUNTRY_MODE: RUSSIA_ONLY
+      TRUST_PROXY: 1
+      # Совместимость со старым кодом (DATABASE_URL)
       DATABASE_URL: postgres://${BEZIT_DB_USER:-bezit}:${BEZIT_DB_PASSWORD:-bezit_change_me}@bez-it-db:5432/${BEZIT_DB_NAME:-bezit}
+      # bez-it.ru интеграции
       BEZIT_TG_BOT_TOKEN: ${BEZIT_TG_BOT_TOKEN}
       BEZIT_TG_OBORON_CHAT: ${BEZIT_TG_OBORON_CHAT}
       BEZIT_TG_CENT_CHAT: ${BEZIT_TG_CENT_CHAT}
@@ -38,6 +54,8 @@ services:
       BEZIT_WEBHOOK_URL: ${BEZIT_WEBHOOK_URL}
       BEZIT_CABINET_TOKEN: ${BEZIT_CABINET_TOKEN}
       BEZIT_RATE_LIMIT_PER_IP_MIN: ${BEZIT_RATE_LIMIT_PER_IP_MIN:-30}
+    volumes:
+      - bez_it_uploads:/app/uploads
     ports:
       - "127.0.0.1:3001:3001"
 
@@ -70,3 +88,4 @@ services:
 
 volumes:
   bez_it_pgdata:
+  bez_it_uploads:

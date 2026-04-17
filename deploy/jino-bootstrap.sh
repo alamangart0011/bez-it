@@ -59,12 +59,17 @@ if [[ ! -f .env ]]; then
   cp .env.sandbox.example .env
   DB_PASS="$(openssl rand -hex 16)"
   CAB_TOKEN="$(openssl rand -hex 24)"
+  JWT_SEC="$(openssl rand -hex 32)"
+  JWT_REF="$(openssl rand -hex 32)"
   sed -i "s|^BEZIT_DB_PASSWORD=.*|BEZIT_DB_PASSWORD=${DB_PASS}|" .env
   sed -i "s|^BEZIT_CABINET_TOKEN=.*|BEZIT_CABINET_TOKEN=${CAB_TOKEN}|" .env
   sed -i "s|^BEZIT_HTTP_PORT=.*|BEZIT_HTTP_PORT=${HTTP_PORT}|" .env
+  sed -i "s|^BEZIT_JWT_SECRET=.*|BEZIT_JWT_SECRET=${JWT_SEC}|" .env
+  sed -i "s|^BEZIT_JWT_REFRESH_SECRET=.*|BEZIT_JWT_REFRESH_SECRET=${JWT_REF}|" .env
   echo "  -> сгенерированы:"
   echo "     BEZIT_DB_PASSWORD=${DB_PASS}"
   echo "     BEZIT_CABINET_TOKEN=${CAB_TOKEN}"
+  echo "     BEZIT_JWT_SECRET=${JWT_SEC:0:8}…"
   echo "  -> позже впишите в .env свои BEZIT_TG_BOT_TOKEN / *_CHAT, если нужен Telegram"
 else
   echo "  -> .env уже существует, оставляю без изменений"
