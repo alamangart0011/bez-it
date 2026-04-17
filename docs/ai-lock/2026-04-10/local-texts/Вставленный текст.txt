@@ -1,7 +1,7 @@
-Продолжаем проект Signalum / contour-chat-v17 в режиме: минимум текста, максимум действий.
+Продолжаем проект Signalum / bez-it в режиме: минимум текста, максимум действий.
 
 Текущий подтверждённый контекст:
-- repo: alamangart0011/contour-chat-v17
+- repo: alamangart0011/bez-it
 - server app dir: /opt/messenger/contour-chat-jino-final
 - domain: ai.voice.oboron-it.ru
 - admin login: admin@corpchat.local

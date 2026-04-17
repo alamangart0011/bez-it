@@ -1,4 +1,4 @@
-Работаем только от GitHub repo alamangart0011/contour-chat-v17.
+Работаем только от GitHub repo alamangart0011/bez-it.
 
 Сначала прочитай в таком порядке:
 1. CHATGPT_START_HERE_RU.md

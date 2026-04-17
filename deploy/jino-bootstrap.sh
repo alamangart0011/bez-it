@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # bez-it.ru — bootstrap для Jino VPS Ubuntu
-# Запуск:  bash <(curl -fsSL https://raw.githubusercontent.com/alamangart0011/contour-chat-v17/claude/landing-pages-leads-X4MIG/deploy/jino-bootstrap.sh)
+# Запуск:  bash <(curl -fsSL https://raw.githubusercontent.com/alamangart0011/bez-it/claude/landing-pages-leads-X4MIG/deploy/jino-bootstrap.sh)
 # или:    bash deploy/jino-bootstrap.sh
 set -euo pipefail
 
 REPO_OWNER="${REPO_OWNER:-alamangart0011}"
-REPO_NAME="${REPO_NAME:-contour-chat-v17}"
+REPO_NAME="${REPO_NAME:-bez-it}"
 BRANCH="${BRANCH:-claude/landing-pages-leads-X4MIG}"
 APP_DIR="${APP_DIR:-/opt/bez-it}"
 HTTP_PORT="${HTTP_PORT:-80}"

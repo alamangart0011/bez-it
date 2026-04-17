@@ -35,7 +35,7 @@ docker compose -f docker-compose.bez-it.yml logs -f bez-it-bot
 
 ## Перенос на Jino / VPS
 
-1. Скопируйте репозиторий на сервер: `git clone … && cd contour-chat-v17`
+1. Скопируйте репозиторий на сервер: `git clone … && cd bez-it`
 2. `cd ops/bez-it-sandbox && cp .env.sandbox.example .env`
 3. Замените все `*_change_me`, заполните Telegram-токены, поставьте свой `BEZIT_HTTP_PORT` (если 80 уже занят).
 4. `./up.sh && ./smoke.sh`

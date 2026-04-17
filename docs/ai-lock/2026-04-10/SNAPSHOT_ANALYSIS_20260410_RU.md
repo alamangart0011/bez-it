@@ -11,7 +11,7 @@
 - appName: Signalum
 
 ## Git
-- repo: alamangart0011/contour-chat-v17
+- repo: alamangart0011/bez-it
 - HEAD branch on VPS: ops/fix-ui-contract-20260410_002744
 - worktree clean
 - main behind origin/main by 2 commits

@@ -1,6 +1,6 @@
 {
   "project": "Contour Chat V17",
-  "repository": "alamangart0011/contour-chat-v17",
+  "repository": "alamangart0011/bez-it",
   "source_of_truth": "github",
   "active_baseline": "room-based-v17",
   "deploy_path": "/opt/messenger/contour-chat-jino-final",

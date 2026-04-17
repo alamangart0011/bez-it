@@ -37,7 +37,7 @@ git push git@github.com:<org>/bez-it-landing.git export/landing:main
 ```bash
 for p in 01-landing-bez-it 02-cabinet-ip 03-api-leads 04-research 05-ops-deploy 06-telegram-bot; do
   cp -r projects/$p ~/Projects/bez-it-$p
-  cd ~/Projects/bez-it-$p && git init && git add -A && git commit -m "initial import from contour-chat-v17"
+  cd ~/Projects/bez-it-$p && git init && git add -A && git commit -m "initial import from bez-it"
   gh repo create <org>/bez-it-$p --private --push --source=.
   cd -
 done
