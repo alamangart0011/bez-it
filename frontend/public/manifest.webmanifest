@@ -1,0 +1,22 @@
+{
+  "name": "Контур Связи",
+  "short_name": "Контур",
+  "description": "Корпоративный контур связи, собраний и администрирования",
+  "lang": "ru",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "categories": ["business", "productivity", "communication"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    }
+  ]
+}
