@@ -17,6 +17,11 @@
   <url><loc>https://bez-it.ru/licenses.html</loc><lastmod>2026-04-17</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 
   <!-- Гео -->
+  <url><loc>https://bez-it.ru/regions/</loc><lastmod>2026-04-17</lastmod><changefreq>weekly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://bez-it.ru/partners.html</loc><lastmod>2026-04-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://bez-it.ru/resources/templates-orderlist-ispdn.html</loc><lastmod>2026-04-17</lastmod><changefreq>monthly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://bez-it.ru/resources/incident-runbook.html</loc><lastmod>2026-04-17</lastmod><changefreq>monthly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://bez-it.ru/resources/import-replacement-matrix.html</loc><lastmod>2026-04-17</lastmod><changefreq>monthly</changefreq><priority>0.75</priority></url>
   <url><loc>https://bez-it.ru/regions/moscow.html</loc><lastmod>2026-04-17</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>
   <url><loc>https://bez-it.ru/regions/spb.html</loc><lastmod>2026-04-17</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>
   <url><loc>https://bez-it.ru/regions/ekaterinburg.html</loc><lastmod>2026-04-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
