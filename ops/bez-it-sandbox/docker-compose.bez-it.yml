@@ -1,6 +1,6 @@
 services:
   bez-it-db:
-    image: postgres:16-alpine
+    image: mirror.gcr.io/library/postgres:16-alpine
     container_name: bez-it-db
     restart: unless-stopped
     environment:
@@ -42,7 +42,7 @@ services:
       - "127.0.0.1:3001:3001"
 
   bez-it-web:
-    image: nginx:1.27-alpine
+    image: mirror.gcr.io/library/nginx:1.27-alpine
     container_name: bez-it-web
     restart: unless-stopped
     depends_on:
