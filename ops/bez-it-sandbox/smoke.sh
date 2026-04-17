@@ -10,7 +10,7 @@ TOKEN="${TOKEN:-devtoken_change_me}"
 
 BASE="http://localhost:${PORT}"
 PASS=0; FAIL=0
-ck(){ local name="$1"; shift; if "$@" >/dev/null 2>&1; then echo "  ✓ $name"; ((PASS++)); else echo "  ✗ $name"; ((FAIL++)); fi; }
+ck(){ local name="$1"; shift; if "$@" >/dev/null 2>&1; then echo "  ✓ $name"; PASS=$((PASS+1)); else echo "  ✗ $name"; FAIL=$((FAIL+1)); fi; }
 
 echo "=== Песочница bez-it.ru — smoke-тест на ${BASE} ==="
 
