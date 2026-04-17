@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Импортозамещение СЗИ к 01.03.2026: чек-лист 12 пунктов | bez-it.ru</title>
+<meta name="description" content="Готовим инфраструктуру к ФЗ-325 без остановки сервисов: 12 шагов миграции, матрица замены иностранных СЗИ на российские из реестра Минцифры, переаттестация ФСТЭК.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://bez-it.ru/blog/importozameshenie-checklist.html">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article",
+"headline":"Импортозамещение СЗИ к 01.03.2026: чек-лист 12 пунктов",
+"datePublished":"2026-04-17","dateModified":"2026-04-17",
+"author":{"@type":"Organization","name":"bez-it.ru"},
+"publisher":{"@type":"Organization","name":"bez-it.ru","logo":{"@type":"ImageObject","url":"https://bez-it.ru/og-image.svg"}},
+"mainEntityOfPage":"https://bez-it.ru/blog/importozameshenie-checklist.html"}
+</script>
+<style>
+.article{max-width:760px;margin:0 auto;padding:0 20px}
+.article h2{font-size:24px;margin:32px 0 12px}
+.article h3{font-size:18px;margin:20px 0 8px}
+.article p,.article li{font-size:16px;line-height:1.7;color:#1f2d3e;margin-bottom:10px}
+.checklist{list-style:none;padding:0;margin:18px 0}
+.checklist li{padding:14px 16px;background:#f7f9fc;border:1px solid #e5ecf4;border-radius:10px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start}
+.checklist li::before{content:'☐';color:#ff5a1f;font-size:20px;font-weight:900;flex-shrink:0;line-height:1}
+.cta-block{background:#0b1b2b;color:#fff;padding:24px;border-radius:14px;margin:30px 0;text-align:center}
+.cta-block h3{color:#ffc86b;margin-bottom:10px}
+.cta-block .btn{margin-top:12px}
+</style>
+</head>
+<body>
+<header class="hdr"><div class="wrap hdr-in">
+  <a href="/" class="logo">bez<span>-it</span>.ru</a>
+  <a class="btn" href="/#leadHero">Получить расчёт</a>
+</div></header>
+
+<section style="background:linear-gradient(135deg,#0b1b2b,#142a42);color:#fff;padding:50px 0">
+  <div class="article">
+    <div style="font-size:13px;color:#ffc86b;text-transform:uppercase;font-weight:700;margin-bottom:10px">ФЗ-325 · Импортозамещение</div>
+    <h1 style="font-size:34px;line-height:1.2">Импортозамещение СЗИ к 01.03.2026: чек-лист из 12 пунктов</h1>
+    <div style="margin-top:14px;opacity:.8">17 апреля 2026 · 10 минут чтения</div>
+  </div>
+</section>
+
+<section style="padding:40px 0"><div class="article">
+
+<p>С 01.03.2026 на значимых объектах КИИ запрещено использование иностранного ПО, не входящего в Единый реестр российских программ Минцифры. Срок осталось — меньше года, а среднее время полной миграции — 4–6 месяцев. Этот чек-лист поможет начать прямо сегодня.</p>
+
+<h2>Чек-лист миграции — 12 шагов</h2>
+
+<ol class="checklist">
+  <li><div><b>Шаг 1. Инвентаризация СЗИ.</b> Соберите полный список всех средств защиты информации, развёрнутых на объектах КИИ: NGFW, IPS/IDS, DLP, EDR, SIEM, антивирусы, VPN, шлюзы, криптография. На каждое — производитель, версия, лицензия, контакты вендора.</div></li>
+  <li><div><b>Шаг 2. Маркировка иностранных продуктов.</b> Сравните с реестром Минцифры (reestr.digital.gov.ru). Всё, чего там нет — кандидат на замену.</div></li>
+  <li><div><b>Шаг 3. Оценка критичности.</b> Для каждого иностранного СЗИ — на каких объектах КИИ оно стоит, какую функцию выполняет, что произойдёт при выводе из эксплуатации.</div></li>
+  <li><div><b>Шаг 4. Подбор аналогов.</b> Минимум 2–3 кандидата на замену из реестра. Совпадение по функциональности должно быть ≥90%, иначе нужны компенсирующие меры.</div></li>
+  <li><div><b>Шаг 5. Проверка сертификации ФСТЭК / ФСБ.</b> Аналог должен иметь действующий сертификат соответствия по нужному классу защиты.</div></li>
+  <li><div><b>Шаг 6. Технико-экономическое обоснование (ТЭО).</b> Стоимость лицензий + работ по миграции + обучения персонала + поддержки на 3 года. Сравнение с TCO текущего иностранного решения.</div></li>
+  <li><div><b>Шаг 7. Пилотный стенд.</b> Поднимите выбранный аналог на тестовой среде, прогоните ваши сценарии, проверьте интеграции.</div></li>
+  <li><div><b>Шаг 8. План миграции и rollback.</b> Поэтапный план с точками возврата. Минимум 2 окна обслуживания. Резервные копии конфигов и правил.</div></li>
+  <li><div><b>Шаг 9. Закупка и поставка.</b> Лицензии, ПАК, сертификаты — по 44-ФЗ или 223-ФЗ (для коммерции). Срок поставки российских СЗИ в 2026 — 4–8 недель.</div></li>
+  <li><div><b>Шаг 10. Параллельный режим.</b> 2–4 недели работы старого и нового СЗИ одновременно — ловим расхождения, дотюниваем правила.</div></li>
+  <li><div><b>Шаг 11. Вывод из эксплуатации иностранного ПО.</b> Полное отключение, удаление лицензий, акт о выводе. Документально зафиксировать дату.</div></li>
+  <li><div><b>Шаг 12. Переаттестация ФСТЭК.</b> При смене СЗИ из аттестованного контура требуется выпуск дополнения к проекту и переаттестация. Срок — до 30 рабочих дней.</div></li>
+</ol>
+
+<h2>Топ-5 матриц замены</h2>
+<table style="width:100%;border-collapse:collapse;margin:14px 0;font-size:14px">
+  <thead><tr style="background:#0b1b2b;color:#fff"><th style="padding:10px;text-align:left">Иностранное</th><th style="padding:10px;text-align:left">Российский аналог</th></tr></thead>
+  <tbody>
+    <tr style="border-bottom:1px solid #e5ecf4"><td style="padding:10px">Cisco ASA / Fortinet VPN</td><td style="padding:10px">ViPNet Coordinator HW, Континент 4, S-Terra Gate</td></tr>
+    <tr style="border-bottom:1px solid #e5ecf4"><td style="padding:10px">Palo Alto NGFW</td><td style="padding:10px">UserGate NGFW, Континент NGFW, Ideco UTM</td></tr>
+    <tr style="border-bottom:1px solid #e5ecf4"><td style="padding:10px">CrowdStrike / Symantec EDR</td><td style="padding:10px">Kaspersky EDR (сертификат ФСТЭК), Dr.Web ES, Secret Net Studio</td></tr>
+    <tr style="border-bottom:1px solid #e5ecf4"><td style="padding:10px">Splunk / ArcSight SIEM</td><td style="padding:10px">MaxPatrol SIEM (Positive Technologies), R-Vision SIEM</td></tr>
+    <tr><td style="padding:10px">Forcepoint / Symantec DLP</td><td style="padding:10px">InfoWatch Traffic Monitor, Solar Dozor, СёрчИнформ КИБ</td></tr>
+  </tbody>
+</table>
+
+<h2>Сколько стоит и сколько занимает</h2>
+<p>Средняя миграция инфраструктуры из 50–100 АРМ + ядра обходится в <b>1.5–4 млн ₽</b> (лицензии + работы + переаттестация) и занимает <b>2–4 месяца</b>. Самые долгие — миграции SIEM (правила корреляции переписываются заново) и EDR (новый агент, перенастройка политик).</p>
+
+<div class="cta-block">
+  <h3>Возьмём миграцию под ключ</h3>
+  <p>Полный цикл: аудит → ТЭО → закупка → миграция → переаттестация. Фиксированная цена и срок в договоре. От 250 000 ₽ за минимальный сценарий.</p>
+  <a class="btn" href="/#leadHero">Запросить аудит инфраструктуры</a>
+</div>
+
+</div></section>
+
+<footer><div class="wrap">
+  © 2026 bez-it.ru · <a href="/">Главная</a> · <a href="/blog/">Блог</a> · <a href="/privacy.html">Политика ПДн</a> · <a href="/oferta.html">Оферта</a>
+</div></footer>
+</body>
+</html>

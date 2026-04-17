@@ -46,7 +46,7 @@ tr:hover td{background:#fafcfe;cursor:pointer}
 .routes{background:#f7f9fc;padding:10px;border-radius:8px;margin-top:10px;font-size:13px}
 .actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 .err{background:#fde7e7;color:#b42222;padding:10px;border-radius:8px;margin-bottom:10px}
-@media (max-width:860px){.stats{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:860px){.stats{grid-template-columns:repeat(2,1fr)}.charts{grid-template-columns:1fr!important}}
 </style>
 </head>
 <body>
@@ -72,6 +72,16 @@ tr:hover td{background:#fafcfe;cursor:pointer}
       <div class="tile"><small>Новые</small><b id="stNew">—</b></div>
       <div class="tile"><small>Выиграно</small><b id="stWon">—</b></div>
       <div class="tile"><small>Последнее обновление</small><b id="stUpd" style="font-size:14px">—</b></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px" class="charts">
+      <div class="tile" style="background:#fff;border:1px solid #e5ecf4;border-radius:12px;padding:16px">
+        <small style="color:#56697e;text-transform:uppercase;font-size:12px;letter-spacing:.4px">Распределение по статусам</small>
+        <canvas id="chartStatus" height="160" style="width:100%;display:block;margin-top:10px"></canvas>
+      </div>
+      <div class="tile" style="background:#fff;border:1px solid #e5ecf4;border-radius:12px;padding:16px">
+        <small style="color:#56697e;text-transform:uppercase;font-size:12px;letter-spacing:.4px">Динамика за 14 дней</small>
+        <canvas id="chartDays" height="160" style="width:100%;display:block;margin-top:10px"></canvas>
+      </div>
     </div>
     <div class="filters">
       <select id="fStatus">
@@ -126,6 +136,62 @@ document.getElementById('logout').addEventListener('click', ()=>{ localStorage.r
 const SERVICES = {it_security:'Защита КИИ',audit_ib:'Аудит ИБ',skzi_dev:'Разработка СКЗИ',import_substitution:'Импортозамещение',video_skud:'Видео/СКУД',it_outsourcing:'ИТ-аутсорсинг',server_support:'Серверы/1С',antivirus_dlp:'АВ/DLP',cctv_install:'Видеонаблюдение',network_sks:'СКС/сети',other:'Другое'};
 let current = [];
 
+const STATUS_COLORS = {
+  new:'#ff5a1f', in_progress:'#a07a00', routed_oboron:'#0b63d6', routed_cent:'#1b8a3a',
+  routed_both:'#4b3ddb', won:'#0a7e22', lost:'#b42222', duplicate:'#56697e', spam:'#56697e'
+};
+const STATUS_LABEL = {
+  new:'Новые', in_progress:'В работе', routed_oboron:'→ Оборон',
+  routed_cent:'→ Cent', routed_both:'→ обеим', won:'Выиграны',
+  lost:'Проиграны', duplicate:'Дубли', spam:'Спам'
+};
+
+function drawStatusChart(leads){
+  const cv = document.getElementById('chartStatus'); if(!cv) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W = cv.clientWidth, H = 160; cv.width = W*dpr; cv.height = H*dpr;
+  const ctx = cv.getContext('2d'); ctx.scale(dpr, dpr); ctx.clearRect(0,0,W,H);
+  const counts = {};
+  Object.keys(STATUS_COLORS).forEach(k=>counts[k]=0);
+  leads.forEach(l=>{ if(counts[l.status]!==undefined) counts[l.status]++; });
+  const keys = Object.keys(counts).filter(k=>counts[k]>0);
+  if(!keys.length){ ctx.fillStyle='#56697e'; ctx.font='13px sans-serif'; ctx.fillText('Нет данных', 10, 80); return; }
+  const max = Math.max(...keys.map(k=>counts[k]));
+  const bw = (W - 40) / keys.length - 8;
+  keys.forEach((k,i)=>{
+    const h = (counts[k] / max) * (H - 50);
+    const x = 20 + i*(bw + 8); const y = H - 30 - h;
+    ctx.fillStyle = STATUS_COLORS[k]; ctx.fillRect(x, y, bw, h);
+    ctx.fillStyle = '#0b1b2b'; ctx.font='bold 12px sans-serif'; ctx.textAlign='center';
+    ctx.fillText(counts[k], x + bw/2, y - 4);
+    ctx.fillStyle = '#56697e'; ctx.font='10px sans-serif';
+    ctx.fillText(STATUS_LABEL[k]||k, x + bw/2, H - 14);
+  });
+}
+
+function drawDaysChart(leads){
+  const cv = document.getElementById('chartDays'); if(!cv) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W = cv.clientWidth, H = 160; cv.width = W*dpr; cv.height = H*dpr;
+  const ctx = cv.getContext('2d'); ctx.scale(dpr, dpr); ctx.clearRect(0,0,W,H);
+  const days = []; const today = new Date(); today.setHours(0,0,0,0);
+  for(let i=13;i>=0;i--){ const d = new Date(today); d.setDate(d.getDate()-i); days.push(d); }
+  const counts = days.map(d=>{
+    const next = new Date(d); next.setDate(next.getDate()+1);
+    return leads.filter(l=>{ const t = new Date(l.createdAt); return t>=d && t<next; }).length;
+  });
+  const max = Math.max(1, ...counts);
+  const bw = (W - 40) / days.length - 4;
+  counts.forEach((c,i)=>{
+    const h = (c / max) * (H - 50);
+    const x = 20 + i*(bw + 4); const y = H - 30 - h;
+    ctx.fillStyle = c>0 ? '#0b63d6' : '#cfd8e3';
+    ctx.fillRect(x, y, bw, Math.max(2, h));
+    if(c>0){ ctx.fillStyle='#0b1b2b'; ctx.font='bold 11px sans-serif'; ctx.textAlign='center'; ctx.fillText(c, x+bw/2, y-3); }
+    if(i % 2 === 0){ ctx.fillStyle='#56697e'; ctx.font='10px sans-serif'; ctx.fillText((days[i].getMonth()+1)+'/'+days[i].getDate(), x+bw/2, H-14); }
+  });
+}
+
 async function load(){
   try{
     const status = document.getElementById('fStatus').value;
@@ -141,6 +207,7 @@ async function load(){
     document.getElementById('stWon').textContent = data.summary.won_cnt;
     document.getElementById('stUpd').textContent = new Date().toLocaleString('ru-RU');
     document.getElementById('whoami').textContent = 'Загружено: '+current.length;
+    drawStatusChart(current); drawDaysChart(current);
     const tb = document.getElementById('tbl'); tb.innerHTML='';
     if(!current.length){ tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:#56697e">Заявок нет</td></tr>'; return; }
     current.forEach(l=>{
@@ -186,7 +253,11 @@ async function openLead(id){
     }
     html += '<div class="routes"><b>Доставка партнёрам:</b><br>'+
       (routes.length ? routes.map(r=>'• '+r.target+' ('+r.channel+'): '+r.status+(r.last_error?' · '+r.last_error:'')).join('<br>') : '—')+'</div>';
+    html += '<div style="margin-top:14px"><label style="display:block;font-weight:700;margin-bottom:6px;font-size:13px;color:#56697e;text-transform:uppercase;letter-spacing:.3px">Заметка по лиду</label>'+
+      '<textarea id="leadNotes" rows="3" placeholder="Внутренние пометки: переговоры, договорённости, следующий шаг…">'+(lead.notes||'').replace(/</g,'&lt;')+'</textarea>'+
+      '<input id="leadAssign" placeholder="Ответственный (например, Екатерина / менеджер Cent-IT)" value="'+(lead.assignedTo||'').replace(/"/g,'&quot;')+'" style="margin-top:6px"></div>';
     html += '<div class="actions">'+
+      '<button class="btn" id="saveNotes">💾 Сохранить заметку</button>'+
       '<button class="btn" data-set="in_progress">Взять в работу</button>'+
       '<button class="btn" data-set="won">Выиграна</button>'+
       '<button class="btn secondary" data-set="lost">Проиграна</button>'+
@@ -197,10 +268,22 @@ async function openLead(id){
     box.innerHTML = html;
     document.getElementById('mod').classList.add('on');
     document.getElementById('modClose').onclick = ()=>document.getElementById('mod').classList.remove('on');
+    document.getElementById('saveNotes').onclick = async ()=>{
+      try{
+        const notes = document.getElementById('leadNotes').value;
+        const assignedTo = document.getElementById('leadAssign').value;
+        await api('/api/bez-it/cabinet/leads/'+id, {method:'PATCH',body:JSON.stringify({notes, assignedTo})});
+        document.getElementById('saveNotes').textContent = '✓ Сохранено';
+        setTimeout(()=>{ document.getElementById('mod').classList.remove('on'); load(); }, 600);
+      }catch(e){ alert(e.message); }
+    };
     box.querySelectorAll('button[data-set]').forEach(b=>b.addEventListener('click', async ()=>{
-      try{ await api('/api/bez-it/cabinet/leads/'+id, {method:'PATCH',body:JSON.stringify({status:b.dataset.set})});
-           document.getElementById('mod').classList.remove('on'); load(); }
-      catch(e){ alert(e.message); }
+      try{
+        const notes = document.getElementById('leadNotes').value;
+        const assignedTo = document.getElementById('leadAssign').value;
+        await api('/api/bez-it/cabinet/leads/'+id, {method:'PATCH',body:JSON.stringify({status:b.dataset.set, notes, assignedTo})});
+        document.getElementById('mod').classList.remove('on'); load();
+      }catch(e){ alert(e.message); }
     }));
   }catch(e){ alert(e.message); }
 }

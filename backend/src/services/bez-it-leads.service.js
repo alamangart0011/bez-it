@@ -73,9 +73,18 @@ function validatePayload(body) {
 
 export const bezItLeadsService = {
   async submitLead(body, ctx = {}) {
+    const honeypot = body && (body.website || body.url || body.fax);
     const payload = validatePayload(body);
     payload.userAgent = trimOrNull(ctx.userAgent, SHORT_LIMIT);
     payload.ipAddr = trimOrNull(ctx.ipAddr, 64);
+
+    if (honeypot) {
+      payload.comment = (payload.comment ? payload.comment + '\n\n' : '') + '[HONEYPOT TRIGGERED: ' + String(honeypot).slice(0, 200) + ']';
+      const lead = await bezItLeadsRepository.createLead(payload);
+      await bezItLeadsRepository.updateLeadStatus(lead.id, { status: 'spam' });
+      return { ok: true, leadId: lead.id, routed: false, target: 'spam' };
+    }
+
     const lead = await bezItLeadsRepository.createLead(payload);
     const routing = await bezItRouterService.routeLead(lead);
     if (routing.newStatus && routing.newStatus !== 'new') {
