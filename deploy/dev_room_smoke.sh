@@ -46,4 +46,23 @@ echo "[INFO] using room: $ROOM_ID"
 curl -fsS -H "Authorization: Bearer $TOKEN" "$BASE_URL/api/rooms/$ROOM_ID" | jq .
 curl -fsS -H "Authorization: Bearer $TOKEN" "$BASE_URL/api/rooms/$ROOM_ID/members" | jq .
 
+echo "[8/10] push config"
+curl -fsS -H "Authorization: Bearer $TOKEN" "$BASE_URL/api/push/config" | jq .
+
+echo "[9/10] webhook events catalog"
+curl -fsS -H "Authorization: Bearer $TOKEN" "$BASE_URL/api/admin/webhooks/events" | jq . || echo "[WARN] webhooks access may require admin role"
+
+echo "[10/10] invite create + preview + revoke"
+INVITE_JSON="$(curl -fsS -X POST -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d '{"ttlSec":600,"maxUses":1,"note":"smoke"}' "$BASE_URL/api/rooms/$ROOM_ID/invites" || true)"
+echo "$INVITE_JSON" | jq . || true
+INVITE_TOKEN="$(echo "$INVITE_JSON" | jq -r '.token // empty')"
+INVITE_ID="$(echo "$INVITE_JSON"   | jq -r '.id    // empty')"
+if [[ -n "$INVITE_TOKEN" ]]; then
+  curl -fsS "$BASE_URL/api/invites/$INVITE_TOKEN" | jq .
+fi
+if [[ -n "$INVITE_ID" ]]; then
+  curl -fsS -X DELETE -H "Authorization: Bearer $TOKEN" "$BASE_URL/api/invites/$INVITE_ID" | jq .
+fi
+
 echo "[OK] dev room smoke completed"
