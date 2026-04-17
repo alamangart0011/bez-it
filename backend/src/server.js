@@ -11,6 +11,13 @@ import { accessLog } from './middleware/access-log.js';
 import { securityHeaders } from './middleware/security.js';
 import { createRateLimiter } from './middleware/rate-limit.js';
 import { authRouter } from './routes/auth.js';
+import { buildAuthPhoneRouter } from './routes/auth.phone.routes.js';
+import { buildAuthPhoneService } from './services/auth.phone.service.js';
+import { buildSmsSender } from './services/auth.phone.sms.js';
+import { phoneAuthRepository } from './repositories/phone-auth.repository.js';
+import { authRepository } from './repositories/auth.repository.js';
+import { auditRepository } from './repositories/audit.repository.js';
+import { jwtUtil } from './lib/jwt.js';
 import { meRouter } from './routes/me.js';
 import { buildRtcRouter } from './routes/rtc.js';
 import { buildRoomsRouter } from './routes/rooms.js';
@@ -70,7 +77,23 @@ app.get('/api/release', (req, res) => {
   res.json({ ok: true, appName: config.appName, releaseVersion: config.releaseVersion, releaseChannel: config.releaseChannel, socketPath: config.socketPath, countryMode: config.appCountryMode, healthExternalUrl: config.healthExternalUrl || null, requestLogEnabled: config.requestLogEnabled, requestId: req.requestId || null });
 });
 
+const authPhoneService = buildAuthPhoneService({
+  phoneAuthRepository,
+  authRepository,
+  auditRepository,
+  jwtUtil,
+  smsSender: buildSmsSender(),
+  config: {
+    otpTtlSec:      config.otpTtlSec,
+    otpResendMin:   config.otpResendMinSec,
+    otpMaxAttempts: config.otpMaxAttempts,
+    refreshTtlSec:  Number(process.env.REFRESH_TOKEN_TTL_SEC || 2592000),
+    exposeDevCode:  config.otpExposeDevCode
+  }
+});
+const authPhoneRouter = buildAuthPhoneRouter({ authPhoneService });
 app.use('/api/auth', createRateLimiter({ windowMs: 60_000, max: config.authRateLimit, prefix: 'auth' }), authRouter);
+app.use('/api/auth', createRateLimiter({ windowMs: 60_000, max: config.authRateLimit, prefix: 'auth-phone' }), authPhoneRouter);
 app.use('/api/me', authMiddleware, meRouter);
 app.use('/api/rtc', authMiddleware, buildRtcRouter(config));
 app.use('/api/rooms', authMiddleware, buildRoomsRouter({ io, uploadRoot: config.uploadRoot, maxUploadBytes: config.maxUploadBytes }));

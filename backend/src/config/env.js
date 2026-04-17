@@ -76,6 +76,11 @@ export function validateEnv(env = process.env) {
     releaseVersion: env.RELEASE_VERSION || '17.17.0',
     releaseChannel: env.RELEASE_CHANNEL || 'operator-wallboard',
     healthExternalUrl: env.HEALTH_EXTERNAL_URL || '',
-    requestLogEnabled: String(env.REQUEST_LOG_ENABLED || 'true') !== 'false'
+    requestLogEnabled: String(env.REQUEST_LOG_ENABLED || 'true') !== 'false',
+    otpProvider: String(env.OTP_PROVIDER || env.SMS_PROVIDER || 'dev').trim().toLowerCase(),
+    otpTtlSec: Number(env.OTP_TTL_SEC || 300),
+    otpResendMinSec: Number(env.OTP_RESEND_MIN_SEC || 60),
+    otpMaxAttempts: Number(env.OTP_MAX_ATTEMPTS || 5),
+    otpExposeDevCode: String(env.OTP_EXPOSE_DEV_CODE || 'true') !== 'false'
   };
 }
