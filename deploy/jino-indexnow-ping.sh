@@ -57,7 +57,12 @@ URLS_JSON=$(cat <<'EOF'
     "https://bez-it.ru/blog/274-1-uk-rf-praktika.html",
     "https://bez-it.ru/blog/kak-vybrat-litsenziata-fstek.html",
     "https://bez-it.ru/resources/",
-    "https://bez-it.ru/resources/checklist-kii-2026.html"
+    "https://bez-it.ru/resources/checklist-kii-2026.html",
+    "https://bez-it.ru/resources/templates-orderlist-ispdn.html",
+    "https://bez-it.ru/resources/incident-runbook.html",
+    "https://bez-it.ru/resources/import-replacement-matrix.html",
+    "https://bez-it.ru/regions/",
+    "https://bez-it.ru/partners.html"
   ]
 }
 EOF
