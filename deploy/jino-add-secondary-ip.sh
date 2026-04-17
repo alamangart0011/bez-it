@@ -17,7 +17,14 @@ err()  { echo -e "\n[$(date +%H:%M:%S)] \033[1;31m$*\033[0m" >&2; }
 if [[ $EUID -ne 0 ]]; then err "запустите от root"; exit 1; fi
 if [[ -z "${IFACE}" ]]; then err "не удалось определить сетевой интерфейс"; exit 1; fi
 
-PRIMARY_CIDR="$(ip -o -4 addr show dev "${IFACE}" scope global | awk 'NR==1{print $4}')"
+PRIMARY_CIDR=""
+while read -r cidr; do
+  [[ "${cidr%%/*}" == "${SECONDARY_IP}" ]] && continue
+  PRIMARY_CIDR="${cidr}"; break
+done < <(ip -o -4 addr show dev "${IFACE}" scope global | awk '{print $4}')
+if [[ -z "${PRIMARY_CIDR}" ]]; then
+  PRIMARY_CIDR="$(ip -o -4 addr show dev "${IFACE}" scope global | awk 'NR==1{print $4}')"
+fi
 PRIMARY_IP="${PRIMARY_CIDR%%/*}"
 PREFIX="${PRIMARY_CIDR##*/}"
 

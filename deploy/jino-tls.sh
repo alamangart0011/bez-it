@@ -27,8 +27,12 @@ if [[ ! -d "${APP_DIR}/ops/bez-it-sandbox" ]]; then err "Не вижу ${APP_DIR
 
 cd "${APP_DIR}/ops/bez-it-sandbox"
 
-LANDING_IP="$(grep -E '^BEZIT_LANDING_IP=' .env 2>/dev/null | cut -d= -f2)"
-CABINET_IP="$(grep -E '^BEZIT_CABINET_IP=' .env 2>/dev/null | cut -d= -f2)"
+LANDING_IP=""
+CABINET_IP=""
+if [[ -f .env ]]; then
+  LANDING_IP="$(awk -F= '/^BEZIT_LANDING_IP=/{print $2; exit}' .env 2>/dev/null || true)"
+  CABINET_IP="$(awk -F= '/^BEZIT_CABINET_IP=/{print $2; exit}' .env 2>/dev/null || true)"
+fi
 LANDING_IP="${LANDING_IP:-109.73.192.126}"
 CABINET_IP="${CABINET_IP:-217.149.30.147}"
 
