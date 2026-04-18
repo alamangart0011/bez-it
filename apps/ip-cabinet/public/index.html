@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кабинет ИП Сапрыкина Е.В. — заявки bez-it.ru</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:#eef2f7;color:#0b1b2b;min-height:100vh}
+.wrap{max-width:1320px;margin:0 auto;padding:24px 20px}
+.hdr{background:#0b1b2b;color:#fff;padding:16px 0;margin-bottom:20px}
+.hdr .wrap{display:flex;align-items:center;justify-content:space-between;padding-top:0;padding-bottom:0}
+.hdr h1{font-size:20px}
+.hdr .status{font-size:13px;opacity:.85}
+.login{max-width:420px;margin:80px auto;background:#fff;padding:28px;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.1)}
+.login h1{margin-bottom:8px}.login p{color:#56697e;margin-bottom:16px}
+input,select,textarea,button{font:inherit}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid #cfd8e3;border-radius:10px;background:#fff}
+.btn{padding:10px 18px;border-radius:10px;border:0;cursor:pointer;background:#ff5a1f;color:#fff;font-weight:700}
+.btn.secondary{background:#eef2f7;color:#0b1b2b}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.stats .tile{background:#fff;border-radius:12px;padding:16px;border:1px solid #e5ecf4}
+.stats b{display:block;font-size:26px;margin-top:4px}
+.stats small{color:#56697e;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+.filters{background:#fff;padding:14px;border-radius:12px;display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;border:1px solid #e5ecf4}
+.filters input,.filters select{width:auto;min-width:180px}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e5ecf4}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid #eef2f7;font-size:14px;vertical-align:top}
+th{background:#f7f9fc;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.3px;color:#56697e}
+tr:hover td{background:#fafcfe;cursor:pointer}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700}
+.s-new{background:#fff3e6;color:#ff5a1f}
+.s-routed_oboron{background:#e6f0ff;color:#0b63d6}
+.s-routed_cent{background:#e8f5e9;color:#1b8a3a}
+.s-routed_both{background:#e6ecff;color:#4b3ddb}
+.s-in_progress{background:#fffbe6;color:#a07a00}
+.s-won{background:#e7fbe9;color:#0a7e22}
+.s-lost{background:#fde7e7;color:#b42222}
+.s-duplicate,.s-spam{background:#eef2f7;color:#56697e}
+.modal{position:fixed;inset:0;background:rgba(11,27,43,.6);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+.modal.on{display:flex}
+.modal .box{background:#fff;max-width:680px;width:100%;padding:24px;border-radius:14px;max-height:90vh;overflow:auto}
+.modal h3{margin-bottom:10px}.modal dl{display:grid;grid-template-columns:160px 1fr;gap:6px 12px;font-size:14px;margin:10px 0}
+.modal dt{color:#56697e}
+.routes{background:#f7f9fc;padding:10px;border-radius:8px;margin-top:10px;font-size:13px}
+.actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.err{background:#fde7e7;color:#b42222;padding:10px;border-radius:8px;margin-bottom:10px}
+@media (max-width:860px){.stats{grid-template-columns:repeat(2,1fr)}.charts{grid-template-columns:1fr!important}}
+</style>
+</head>
+<body>
+
+<div id="auth" class="login" style="display:none">
+  <h1>Кабинет ИП Сапрыкина Е.В.</h1>
+  <p>Введите токен доступа (выдаёт администратор).</p>
+  <div id="authErr" class="err" style="display:none"></div>
+  <form id="loginForm" style="display:grid;gap:10px">
+    <input type="password" id="tokenInput" placeholder="Токен доступа" required autocomplete="off">
+    <button class="btn" type="submit">Войти в кабинет</button>
+  </form>
+</div>
+
+<div id="app" style="display:none">
+  <header class="hdr"><div class="wrap">
+    <h1>Кабинет · заявки bez-it.ru</h1>
+    <div><span class="status" id="whoami"></span> <button class="btn secondary" id="logout">Выйти</button></div>
+  </div></header>
+  <div class="wrap">
+    <div class="stats">
+      <div class="tile"><small>Всего заявок</small><b id="stTotal">—</b></div>
+      <div class="tile"><small>Новые</small><b id="stNew">—</b></div>
+      <div class="tile"><small>Выиграно</small><b id="stWon">—</b></div>
+      <div class="tile"><small>Последнее обновление</small><b id="stUpd" style="font-size:14px">—</b></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px" class="charts">
+      <div class="tile" style="background:#fff;border:1px solid #e5ecf4;border-radius:12px;padding:16px">
+        <small style="color:#56697e;text-transform:uppercase;font-size:12px;letter-spacing:.4px">Распределение по статусам</small>
+        <canvas id="chartStatus" height="160" style="width:100%;display:block;margin-top:10px"></canvas>
+      </div>
+      <div class="tile" style="background:#fff;border:1px solid #e5ecf4;border-radius:12px;padding:16px">
+        <small style="color:#56697e;text-transform:uppercase;font-size:12px;letter-spacing:.4px">Динамика за 14 дней</small>
+        <canvas id="chartDays" height="160" style="width:100%;display:block;margin-top:10px"></canvas>
+      </div>
+    </div>
+    <div class="filters">
+      <select id="fStatus">
+        <option value="">Все статусы</option>
+        <option value="new">Новые</option>
+        <option value="in_progress">В работе</option>
+        <option value="routed_oboron">Передано в Оборон-Экран</option>
+        <option value="routed_cent">Передано в Cent-IT</option>
+        <option value="routed_both">Передано обеим</option>
+        <option value="won">Выиграно</option>
+        <option value="lost">Проиграно</option>
+        <option value="duplicate">Дубли</option>
+        <option value="spam">Спам</option>
+      </select>
+      <input id="fSearch" placeholder="Поиск: имя, телефон, e-mail, ИНН">
+      <button class="btn" id="fApply">Применить</button>
+      <button class="btn secondary" id="fExport">Экспорт CSV</button>
+      <button class="btn secondary" id="fReload">Обновить</button>
+    </div>
+    <table>
+      <thead><tr><th>#</th><th>Дата</th><th>Контакт</th><th>Телефон</th><th>Услуга</th><th>Источник</th><th>Статус</th></tr></thead>
+      <tbody id="tbl"><tr><td colspan="7" style="text-align:center;color:#56697e">Загрузка…</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal" id="mod"><div class="box" id="modBox"></div></div>
+
+<script>
+const TKEY='bezit_cab_token';
+let token = localStorage.getItem(TKEY) || '';
+const authEl = document.getElementById('auth');
+const appEl = document.getElementById('app');
+function showAuth(err){ authEl.style.display='block'; appEl.style.display='none'; if(err){ const e=document.getElementById('authErr'); e.textContent=err; e.style.display='block'; } }
+function showApp(){ authEl.style.display='none'; appEl.style.display='block'; load(); }
+
+async function api(path, opts={}){
+  const r = await fetch(path, Object.assign({headers:{'content-type':'application/json','x-cabinet-token':token}}, opts));
+  if(r.status===401){ localStorage.removeItem(TKEY); token=''; showAuth('Токен отклонён'); throw new Error('unauth'); }
+  if(!r.ok){ const j = await r.json().catch(()=>({message:'Ошибка '+r.status})); throw new Error(j.message||'Ошибка'); }
+  return r.json();
+}
+
+document.getElementById('loginForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  token = document.getElementById('tokenInput').value.trim();
+  localStorage.setItem(TKEY, token);
+  showApp();
+});
+document.getElementById('logout').addEventListener('click', ()=>{ localStorage.removeItem(TKEY); token=''; location.reload(); });
+
+const SERVICES = {it_security:'Защита КИИ',audit_ib:'Аудит ИБ',skzi_dev:'Разработка СКЗИ',import_substitution:'Импортозамещение',video_skud:'Видео/СКУД',it_outsourcing:'ИТ-аутсорсинг',server_support:'Серверы/1С',antivirus_dlp:'АВ/DLP',cctv_install:'Видеонаблюдение',network_sks:'СКС/сети',other:'Другое'};
+let current = [];
+
+const STATUS_COLORS = {
+  new:'#ff5a1f', in_progress:'#a07a00', routed_oboron:'#0b63d6', routed_cent:'#1b8a3a',
+  routed_both:'#4b3ddb', won:'#0a7e22', lost:'#b42222', duplicate:'#56697e', spam:'#56697e'
+};
+const STATUS_LABEL = {
+  new:'Новые', in_progress:'В работе', routed_oboron:'→ Оборон',
+  routed_cent:'→ Cent', routed_both:'→ обеим', won:'Выиграны',
+  lost:'Проиграны', duplicate:'Дубли', spam:'Спам'
+};
+
+function drawStatusChart(leads){
+  const cv = document.getElementById('chartStatus'); if(!cv) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W = cv.clientWidth, H = 160; cv.width = W*dpr; cv.height = H*dpr;
+  const ctx = cv.getContext('2d'); ctx.scale(dpr, dpr); ctx.clearRect(0,0,W,H);
+  const counts = {};
+  Object.keys(STATUS_COLORS).forEach(k=>counts[k]=0);
+  leads.forEach(l=>{ if(counts[l.status]!==undefined) counts[l.status]++; });
+  const keys = Object.keys(counts).filter(k=>counts[k]>0);
+  if(!keys.length){ ctx.fillStyle='#56697e'; ctx.font='13px sans-serif'; ctx.fillText('Нет данных', 10, 80); return; }
+  const max = Math.max(...keys.map(k=>counts[k]));
+  const bw = (W - 40) / keys.length - 8;
+  keys.forEach((k,i)=>{
+    const h = (counts[k] / max) * (H - 50);
+    const x = 20 + i*(bw + 8); const y = H - 30 - h;
+    ctx.fillStyle = STATUS_COLORS[k]; ctx.fillRect(x, y, bw, h);
+    ctx.fillStyle = '#0b1b2b'; ctx.font='bold 12px sans-serif'; ctx.textAlign='center';
+    ctx.fillText(counts[k], x + bw/2, y - 4);
+    ctx.fillStyle = '#56697e'; ctx.font='10px sans-serif';
+    ctx.fillText(STATUS_LABEL[k]||k, x + bw/2, H - 14);
+  });
+}
+
+function drawDaysChart(leads){
+  const cv = document.getElementById('chartDays'); if(!cv) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W = cv.clientWidth, H = 160; cv.width = W*dpr; cv.height = H*dpr;
+  const ctx = cv.getContext('2d'); ctx.scale(dpr, dpr); ctx.clearRect(0,0,W,H);
+  const days = []; const today = new Date(); today.setHours(0,0,0,0);
+  for(let i=13;i>=0;i--){ const d = new Date(today); d.setDate(d.getDate()-i); days.push(d); }
+  const counts = days.map(d=>{
+    const next = new Date(d); next.setDate(next.getDate()+1);
+    return leads.filter(l=>{ const t = new Date(l.createdAt); return t>=d && t<next; }).length;
+  });
+  const max = Math.max(1, ...counts);
+  const bw = (W - 40) / days.length - 4;
+  counts.forEach((c,i)=>{
+    const h = (c / max) * (H - 50);
+    const x = 20 + i*(bw + 4); const y = H - 30 - h;
+    ctx.fillStyle = c>0 ? '#0b63d6' : '#cfd8e3';
+    ctx.fillRect(x, y, bw, Math.max(2, h));
+    if(c>0){ ctx.fillStyle='#0b1b2b'; ctx.font='bold 11px sans-serif'; ctx.textAlign='center'; ctx.fillText(c, x+bw/2, y-3); }
+    if(i % 2 === 0){ ctx.fillStyle='#56697e'; ctx.font='10px sans-serif'; ctx.fillText((days[i].getMonth()+1)+'/'+days[i].getDate(), x+bw/2, H-14); }
+  });
+}
+
+async function load(){
+  try{
+    const status = document.getElementById('fStatus').value;
+    const search = document.getElementById('fSearch').value.trim();
+    const q = new URLSearchParams();
+    if(status) q.set('status', status);
+    if(search) q.set('search', search);
+    q.set('limit','200');
+    const data = await api('/api/bez-it/cabinet/leads?'+q.toString());
+    current = data.leads || [];
+    document.getElementById('stTotal').textContent = data.summary.total;
+    document.getElementById('stNew').textContent = data.summary.new_cnt;
+    document.getElementById('stWon').textContent = data.summary.won_cnt;
+    document.getElementById('stUpd').textContent = new Date().toLocaleString('ru-RU');
+    document.getElementById('whoami').textContent = 'Загружено: '+current.length;
+    drawStatusChart(current); drawDaysChart(current);
+    const tb = document.getElementById('tbl'); tb.innerHTML='';
+    if(!current.length){ tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:#56697e">Заявок нет</td></tr>'; return; }
+    current.forEach(l=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td>#'+l.id+'</td>'+
+        '<td>'+new Date(l.createdAt).toLocaleString('ru-RU')+'</td>'+
+        '<td>'+(l.contactName||'—')+(l.companyName?'<br><small style="color:#56697e">'+l.companyName+'</small>':'')+'</td>'+
+        '<td>'+(l.phone||'—')+(l.email?'<br><small>'+l.email+'</small>':'')+'</td>'+
+        '<td>'+(SERVICES[l.serviceKey]||l.serviceKey||'—')+'</td>'+
+        '<td>'+(l.channel||'—')+'</td>'+
+        '<td><span class="pill s-'+l.status+'">'+l.status+'</span></td>';
+      tr.addEventListener('click', ()=>openLead(l.id));
+      tb.appendChild(tr);
+    });
+  }catch(e){ if(e.message!=='unauth') alert(e.message); }
+}
+
+async function openLead(id){
+  try{
+    const { lead, routes } = await api('/api/bez-it/cabinet/leads/'+id);
+    const box = document.getElementById('modBox');
+    let html = '<h3>Заявка №'+lead.id+'</h3>'+
+      '<dl>'+
+      '<dt>Дата</dt><dd>'+new Date(lead.createdAt).toLocaleString('ru-RU')+'</dd>'+
+      '<dt>Контакт</dt><dd>'+(lead.contactName||'—')+'</dd>'+
+      '<dt>Организация</dt><dd>'+(lead.companyName||'—')+'</dd>'+
+      '<dt>Телефон</dt><dd>'+(lead.phone||'—')+'</dd>'+
+      '<dt>E-mail</dt><dd>'+(lead.email||'—')+'</dd>'+
+      '<dt>Город</dt><dd>'+(lead.city||'—')+'</dd>'+
+      '<dt>Услуга</dt><dd>'+(SERVICES[lead.serviceKey]||lead.serviceKey||'—')+'</dd>'+
+      '<dt>Канал</dt><dd>'+(lead.channel||'—')+'</dd>'+
+      '<dt>Маршрут</dt><dd>'+(lead.routeTarget||'—')+'</dd>'+
+      '<dt>Бюджет</dt><dd>'+(lead.budget||'—')+'</dd>'+
+      '<dt>Срок</dt><dd>'+(lead.deadline||'—')+'</dd>'+
+      '<dt>Комментарий</dt><dd>'+(lead.comment||'—')+'</dd>'+
+      '<dt>Статус</dt><dd><span class="pill s-'+lead.status+'">'+lead.status+'</span></dd>'+
+      '</dl>';
+    if(lead.quizAnswers && Object.keys(lead.quizAnswers).length){
+      html += '<h4 style="margin-top:10px">Ответы квиза</h4><pre style="background:#f7f9fc;padding:10px;border-radius:8px;font-size:12px;overflow:auto">'+JSON.stringify(lead.quizAnswers,null,2)+'</pre>';
+    }
+    if(lead.utm && Object.keys(lead.utm).length){
+      html += '<h4 style="margin-top:10px">UTM</h4><pre style="background:#f7f9fc;padding:10px;border-radius:8px;font-size:12px;overflow:auto">'+JSON.stringify(lead.utm,null,2)+'</pre>';
+    }
+    html += '<div class="routes"><b>Доставка партнёрам:</b><br>'+
+      (routes.length ? routes.map(r=>'• '+r.target+' ('+r.channel+'): '+r.status+(r.last_error?' · '+r.last_error:'')).join('<br>') : '—')+'</div>';
+    html += '<div style="margin-top:14px"><label style="display:block;font-weight:700;margin-bottom:6px;font-size:13px;color:#56697e;text-transform:uppercase;letter-spacing:.3px">Заметка по лиду</label>'+
+      '<textarea id="leadNotes" rows="3" placeholder="Внутренние пометки: переговоры, договорённости, следующий шаг…">'+(lead.notes||'').replace(/</g,'&lt;')+'</textarea>'+
+      '<input id="leadAssign" placeholder="Ответственный (например, Екатерина / менеджер Cent-IT)" value="'+(lead.assignedTo||'').replace(/"/g,'&quot;')+'" style="margin-top:6px"></div>';
+    html += '<div class="actions">'+
+      '<button class="btn" id="saveNotes">💾 Сохранить заметку</button>'+
+      '<button class="btn" data-set="in_progress">Взять в работу</button>'+
+      '<button class="btn" data-set="won">Выиграна</button>'+
+      '<button class="btn secondary" data-set="lost">Проиграна</button>'+
+      '<button class="btn secondary" data-set="duplicate">Дубль</button>'+
+      '<button class="btn secondary" data-set="spam">Спам</button>'+
+      '<button class="btn secondary" id="modClose">Закрыть</button>'+
+      '</div>';
+    box.innerHTML = html;
+    document.getElementById('mod').classList.add('on');
+    document.getElementById('modClose').onclick = ()=>document.getElementById('mod').classList.remove('on');
+    document.getElementById('saveNotes').onclick = async ()=>{
+      try{
+        const notes = document.getElementById('leadNotes').value;
+        const assignedTo = document.getElementById('leadAssign').value;
+        await api('/api/bez-it/cabinet/leads/'+id, {method:'PATCH',body:JSON.stringify({notes, assignedTo})});
+        document.getElementById('saveNotes').textContent = '✓ Сохранено';
+        setTimeout(()=>{ document.getElementById('mod').classList.remove('on'); load(); }, 600);
+      }catch(e){ alert(e.message); }
+    };
+    box.querySelectorAll('button[data-set]').forEach(b=>b.addEventListener('click', async ()=>{
+      try{
+        const notes = document.getElementById('leadNotes').value;
+        const assignedTo = document.getElementById('leadAssign').value;
+        await api('/api/bez-it/cabinet/leads/'+id, {method:'PATCH',body:JSON.stringify({status:b.dataset.set, notes, assignedTo})});
+        document.getElementById('mod').classList.remove('on'); load();
+      }catch(e){ alert(e.message); }
+    }));
+  }catch(e){ alert(e.message); }
+}
+
+document.getElementById('fApply').addEventListener('click', load);
+document.getElementById('fReload').addEventListener('click', load);
+document.getElementById('fStatus').addEventListener('change', load);
+document.getElementById('fSearch').addEventListener('keydown', e=>{ if(e.key==='Enter') load(); });
+document.getElementById('fExport').addEventListener('click', ()=>{
+  const rows = [['id','created','name','company','phone','email','service','channel','status']];
+  current.forEach(l=>rows.push([l.id,l.createdAt,l.contactName||'',l.companyName||'',l.phone||'',l.email||'',l.serviceKey||'',l.channel||'',l.status]));
+  const csv = rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(';')).join('\r\n');
+  const blob = new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'bez-it-leads-'+new Date().toISOString().slice(0,10)+'.csv'; a.click();
+});
+
+if(token) showApp(); else showAuth();
+</script>
+</body>
+</html>

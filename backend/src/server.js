@@ -19,6 +19,7 @@ import { buildVoiceSessionsRouter } from './routes/voice-sessions.js';
 import { meetingsRouter } from './routes/meetings.js';
 import { adminRouter } from './routes/admin.js';
 import { aiJobsRouter } from './routes/ai-jobs.js';
+import { bezItLeadsPublicRouter, bezItCabinetRouter } from './routes/bez-it-leads.js';
 import { registerSocketGateway } from './socket/gateway.js';
 import { sendError } from './lib/http-error.js';
 
@@ -79,6 +80,13 @@ app.use('/api/voice-sessions', authMiddleware, buildVoiceSessionsRouter({ io }))
 app.use('/api/meetings', authMiddleware, meetingsRouter);
 app.use('/api/admin', authMiddleware, adminRouter);
 app.use('/api/ai-jobs', authMiddleware, aiJobsRouter);
+
+app.use('/api/bez-it/leads',
+  createRateLimiter({ windowMs: 60_000, max: Number(process.env.BEZIT_PUBLIC_RATE_LIMIT || 30), prefix: 'bezit-public' }),
+  bezItLeadsPublicRouter);
+app.use('/api/bez-it/cabinet',
+  createRateLimiter({ windowMs: 60_000, max: Number(process.env.BEZIT_CABINET_RATE_LIMIT || 120), prefix: 'bezit-cabinet' }),
+  bezItCabinetRouter);
 
 const legacyDisabledMessage = {
   code: 'LEGACY_ENDPOINT_DISABLED',

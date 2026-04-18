@@ -2,7 +2,7 @@
 
 ## Канон
 - active baseline: room-based V17
-- active repo: contour-chat-v17
+- active repo: bez-it
 - active deploy path: /opt/messenger/contour-chat-jino-final
 - active domain: https://ai.voice.oboron-it.ru
 

@@ -2,12 +2,12 @@
 
 ## Что уже подтверждено
 - GitHub login и write-access рабочие
-- Lock-файлы пишутся в `alamangart0011/contour-chat-v17`
+- Lock-файлы пишутся в `alamangart0011/bez-it`
 - Собран локальный snapshot-скрипт для полного съёма Mac + Jino
 - Собран полный чек-лист P0/P1/P2
 
 ## Что считаю текущим реальным baseline
-- repo: alamangart0011/contour-chat-v17
+- repo: alamangart0011/bez-it
 - VPS path: /opt/messenger/contour-chat-jino-final
 - domain: ai.voice.oboron-it.ru
 - цель: догнать room-based контур до V26

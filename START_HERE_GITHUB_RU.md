@@ -3,7 +3,7 @@
 Если новый чат должен поднять проект только из GitHub, начинать отсюда.
 
 ## Активный репозиторий
-`alamangart0011/contour-chat-v17`
+`alamangart0011/bez-it`
 
 ## Активный канон
 - room-based V17 baseline

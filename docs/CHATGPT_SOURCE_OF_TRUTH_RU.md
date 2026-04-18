@@ -1,7 +1,7 @@
 # GitHub как источник истины для проекта
 
 ## Активный репозиторий
-`alamangart0011/contour-chat-v17`
+`alamangart0011/bez-it`
 
 ## Активный продуктовый канон
 - room-based V17 baseline

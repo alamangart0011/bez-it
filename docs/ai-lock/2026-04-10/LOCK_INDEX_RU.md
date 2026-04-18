@@ -18,7 +18,7 @@
 - signalum_full_checklist_ru.md
 
 Канон проекта:
-- active baseline: room-based contour-chat-v17
+- active baseline: room-based bez-it
 - path: /opt/messenger/contour-chat-jino-final
 - domain: https://ai.voice.oboron-it.ru
 - one baseline, one deploy path

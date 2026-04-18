@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:yandex="http://news.yandex.ru"
+     xmlns:media="http://search.yahoo.com/mrss/"
+     xmlns:turbo="http://turbo.yandex.ru"
+     version="2.0">
+  <channel>
+    <title>bez-it.ru — Информационная безопасность и СКЗИ</title>
+    <link>https://bez-it.ru/</link>
+    <description>Защита КИИ, аттестация ФСТЭК, разработка СКЗИ, ГосСОПКА, ИТ-аутсорсинг и видеонаблюдение. ИП Сапрыкина Е.В. — партнёр Оборон-Экран и Cent-IT.</description>
+    <language>ru</language>
+
+    <item turbo="true">
+      <link>https://bez-it.ru/kii-2026.html</link>
+      <turbo:topic>КИИ 2026</turbo:topic>
+      <pubDate>Fri, 17 Apr 2026 00:00:00 +0300</pubDate>
+      <author>bez-it.ru</author>
+      <turbo:content><![CDATA[
+        <header><h1>КИИ 2026: категорирование, ФСТЭК, штрафы 500 000 ₽</h1></header>
+        <p>187-ФЗ и КИИ-2026 касаются 13 сфер: энергетика, транспорт, связь, банки, здравоохранение, химия, металлургия. Подготовим комплект документов и проведём категорирование под требования ФСТЭК за 20 рабочих дней от 75 000 ₽.</p>
+        <p><a href="https://bez-it.ru/kii-2026.html">Подробнее →</a></p>
+      ]]></turbo:content>
+    </item>
+
+    <item turbo="true">
+      <link>https://bez-it.ru/fstek-attestaciya.html</link>
+      <turbo:topic>Аттестация ФСТЭК</turbo:topic>
+      <pubDate>Fri, 17 Apr 2026 00:00:00 +0300</pubDate>
+      <author>bez-it.ru</author>
+      <turbo:content><![CDATA[
+        <header><h1>Аттестация ИСПДн и ГИС по ФСТЭК № 17/21</h1></header>
+        <p>Аттестация объектов информатизации под требования ФСТЭК № 17 (ГИС) и № 21 (ИСПДн) — от 150 000 ₽, срок 30–45 рабочих дней. Классы защищённости 1Г, 1В, К1, К2. Сопровождение до получения аттестата.</p>
+        <p><a href="https://bez-it.ru/fstek-attestaciya.html">Подробнее →</a></p>
+      ]]></turbo:content>
+    </item>
+
+    <item turbo="true">
+      <link>https://bez-it.ru/skzi-razrabotka.html</link>
+      <turbo:topic>СКЗИ и ГОСТ-VPN</turbo:topic>
+      <pubDate>Fri, 17 Apr 2026 00:00:00 +0300</pubDate>
+      <author>bez-it.ru</author>
+      <turbo:content><![CDATA[
+        <header><h1>Разработка СКЗИ по ПП-313: ГОСТ 34.10/34.11/34.12</h1></header>
+        <p>Лицензия ФСБ на разработку СКЗИ по пп. 1–6 ПП-313. Проектируем и сертифицируем криптомодули: электронная подпись ГОСТ 34.10-2018, хеш 34.11-2018, симметричное шифрование «Кузнечик» (34.12-2015), режимы 34.13-2015.</p>
+        <p><a href="https://bez-it.ru/skzi-razrabotka.html">Подробнее →</a></p>
+      ]]></turbo:content>
+    </item>
+
+    <item turbo="true">
+      <link>https://bez-it.ru/gossopka-podklyuchenie.html</link>
+      <turbo:topic>ГосСОПКА</turbo:topic>
+      <pubDate>Fri, 17 Apr 2026 00:00:00 +0300</pubDate>
+      <author>bez-it.ru</author>
+      <turbo:content><![CDATA[
+        <header><h1>Подключение к ГосСОПКА за 30 дней</h1></header>
+        <p>Для значимых объектов КИИ по 187-ФЗ обязательно подключение к ГосСОПКА НКЦКИ. Настроим передачу инцидентов, доступ к методике, регистрацию в ФСТЭК и согласование у НКЦКИ. Срок — 30 рабочих дней от 350 000 ₽.</p>
+        <p><a href="https://bez-it.ru/gossopka-podklyuchenie.html">Подробнее →</a></p>
+      ]]></turbo:content>
+    </item>
+
+    <item turbo="true">
+      <link>https://bez-it.ru/ispdn-152fz.html</link>
+      <turbo:topic>152-ФЗ и ПДн</turbo:topic>
+      <pubDate>Fri, 17 Apr 2026 00:00:00 +0300</pubDate>
+      <author>bez-it.ru</author>
+      <turbo:content><![CDATA[
+        <header><h1>ИСПДн 152-ФЗ: категории К1–К4, уведомление РКН</h1></header>
+        <p>Определим категорию ИСПДн, разработаем модель угроз ФСТЭК БДУ, подготовим уведомление в РКН. Внедрим СЗИ под класс защищённости К1, К2, К3 или К4. Срок — 15 рабочих дней от 120 000 ₽.</p>
+        <p><a href="https://bez-it.ru/ispdn-152fz.html">Подробнее →</a></p>
+      ]]></turbo:content>
+    </item>
+
+    <item turbo="true">
+      <link>https://bez-it.ru/audit-ib.html</link>
+      <turbo:topic>Аудит ИБ</turbo:topic>
+      <pubDate>Fri, 17 Apr 2026 00:00:00 +0300</pubDate>
+      <author>bez-it.ru</author>
+      <turbo:content><![CDATA[
+        <header><h1>Аудит информационной безопасности за 5 рабочих дней</h1></header>
+        <p>Экспресс-аудит соответствия 187-ФЗ, 152-ФЗ, № 17, № 21. Анализ модели угроз, инвентаризация активов, пен-тест периметра. Отчёт с приоритезированными рекомендациями и дорожной картой приведения в соответствие.</p>
+        <p><a href="https://bez-it.ru/audit-ib.html">Подробнее →</a></p>
+      ]]></turbo:content>
+    </item>
+
+    <item turbo="true">
+      <link>https://bez-it.ru/blog/shtrafy-2026-praktika.html</link>
+      <turbo:topic>Штрафы 2026</turbo:topic>
+      <pubDate>Fri, 17 Apr 2026 00:00:00 +0300</pubDate>
+      <author>bez-it.ru</author>
+      <turbo:content><![CDATA[
+        <header><h1>Штрафы за нарушения КИИ и 152-ФЗ в 2026</h1></header>
+        <p>С 30 мая 2025 по ст. 13.12.1 КоАП штраф до 500 000 ₽ за невыполнение требований защиты значимых объектов КИИ. По 274.1 УК РФ — до 10 лет лишения свободы за умышленные нарушения. Разбираем реальную практику.</p>
+        <p><a href="https://bez-it.ru/blog/shtrafy-2026-praktika.html">Подробнее →</a></p>
+      ]]></turbo:content>
+    </item>
+
+    <item turbo="true">
+      <link>https://bez-it.ru/blog/kii-kateg-instrukciya.html</link>
+      <turbo:topic>Категорирование КИИ</turbo:topic>
+      <pubDate>Fri, 17 Apr 2026 00:00:00 +0300</pubDate>
+      <author>bez-it.ru</author>
+      <turbo:content><![CDATA[
+        <header><h1>Инструкция: как провести категорирование КИИ</h1></header>
+        <p>Пошаговый гид по категорированию объектов критической информационной инфраструктуры: комиссия, реестр, показатели значимости, согласование с ФСТЭК. Шаблоны документов и чек-листы.</p>
+        <p><a href="https://bez-it.ru/blog/kii-kateg-instrukciya.html">Подробнее →</a></p>
+      ]]></turbo:content>
+    </item>
+
+  </channel>
+</rss>
