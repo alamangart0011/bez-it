@@ -12,69 +12,113 @@ OK()   { echo -e "\033[1;32m  ✓ $*\033[0m"; }
 BAD()  { echo -e "\033[1;31m  ✗ $*\033[0m"; }
 WARN() { echo -e "\033[1;33m  ⚠ $*\033[0m"; }
 
-BLUE "0/12 pre-flight"
+# retry_curl <url> — 3 попытки, возвращает код ответа или 000
+retry_curl() {
+  local url="$1"; local want="${2:-200}"; local code
+  for _ in 1 2 3; do
+    code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 10 "$url" 2>/dev/null || echo 000)
+    [[ "$code" == "$want" ]] && { echo "$code"; return 0; }
+    sleep 2
+  done
+  echo "$code"
+}
+
+# retry_body <url> — 3 попытки, тело ответа
+retry_body() {
+  local url="$1"
+  for _ in 1 2 3; do
+    local body
+    body=$(curl -fsS --max-time 10 "$url" 2>/dev/null) && { echo "$body"; return 0; }
+    sleep 2
+  done
+  return 1
+}
+
+BLUE "0/13 pre-flight"
 if [[ $EUID -ne 0 ]]; then BAD "нужен root"; exit 1; fi
 cd "${APP_DIR}"
 git fetch origin --quiet
 git reset --hard origin/claude/landing-pages-leads-X4MIG --quiet
 OK "на коммите: $(git log -1 --oneline)"
 
-BLUE "1/12 регенерация региональных лендингов"
+BLUE "1/13 регенерация региональных лендингов"
 python3 tools/seo-regen-regions.py
 
-BLUE "2/12 docker rebuild"
+BLUE "2/13 docker rebuild"
 cd "${APP_DIR}/ops/bez-it-sandbox"
 docker compose -f docker-compose.single.yml --env-file .env up -d --remove-orphans
 sleep 4
 docker exec bez-it-web nginx -t 2>&1 | tail -3 && OK "nginx config валиден"
 docker exec bez-it-web nginx -s reload && OK "nginx перезагружен"
+sleep 2
 
-BLUE "3/12 smoke 20 регионов"
+BLUE "3/13 smoke 20 регионов (retry=3)"
 PASS=0; FAIL=0
 for city in moscow spb ekaterinburg kazan novosibirsk krasnodar rostov nizhny-novgorod samara ufa perm voronezh volgograd chelyabinsk krasnoyarsk saratov tyumen izhevsk barnaul kaliningrad; do
-  code=$(curl -fsS -o /dev/null -w '%{http_code}' --max-time 10 "https://bez-it.ru/regions/${city}.html" 2>/dev/null || echo 000)
+  code=$(retry_curl "https://bez-it.ru/regions/${city}.html" 200)
   if [[ "$code" == "200" ]]; then PASS=$((PASS+1)); else BAD "regions/${city}: $code"; FAIL=$((FAIL+1)); fi
 done
 [[ $FAIL -eq 0 ]] && OK "regions: $PASS/20" || WARN "regions: $PASS/20 (failed $FAIL)"
 
-BLUE "4/12 проверка 404.html"
-code=$(curl -fsS -o /dev/null -w '%{http_code}' --max-time 10 "https://bez-it.ru/totally-missing-page-xyz.html" 2>/dev/null || echo 000)
+BLUE "4/13 проверка 404.html (несуществующий URL должен → 404)"
+code=$(retry_curl "https://bez-it.ru/totally-missing-page-xyz.html" 404)
 [[ "$code" == "404" ]] && OK "404 возвращает $code" || WARN "404 код: $code (ожидался 404)"
 
-BLUE "5/12 проверка turbo.xml"
-turbo_size=$(curl -fsS "https://bez-it.ru/turbo.xml" 2>/dev/null | wc -c)
+BLUE "5/13 проверка turbo.xml"
+turbo_size=$(retry_body "https://bez-it.ru/turbo.xml" 2>/dev/null | wc -c)
 [[ "$turbo_size" -gt 500 ]] && OK "turbo.xml: ${turbo_size} bytes" || BAD "turbo.xml: ${turbo_size} bytes"
 
-BLUE "6/12 проверка robots.txt с Clean-param"
-if curl -fsS "https://bez-it.ru/robots.txt" 2>/dev/null | grep -q "Clean-param"; then
+BLUE "6/13 robots.txt с Clean-param"
+if retry_body "https://bez-it.ru/robots.txt" | grep -q "Clean-param"; then
   OK "robots.txt содержит Clean-param"
 else
   BAD "robots.txt без Clean-param"
 fi
 
-BLUE "7/12 JSON-LD AggregateRating на 3 регионах"
+BLUE "7/13 JSON-LD AggregateRating на 3 регионах"
 for city in moscow spb kazan; do
-  n=$(curl -fsS "https://bez-it.ru/regions/${city}.html" 2>/dev/null | grep -c "AggregateRating" || echo 0)
+  n=$(retry_body "https://bez-it.ru/regions/${city}.html" | grep -c "AggregateRating" || echo 0)
   [[ "$n" -ge 1 ]] && OK "regions/${city}: $n × AggregateRating" || BAD "regions/${city}: нет AggregateRating"
 done
 
-BLUE "8/12 Метрика reachGoal на ключевых страницах"
-for u in "/" "/regions/moscow.html" "/regions/kazan.html"; do
-  n=$(curl -fsS "https://bez-it.ru${u}" 2>/dev/null | grep -c "reachGoal" || echo 0)
-  [[ "$n" -ge 1 ]] && OK "${u}: ${n} × reachGoal" || WARN "${u}: нет reachGoal"
+BLUE "8/13 Метрика reachGoal + counter ID 108625027"
+for u in "/" "/regions/moscow.html" "/regions/kazan.html" "/partners.html" "/resources/"; do
+  body=$(retry_body "https://bez-it.ru${u}") || { BAD "${u}: не ответил"; continue; }
+  n_goal=$(echo "$body" | grep -c "reachGoal" || echo 0)
+  has_id=$(echo "$body" | grep -q 'id=108625027' && echo yes || echo no)
+  if [[ "$n_goal" -ge 1 && "$has_id" == yes ]]; then
+    OK "${u}: ${n_goal} × reachGoal + counter"
+  else
+    WARN "${u}: reachGoal=$n_goal counter=$has_id"
+  fi
 done
 
-BLUE "9/12 IndexNow для новых URL"
+BLUE "9/13 Yandex verification: файл + meta"
+code=$(retry_curl "https://bez-it.ru/yandex_9e7d671381785e61.html" 200)
+if [[ "$code" == "200" ]]; then
+  body=$(retry_body "https://bez-it.ru/yandex_9e7d671381785e61.html")
+  if echo "$body" | grep -q "9e7d671381785e61"; then
+    OK "файл /yandex_9e7d671381785e61.html: 200 + содержит токен"
+  else BAD "файл отдаётся, но без токена в теле"; fi
+else BAD "файл /yandex_...html не найден (код $code)"; fi
+if retry_body "https://bez-it.ru/" | grep -q 'content="9e7d671381785e61"'; then
+  OK "meta yandex-verification на главной"
+else BAD "meta yandex-verification НЕ на главной"; fi
+
+BLUE "10/13 IndexNow ping (45+ URL)"
 bash "${APP_DIR}/deploy/jino-indexnow-ping.sh" 2>&1 | tail -5
 
-BLUE "10/12 sitemap.xml свежий"
-curl -fsS "https://bez-it.ru/sitemap.xml" 2>/dev/null | grep -c "<loc>" || echo 0
+BLUE "11/13 sitemap.xml: count <loc> и HTTP-коды первых 10 URL"
+body=$(retry_body "https://bez-it.ru/sitemap.xml")
+n=$(echo "$body" | grep -c "<loc>" || echo 0)
+OK "sitemap: $n URL"
+# проверим первые 10 URL (кроме hash-якорей и /#)
+echo "$body" | grep -oE "https://bez-it\.ru[^<#]+" | sort -u | head -10 | while read -r u; do
+  c=$(retry_curl "$u" 200)
+  [[ "$c" == "200" ]] && echo -e "\033[1;32m    ✓ $u → $c\033[0m" || echo -e "\033[1;31m    ✗ $u → $c\033[0m"
+done
 
-BLUE "11/12 Yandex Webmaster ping"
-curl -fsS "https://webmaster.yandex.ru/ping?sitemap=https://bez-it.ru/sitemap.xml" 2>&1 | tail -3 || WARN "yandex ping fail"
-# Google sitemap ping endpoint был отключён Google в 2023 — оставлен только Yandex
-
-BLUE "12/12 smoke-prod финальный"
+BLUE "12/13 smoke-prod финальный (retry=3)"
 cd "${APP_DIR}/ops/bez-it-sandbox"
 ./smoke-prod.sh
 
@@ -82,5 +126,5 @@ echo
 BLUE "✅ FINALIZE-V2 DONE"
 echo "  commit:    $(git -C ${APP_DIR} log -1 --oneline)"
 echo "  regions:   $PASS/20 passed"
-echo "  404:       $code"
+echo "  sitemap:   $n URLs"
 echo "  turbo:     $turbo_size bytes"
