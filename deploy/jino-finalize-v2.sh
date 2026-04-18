@@ -44,13 +44,20 @@ OK "на коммите: $(git log -1 --oneline)"
 BLUE "1/13 регенерация региональных лендингов"
 python3 tools/seo-regen-regions.py
 
-BLUE "2/13 docker rebuild"
+BLUE "2/13 docker rebuild + nginx restart"
 cd "${APP_DIR}/ops/bez-it-sandbox"
 docker compose -f docker-compose.single.yml --env-file .env up -d --remove-orphans
 sleep 4
 docker exec bez-it-web nginx -t 2>&1 | tail -3 && OK "nginx config валиден"
-docker exec bez-it-web nginx -s reload && OK "nginx перезагружен"
-sleep 2
+# Полный restart контейнера: иногда reload не подхватывает монтированный conf.
+docker compose -f docker-compose.single.yml restart bez-it-web >/dev/null 2>&1 && OK "bez-it-web перезапущен"
+sleep 3
+# Показываем, что nginx в контейнере реально видит свежий конфиг:
+if docker exec bez-it-web grep -q "try_files \$uri =404" /etc/nginx/conf.d/default.conf; then
+  OK "nginx config содержит try_files =404"
+else
+  WARN "nginx config без try_files =404 — проверьте монтирование"
+fi
 
 BLUE "3/13 smoke 20 регионов (retry=3)"
 PASS=0; FAIL=0
