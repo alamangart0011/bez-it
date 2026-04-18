@@ -101,16 +101,22 @@ for u in "/" "/regions/moscow.html" "/regions/kazan.html" "/partners.html" "/res
 done
 
 BLUE "9/13 Yandex verification: файл + meta"
-code=$(retry_curl "https://bez-it.ru/yandex_9e7d671381785e61.html" 200)
-if [[ "$code" == "200" ]]; then
-  body=$(retry_body "https://bez-it.ru/yandex_9e7d671381785e61.html")
-  if echo "$body" | grep -q "9e7d671381785e61"; then
-    OK "файл /yandex_9e7d671381785e61.html: 200 + содержит токен"
-  else BAD "файл отдаётся, но без токена в теле"; fi
-else BAD "файл /yandex_...html не найден (код $code)"; fi
-if retry_body "https://bez-it.ru/" | grep -q 'content="9e7d671381785e61"'; then
-  OK "meta yandex-verification на главной"
-else BAD "meta yandex-verification НЕ на главной"; fi
+# Прямой curl (без обёртки), чтобы избежать флейков pipe/subshell
+file_ok=0; meta_ok=0
+for _ in 1 2 3; do
+  curl -fsS --max-time 10 "https://bez-it.ru/yandex_9e7d671381785e61.html" 2>/dev/null \
+    | grep -q "9e7d671381785e61" && file_ok=1 && break
+  sleep 2
+done
+for _ in 1 2 3; do
+  curl -fsS --max-time 10 "https://bez-it.ru/" 2>/dev/null \
+    | grep -q 'content="9e7d671381785e61"' && meta_ok=1 && break
+  sleep 2
+done
+[[ $file_ok -eq 1 ]] && OK "файл /yandex_9e7d671381785e61.html: 200 + содержит токен" \
+                     || BAD "файл /yandex_...html не найден или без токена"
+[[ $meta_ok -eq 1 ]] && OK "meta yandex-verification на главной" \
+                     || BAD "meta yandex-verification НЕ на главной"
 
 BLUE "10/13 IndexNow ping (45+ URL)"
 bash "${APP_DIR}/deploy/jino-indexnow-ping.sh" 2>&1 | tail -5
