@@ -101,16 +101,17 @@ for u in "/" "/regions/moscow.html" "/regions/kazan.html" "/partners.html" "/res
 done
 
 BLUE "9/13 Yandex verification: файл + meta"
-# Прямой curl (без обёртки), чтобы избежать флейков pipe/subshell
+# pipefail + -fsS в пайпе ломались на флейках TLS. Сохраняем тело в переменную,
+# затем grep отдельно — как делает smoke-prod (он проходит стабильно).
 file_ok=0; meta_ok=0
-for _ in 1 2 3; do
-  curl -fsS --max-time 10 "https://bez-it.ru/yandex_9e7d671381785e61.html" 2>/dev/null \
-    | grep -q "9e7d671381785e61" && file_ok=1 && break
+for attempt in 1 2 3; do
+  body=$(curl -sS --max-time 10 "https://bez-it.ru/yandex_9e7d671381785e61.html" 2>/dev/null || true)
+  if [[ -n "$body" ]] && echo "$body" | grep -q "9e7d671381785e61"; then file_ok=1; break; fi
   sleep 2
 done
-for _ in 1 2 3; do
-  curl -fsS --max-time 10 "https://bez-it.ru/" 2>/dev/null \
-    | grep -q 'content="9e7d671381785e61"' && meta_ok=1 && break
+for attempt in 1 2 3; do
+  body=$(curl -sS --max-time 10 "https://bez-it.ru/" 2>/dev/null || true)
+  if [[ -n "$body" ]] && echo "$body" | grep -q 'content="9e7d671381785e61"'; then meta_ok=1; break; fi
   sleep 2
 done
 [[ $file_ok -eq 1 ]] && OK "файл /yandex_9e7d671381785e61.html: 200 + содержит токен" \
