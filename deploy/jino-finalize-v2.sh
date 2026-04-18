@@ -72,7 +72,7 @@ curl -fsS "https://bez-it.ru/sitemap.xml" 2>/dev/null | grep -c "<loc>" || echo 
 
 BLUE "11/12 Yandex Webmaster ping"
 curl -fsS "https://webmaster.yandex.ru/ping?sitemap=https://bez-it.ru/sitemap.xml" 2>&1 | tail -3 || WARN "yandex ping fail"
-curl -fsS "https://www.google.com/ping?sitemap=https://bez-it.ru/sitemap.xml" 2>&1 | tail -3 || WARN "google ping fail"
+# Google sitemap ping endpoint был отключён Google в 2023 — оставлен только Yandex
 
 BLUE "12/12 smoke-prod финальный"
 cd "${APP_DIR}/ops/bez-it-sandbox"
