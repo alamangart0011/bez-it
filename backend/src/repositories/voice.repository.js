@@ -159,6 +159,27 @@ export const voiceRepository = {
     return this.upsertParticipant(targetRoomId, userId, { voiceRole: targetRole, isConnected: true }, client);
   },
 
+  async listAllConnected(client = pool) {
+    const res = await client.query(
+      `${baseSelect}
+       join rooms r on r.id = vp.room_id
+       where vp.is_connected = true and r.is_archived = false
+       order by r.name asc, u.display_name asc`
+    );
+    return res.rows;
+  },
+
+  async findConnectedRoomFor(userId, client = pool) {
+    const res = await client.query(
+      `${baseSelect}
+       where vp.user_id = $1 and vp.is_connected = true
+       order by vp.updated_at desc
+       limit 1`,
+      [userId]
+    );
+    return res.rows[0] || null;
+  },
+
   async listJoinRequests(roomId, client = pool) {
     const res = await client.query(
       `select rjr.id, rjr.room_id as "roomId", rjr.user_id as "userId", rjr.status, rjr.note,

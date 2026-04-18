@@ -207,6 +207,85 @@ export const voiceService = {
     return voiceRepository.listRoomState(roomId);
   },
 
+  async presence(actorUser) {
+    const rows = await voiceRepository.listAllConnected();
+    const rooms = new Map();
+    for (const row of rows) {
+      if (!rooms.has(row.roomId)) rooms.set(row.roomId, []);
+      rooms.get(row.roomId).push(row);
+    }
+    const roomIds = Array.from(rooms.keys());
+    const roomDetails = await Promise.all(roomIds.map((id) => roomsRepository.findById(id)));
+    const result = [];
+    for (let i = 0; i < roomIds.length; i += 1) {
+      const room = roomDetails[i];
+      if (!room) continue;
+      const participants = rooms.get(roomIds[i]) || [];
+      result.push({
+        roomId: room.id,
+        roomName: room.name,
+        roomKind: room.kind,
+        isPrivate: Boolean(room.isPrivate),
+        participantsCount: participants.length,
+        participants
+      });
+    }
+    result.sort((a, b) => b.participantsCount - a.participantsCount || a.roomName.localeCompare(b.roomName, 'ru'));
+    return { rooms: result, generatedAt: new Date().toISOString(), viewerUserId: actorUser.sub };
+  },
+
+  async pullToRoom(targetRoomId, actorUser, payload) {
+    const targetRoom = await ensureVoiceRoom(targetRoomId, actorUser.sub);
+    ensureVoiceModeration(actorUser, targetRoom.kind);
+    const targetUserId = String(payload?.targetUserId || '').trim();
+    if (!targetUserId) {
+      throw badRequest('VOICE_PULL_TARGET_REQUIRED', 'Не выбран сотрудник', 'Укажите userId сотрудника для перемещения.');
+    }
+    if (targetUserId === actorUser.sub) {
+      throw badRequest('VOICE_SELF_TARGET', 'Нельзя тянуть самого себя', 'Для себя используйте обычный вход в комнату.');
+    }
+    const targetUser = await usersRepository.findById(targetUserId);
+    if (!targetUser) throw notFound('USER_NOT_FOUND', 'Сотрудник не найден', 'Указанный сотрудник не существует.');
+
+    const current = await voiceRepository.findConnectedRoomFor(targetUserId);
+    const sourceRoomId = current?.roomId || null;
+
+    const hasAccess = await roomsRepository.userHasAccess(targetRoomId, targetUserId);
+    if (!hasAccess) {
+      await roomsRepository.addMembers(targetRoomId, [targetUserId]);
+    }
+
+    return withTransaction(async (client) => {
+      let participant;
+      if (sourceRoomId && sourceRoomId !== targetRoomId) {
+        const sourceRole = current?.voiceRole || 'member';
+        participant = await voiceRepository.moveParticipant(sourceRoomId, targetRoomId, targetUserId, sourceRole, client);
+        await incidentsRepository.create({
+          roomId: sourceRoomId,
+          actorUserId: actorUser.sub,
+          targetUserId,
+          incidentType: 'voice_moved',
+          severity: 'low',
+          note: `Сотрудник перетянут в комнату ${targetRoom.name}.`,
+          meta: { fromRoomId: sourceRoomId, toRoomId: targetRoomId, roomKind: targetRoom.kind, via: 'pull' }
+        }, client);
+      } else {
+        participant = await voiceRepository.upsertParticipant(targetRoomId, targetUserId, {
+          voiceRole: current?.voiceRole || 'member',
+          isConnected: true
+        }, client);
+      }
+      await auditRepository.create({
+        actorUserId: actorUser.sub,
+        action: 'voice.pull',
+        target: targetUserId,
+        result: 'success',
+        meta: { fromRoomId: sourceRoomId, toRoomId: targetRoomId }
+      }, client);
+      return { participant, roomId: targetRoomId, sourceRoomId, action: 'pull', targetUser: { id: targetUser.id, displayName: targetUser.displayName } };
+    });
+  },
+
   async join(roomId, actorUser, payload) {
     const room = await ensureVoiceRoom(roomId, actorUser.sub);
     const current = await voiceRepository.findParticipant(roomId, actorUser.sub);

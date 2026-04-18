@@ -19,6 +19,28 @@ export function buildVoiceRouter({ io }) {
     }
   });
 
+  router.get('/presence', async (req, res) => {
+    try {
+      res.json(await voiceService.presence(req.user));
+    } catch (error) {
+      return sendError(res, error);
+    }
+  });
+
+  router.post('/rooms/:roomId/pull', async (req, res) => {
+    try {
+      const result = await voiceService.pullToRoom(req.params.roomId, req.user, req.body);
+      emitRoom(io, req.params.roomId, 'voice:moderation', { roomId: req.params.roomId, ...result });
+      if (result.sourceRoomId && result.sourceRoomId !== result.roomId) {
+        emitRoom(io, result.sourceRoomId, 'voice:moderation', { roomId: result.sourceRoomId, ...result });
+      }
+      if (io) io.emit('voice:presence-changed', { roomId: result.roomId, sourceRoomId: result.sourceRoomId, userId: result.targetUser?.id });
+      res.json(result);
+    } catch (error) {
+      return sendError(res, error);
+    }
+  });
+
   router.get('/rooms/:roomId/requests', async (req, res) => {
     try {
       res.json(await voiceService.listRequests(req.params.roomId, req.user));
@@ -66,6 +88,7 @@ export function buildVoiceRouter({ io }) {
       const payload = validateVoiceJoinPayload(req.body);
       const joined = await voiceService.join(req.params.roomId, req.user, payload);
       emitRoom(io, req.params.roomId, 'voice:participant', { roomId: req.params.roomId, participant: joined, type: 'join' });
+      if (io) io.emit('voice:presence-changed', { roomId: req.params.roomId, userId: req.user.sub, type: 'join' });
       res.status(201).json(joined);
     } catch (error) {
       return sendError(res, error);
@@ -76,6 +99,7 @@ export function buildVoiceRouter({ io }) {
     try {
       const left = await voiceService.leave(req.params.roomId, req.user);
       emitRoom(io, req.params.roomId, 'voice:participant', { roomId: req.params.roomId, participant: left, type: 'leave' });
+      if (io) io.emit('voice:presence-changed', { roomId: req.params.roomId, userId: req.user.sub, type: 'leave' });
       res.json(left);
     } catch (error) {
       return sendError(res, error);
